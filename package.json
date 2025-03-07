@@ -1,0 +1,19 @@
+{
+  "name": "student_bazaar",
+  "version": "1.0.0",
+  "description": "Table of Contents\r 1. Project Description\r 2. Features\r 3. Technologies Used\r 4. Future Improvements",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "node --watch app.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "mysql2": "^3.12.0"
+  }
+}
