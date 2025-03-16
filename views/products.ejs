@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Products | CampusShop</title>
+    <link rel="stylesheet" href="css/main.css">
+</head>
+<body>
+    <%- include('./partials/navbar') %>
+    
+    <main class="products-page">
+        <div class="page-header">
+            <h1>All Products</h1>
+            <p>Shop our complete catalog of student essentials</p>
+        </div>
+        
+        <div class="product-container">
+            <aside class="filters">
+                <h2>Filter By</h2>
+                
+                <div class="filter-group">
+                    <h3>Category</h3>
+                    <ul>
+                        <li><input type="checkbox" id="cat-textbooks"> <label for="cat-textbooks">Textbooks</label></li>
+                        <li><input type="checkbox" id="cat-tech"> <label for="cat-tech">Tech</label></li>
+                        <li><input type="checkbox" id="cat-supplies"> <label for="cat-supplies">Supplies</label></li>
+                        <li><input type="checkbox" id="cat-apparel"> <label for="cat-apparel">Apparel</label></li>
+                    </ul>
+                </div>
+                
+                <div class="filter-group">
+                    <h3>Price</h3>
+                    <ul>
+                        <li><input type="checkbox" id="price-1"> <label for="price-1">Under $25</label></li>
+                        <li><input type="checkbox" id="price-2"> <label for="price-2">$25 - $50</label></li>
+                        <li><input type="checkbox" id="price-3"> <label for="price-3">$50 - $100</label></li>
+                        <li><input type="checkbox" id="price-4"> <label for="price-4">$100+</label></li>
+                    </ul>
+                </div>
+                
+                <div class="filter-group">
+                    <h3>Deals</h3>
+                    <ul>
+                        <li><input type="checkbox" id="deal-discount"> <label for="deal-discount">On Sale</label></li>
+                        <li><input type="checkbox" id="deal-clearance"> <label for="deal-clearance">Clearance</label></li>
+                    </ul>
+                </div>
+                
+                <button class="btn-outline">Apply Filters</button>
+            </aside>
+            
+            <div class="product-list">
+                <div class="sort-options">
+                    <label for="sort">Sort by:</label>
+                    <select id="sort">
+                        <option value="relevance">Relevance</option>
+                        <option value="price-low">Price: Low to High</option>
+                        <option value="price-high">Price: High to Low</option>
+                        <option value="newest">Newest</option>
+                    </select>
+                </div>
+                
+                <div class="products-grid">
+                    <% products.forEach(product => { %> 
+                        <div class="product-card">
+                            <a href="product-detail.html?id=<%= product.id %>">
+                                <img src="<%= product.image %>" alt="<%= product.name %>">
+                                <h3><%= product.name %></h3>
+                                <p class="price">$<%= product.price %></p>
+                            </a>
+                            <button class="btn-add-cart">Add to Cart</button>
+                        </div>
+                    <% }); %>
+
+                </div>
+                
+                <div class="pagination">
+                    <a href="#" class="active">1</a>
+                    <a href="#">2</a>
+                    <a href="#">3</a>
+                    <a href="#">Next &raquo;</a>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <%- include('./partials/footer') %>
+    <link rel="stylesheet" href="search.css">
+</body>
+</html>

@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Results | StudentStore</title>
+    <link rel="stylesheet" href="css/search.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+
+    <%- include('./partials/navbar') %>
+    <main>
+        <div class="container">
+            <% if (false) { %>
+                <div class="breadcrumb">
+                    <a href="/">Home</a> 
+                </div>
+                
+             <% } %>
+        
+ 
+            <section class="search-results-section">
+                <div class="search-results-header">
+                <!-- Updates when search box has entry-->
+                <% if (false) { %>
+                    <h1>Search Results</h1>
+                    <p>Found 24 results</p>
+                    
+                <% } %>
+                </div>
+
+                <div class="search-filter-container">
+                    <div class="search-filters">
+                        <div class="filter-group">
+                            <h3>Category</h3>
+                            <ul>
+                                <li><input type="checkbox" id="cat-textbooks"> <label for="cat-textbooks">Textbooks </label></li>
+                                <li><input type="checkbox" id="cat-ebooks"> <label for="cat-ebooks">E-Books </label></li>
+                                <li><input type="checkbox" id="cat-electronics"> <label for="cat-electronics">Electronics </label></li>
+                                <li><input type="checkbox" id="cat-accessories"> <label for="cat-accessories">Accessories </label></li>
+                            </ul>
+                        </div>
+                        <div class="filter-group">
+                            <h3>Price Range</h3>
+                            <ul>
+                                <li><input type="checkbox" id="price-0-25"> <label for="price-0-25">$0 - $25 </label></li>
+                                <li><input type="checkbox" id="price-25-50" > <label for="price-25-50">$25 - $50</label></li>
+                                <li><input type="checkbox" id="price-50-100"> <label for="price-50-100">$50 - $100 </label></li>
+                                <li><input type="checkbox" id="price-100plus"> <label for="price-100plus">$100+ </label></li>
+                            </ul>
+                        </div>
+                        <div class="filter-group">
+                            <h3>Availability</h3>
+                            <ul>
+                                <li><input type="checkbox" id="avail-instock" > <label for="avail-instock">In Stock </label></li>
+                                <li><input type="checkbox" id="avail-preorder"> <label for="avail-preorder">Pre-Order </label></li>
+                                <li><input type="checkbox" id="avail-digital"> <label for="avail-digital">Digital Download </label></li>
+                            </ul>
+                        </div>
+                        <div class="filter-group">
+                            <h3>Format</h3>
+                            <ul>
+                                <li><input type="checkbox" id="format-physical" > <label for="format-physical">Physical </label></li>
+                                <li><input type="checkbox" id="format-digital"> <label for="format-digital">Digital </label></li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="search-results-content">
+                        <div class="search-results-sorting">
+                            <label for="sort-by">Sort by:</label>
+                            <select id="sort-by">
+                                <option value="relevance" selected>Relevance</option>
+                                <option value="price-low">Price: Low to High</option>
+                                <option value="price-high">Price: High to Low</option>
+                                <option value="newest">Newest</option>
+                                <option value="bestselling">Best Selling</option>
+                            </select>
+                            <div class="view-options">
+                                <button class="view-grid active"><i class="fas fa-th"></i></button>
+                                <button class="view-list"><i class="fas fa-list"></i></button>
+                            </div>
+                        </div>
+
+                        <div class="search-results-grid">
+                            <!-- Product Card 1 -->
+                            <% products.forEach(product => { %> 
+                                <div class="product-card">
+                                    <div class="product-badge bestseller">Bestseller</div>
+                                    <div class="product-image">
+                                        <a href="product-detail.html?id=123">
+                                            <img src="/api/placeholder/200/250" alt=<%= product.name %>>
+                                        </a>
+                                        <button class="quick-view-btn">Quick View</button>
+                                    </div>
+                                    <div class="product-info">
+                                        <h3><a href="product-detail.html?id=123"><%= product.name %></a></h3>
+                                        <div class="product-rating">
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star-half-alt"></i>
+                                            <span>(42 reviews)</span>
+                                        </div>
+                                        <div class="product-price">
+                                            <span class="current-price"><%= product.price %></span>
+                                        </div>
+                                        <div class="product-actions">
+                                            <button class="add-to-cart-btn">Add to Cart</button>
+                                            <button class="add-to-wishlist-btn"><i class="far fa-heart"></i></button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <% }); %>
+
+
+                        </div>
+
+                        <div class="pagination">
+                            <a href="#" class="active">1</a>
+                            <a href="#">2</a>
+                            <a href="#">3</a>
+                            <a href="#">4</a>
+                            <span>...</span>
+                            <a href="#">Next &raquo;</a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <% if (false) { %>
+            <section class="related-searches">
+                <h2>Related Searches</h2>
+                <div class="related-search-tags">
+                    <a href="search-results.html?query=programming+textbooks">Programming Textbooks</a>
+                    <a href="search-results.html?query=computer+science+degree">Computer Science Degree</a>
+                    <a href="search-results.html?query=coding+bootcamp">Coding Bootcamp</a>
+                    <a href="search-results.html?query=python+books">Python Books</a>
+                    <a href="search-results.html?query=algorithms">Algorithms</a>
+                </div>
+            </section>
+            <%} %>
+        </div>
+    </main>
+
+    
+    <link rel="stylesheet" href="search.css">
+    <script src="js/script.js"></script>
+</body>
+</html>

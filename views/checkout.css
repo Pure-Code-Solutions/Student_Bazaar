@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout | CampusShop</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+
+        header.checkout-header {
+            background: #333;
+            color: #fff;
+            padding: 10px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .checkout-header .logo img {
+            max-width: 120px;
+        }
+
+        .checkout-header .checkout-steps {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .checkout-header .checkout-steps .step {
+            background: #444;
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 3px;
+        }
+
+        .checkout-header .checkout-steps .step.active {
+            background: #00b4d8;
+        }
+
+        .checkout-header .secure-checkout {
+            display: flex;
+            align-items: center;
+        }
+
+        .checkout-header .secure-checkout img {
+            margin-right: 10px;
+        }
+
+        .checkout-page .checkout-container {
+            display: flex;
+            justify-content: space-between;
+            margin: 20px;
+        }
+
+        .checkout-page .checkout-main {
+            width: 70%;
+            background: #fff;
+            padding: 20px;
+            border-radius: 3px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        .checkout-page .checkout-sidebar {
+            width: 25%;
+        }
+
+        .checkout-section {
+            display: none;
+        }
+
+        .checkout-section.active {
+            display: block;
+        }
+
+        .checkout-section h2 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        .saved-addresses,
+        .shipping-options,
+        .payment-methods,
+        .billing-address,
+        .review-sections,
+        .review-items,
+        .place-order {
+            margin-bottom: 20px;
+        }
+
+        .saved-addresses .address-options {
+            display: flex;
+            gap: 20px;
+        }
+
+        .address-card {
+            background: #f4f4f4;
+            padding: 20px;
+            border-radius: 3px;
+            box-shadow: 0 0 5px rgba(0,0,0,0.1);
+            flex: 1;
+        }
+
+        .address-card.selected {
+            border: 2px solid #00b4d8;
+        }
+
+        .address-card .address-card-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .address-card .address-card-actions a {
+            color: #00b4d8;
+            text-decoration: none;
+        }
+
+        .address-card.add-new {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            background: #fff;
+            border: 2px dashed #00b4d8;
+        }
+
+        .address-card.add-new .add-new-content {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .shipping-options .shipping-option-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .shipping-option {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #f4f4f4;
+            padding: 10px;
+            border-radius: 3px;
+            box-shadow: 0 0 5px rgba(0,0,0,0.1);
+        }
+
+        .shipping-option input {
+            display: none;
+        }
+
+        .shipping-option .shipping-option-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .shipping-option .shipping-name {
+            font-weight: bold;
+        }
+
+        .form-actions {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        .form-actions button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+
+        .btn-outline {
+            background: none;
+            color: #00b4d8;
+            border: 1px solid #00b4d8;
+        }
+
+        .btn-primary {
+            background: #00b4d8;
+            color: #fff;
+        }
+
+        .payment-methods .payment-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .payment-tab {
+            background: #f4f4f4;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            border-radius: 3px;
+        }
+
+        .payment-tab.active {
+            background: #00b4d8;
+            color: #fff;
+        }
+
+        .payment-form {
+            display: none;
+        }
+
+        .payment-form.active {
+            display: block;
+        }
+
+        .payment-form .form-row {
+            margin-bottom: 10px;
+        }
+
+        .payment-form .form-row label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .payment-form .form-row input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+        }
+
+        .billing-address-form {
+            display: none;
+        }
+
+        .review-sections .review-section {
+            margin-bottom: 20px;
+        }
+
+        .review-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .review-header a {
+            color: #00b4d8;
+            text-decoration: none;
+        }
+
+        .review-items .review-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #f4f4f4;
+            padding: 10px;
+            border-radius: 3px;
+            box-shadow: 0 0 5px rgba(0,0,0,0.1);
+            margin-bottom: 10px;
+        }
+
+        .review-item .item-image img {
+            max-width: 50px;
+        }
+
+        .review-item .item-details {
+            flex: 1;
+            margin-left: 20px;
+        }
+
+        .review-item .item-price {
+            font-weight: bold;
+        }
+
+        .place-order .terms-agreement {
+            margin-bottom: 20px;
+        }
+
+        .place-order .btn-place-order {
+            width: 100%;
+            padding: 15px;
+        }
+
+        .order-summary .summary-items,
+        .order-summary .summary-total,
+        .order-protection {
+            background: #fff;
+            padding: 20px;
+            border-radius: 3px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+
+        .order-summary .summary-items .summary-row,
+        .order-summary .summary-total {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .promo-section {
+            background: #fff;
+            padding: 10px;
+            border-radius: 3px;
+            box-shadow: 0 0 5px rgba(0,0,0,0.1);
+        }
+
+        .promo-toggle {
+            background: none;
+            border: none;
+            color: #00b4d8;
+            cursor: pointer;
+            font-weight: bold;
+            text-decoration: underline;
+        }
+
+        .promo-form {
+            display: none;
+            margin-top: 10px;
+        }
+
+        footer.checkout-footer {
+            background: #333;
+            color: #fff;
+            padding: 20px 0;
+            text-align: center;
+        }
+
+        footer .footer-links a,
+        footer .footer-secure p {
+            color: #fff;
+            text-decoration: none;
+        }
+
+        footer .footer-secure img {
+            max-width: 100px;
+            margin-bottom: 10px;
+        }
+
+        footer .copyright {
+            margin-top: 20px;
+            font-size: 14px;
+        }
+
+        /* JavaScript to handle section visibility and step updates */
+        <script>
+            function showSection(sectionId) {
+                // Hide all sections
+                document.querySelectorAll('.checkout-section').forEach(section => {
+                    section.classList.remove('active');
+                });
+
+                // Show requested section
+                document.getElementById(sectionId).classList.add('active');
+
+                // Update steps
+                const stepIndex = ['shipping-section', 'payment-section', 'review-section'].indexOf(sectionId);
+                document.querySelectorAll('.checkout-steps .step').forEach((step, index) => {
+                    if (index <= stepIndex) {
+                        step.classList.add('active');
+                    } else {
+                        step.classList.remove('active');
+                    }
+                });
+            }
+        </script

@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Account | CampusShop</title>
+    <style>
+        /* General Styles */
+        * {
+			margin: 0;
+			padding: 0;
+			box-sizing: border-box;
+		}
+
+		body {
+			margin: 0;
+			padding: 0;
+			font-family: Arial, sans-serif;
+			line-height: 1.6;
+			background-color: #f4f4f4;
+			color: #333;
+		}
+
+        header nav {
+            background: #333;
+            color: #fff;
+            padding: 10px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        header nav .logo img {
+            max-width: 100px;
+        }
+
+        header nav .nav-links a,
+        header nav .nav-actions a {
+            color: #fff;
+            text-decoration: none;
+            margin: 0 10px;
+            font-size: 14px;
+        }
+
+        header nav .nav-actions .active img {
+            border: 2px solid #00b4d8;
+            border-radius: 50%;
+        }
+
+        .account-page .page-header {
+            text-align: center;
+            padding: 20px;
+            background: #00b4d8;
+            color: #fff;
+        }
+
+        .account-container {
+            display: flex;
+            justify-content: space-between;
+            padding: 20px;
+        }
+
+        .account-sidebar {
+            width: 25%;
+            background: #fff;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 3px;
+        }
+
+        .user-profile-brief {
+            text-align: center;
+        }
+
+        .user-profile-brief .user-avatar img {
+            max-width: 100px;
+            border-radius: 50%;
+        }
+
+        .user-info h3 {
+            margin: 10px 0 5px;
+            font-size: 18px;
+        }
+
+        .student-badge {
+            display: inline-block;
+            background: #00b4d8;
+            color: #fff;
+            padding: 5px 10px;
+            border-radius: 3px;
+            font-size: 12px;
+        }
+
+        .account-nav a {
+            display: block;
+            color: #333;
+            padding: 10px;
+            margin: 10px 0;
+            text-decoration: none;
+            border-radius: 3px;
+        }
+
+        .account-nav a.active {
+            background: #00b4d8;
+            color: #fff;
+        }
+
+        .account-help,
+        .logout-button {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .logout-button button {
+            background: #dc3545;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+
+        .account-content {
+            width: 70%;
+            background: #fff;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 3px;
+        }
+
+        .dashboard-cards {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .dashboard-card {
+            width: 30%;
+            background: #fff;
+            padding: 20px;
+            border-radius: 3px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .card-icon img {
+            max-width: 50px;
+            margin-bottom: 10px;
+        }
+
+        .card-info h3 {
+            margin: 10px 0;
+            font-size: 16px;
+        }
+
+        .card-link {
+            display: inline-block;
+            margin-top: 10px;
+            text-decoration: none;
+            color: #00b4d8;
+            font-weight: bold;
+        }
+
+        .recent-activity {
+            margin-top: 20px;
+        }
+
+        .activity-list .activity-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #ccc;
+        }
+
+        .activity-item h4 {
+            margin: 0;
+        }
+
+        .activity-time {
+            color: #666;
+            font-size: 12px;
+        }
+
+        .activity-action {
+            color: #00b4d8;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .orders-tabs {
+            display: flex;
+            margin-bottom: 20px;
+        }
+
+        .order-tab {
+            background: #f4f4f4;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            margin-right: 5px;
+            border-radius: 3px;
+        }
+
+        .order-tab.active {
+            background: #00b4d8;
+            color: #fff;
+        }
+
+        .orders-list .order-card {
+            background: #fff;
+            padding: 20px;
+            border-radius: 3px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .order-header,
+        .order-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .order-items {
+            display: flex;
+            justify-content: space-between;
+            padding: 20px 0;
+            border-bottom: 1px solid #ccc;
+        }
+
+        .order-item img {
+            max-width: 50px;
+            margin-right: 20px;
+        }
+
+        .order-total span {
+            font-weight: bold;
+        }
+
+        .btn-outline {
+            background: none;
+            color: #00b4d8;
+            border: 1px solid #00b4d8;
+            padding: 10px 20px;
+            border-radius: 3px;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .btn-link {
+            color: #00b4d8;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        footer {
+            background: #333;
+            color: #fff;
+            padding: 20px 0;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">
+                <a href="index.html"><img src="images/logo.svg" alt="CampusShop Logo"></a>
+            </div>
+            <div class="nav-links">
+                <a href="products.html">Shop</a>
+                <a href="categories.html">Categories</a>
+                <a href="student-deals.html">Student Deals</a>
+                <a href="about.html">About</a>
+            </div>
+            <div class="nav-actions">
+                <a href="search-results.html" class="search-icon"><img src="images/search.svg" alt="Search"></a>
+                <a href="cart.html" class="cart-icon"><img src="images/cart.svg" alt="Cart"></a>
+                <a href="account.html" class="account-icon active"><img src="images/account.svg" alt="Account"></a>
+            </div>
+        </nav>
+    </header>
+    
+    <main class="account-page">
+        <div class="page-header">
+            <h1>My Account</h1>
+            <p>Welcome back, Jane!</p>
+        </div>
+        
+        <div class="account-container">
+            <aside class="account-sidebar">
+                <div class="user-profile-brief">
+                    <div class="user-avatar">
+                        <img src="images/avatar-placeholder.svg" alt="User Avatar">
+                    </div>
+                    <div class="user-info">
+                        <h3>Jane Smith</h3>
+                        <p>jane.smith@university.edu</p>
+                        <span class="student-badge">Verified Student</span>
+                    </div>
+                </div>
+                
+                <nav class="account-nav">
+                    <a href="#" class="active" data-section="dashboard">Dashboard</a>
+                    <a href="#" data-section="orders">My Orders</a>
+                    <a href="#" data-section="wishlist">Wishlist</a>
+                    <a href="#" data-section="addresses">Addresses</a>
+                    <a href="#" data-section="payment-methods">Payment Methods</a>
+                    <a href="#" data-section="student-verification">Student Verification</a>
+                    <a href="#" data-section="account-settings">Account Settings</a>
+                </nav>
+                
+                <div class="account-help">
+                    <h4>Need Help?</h4>
+                    <a href="contact.html">Contact Support</a>
+                    <a href="faq.html">FAQ</a>
+                </div>
+                
+                <div class="logout-button">
+                    <button class="btn-outline">Log Out</button>
+                </div>
+            </aside>
+            
+            <div class="account-content">
+                <section class="account-section

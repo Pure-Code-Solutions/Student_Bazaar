@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>My Account | CampusShop</title>
+        <link rel="stylesheet" href="css/main.css">
+    </head>
+<body>
+
+    
+    <main class="account-page">
+        <div class="page-header">
+            <h1>My Account</h1>
+            <p>Welcome back, Jane!</p>
+        </div>
+        
+        <div class="account-container">
+            <aside class="account-sidebar">
+                <div class="user-profile-brief">
+                    <div class="user-avatar">
+                        <img src="images/avatar-placeholder.svg" alt="User Avatar">
+                    </div>
+                    <div class="user-info">
+                        <h3>Jane Smith</h3>
+                        <p>jane.smith@university.edu</p>
+                        <span class="student-badge">Verified Student</span>
+                    </div>
+                </div>
+                
+                <nav class="account-nav">
+                    <a href="#" class="active" data-section="dashboard">Dashboard</a>
+                    <a href="#" data-section="orders">My Orders</a>
+                    <a href="#" data-section="wishlist">Wishlist</a>
+                    <a href="#" data-section="addresses">Addresses</a>
+                    <a href="#" data-section="payment-methods">Payment Methods</a>
+                    <a href="#" data-section="student-verification">Student Verification</a>
+                    <a href="#" data-section="account-settings">Account Settings</a>
+                </nav>
+                
+                <div class="account-help">
+                    <h4>Need Help?</h4>
+                    <a href="contact.html">Contact Support</a>
+                    <a href="faq.html">FAQ</a>
+                </div>
+                
+                <div class="logout-button">
+                    <button class="btn-outline">Log Out</button>
+                </div>
+            </aside>
+            
+            <div class="account-content">
+                <!-- Dashboard Section -->
+                <section class="account-section active" id="dashboard">
+                    <div class="dashboard-cards">
+                        <div class="dashboard-card">
+                            <div class="card-icon">
+                                <img src="images/box-icon.svg" alt="Orders">
+                            </div>
+                            <div class="card-info">
+                                <h3>Recent Orders</h3>
+                                <p>2 orders in progress</p>
+                            </div>
+                            <a href="#" class="card-link" data-section="orders">View Orders</a>
+                        </div>
+                        
+                        <div class="dashboard-card">
+                            <div class="card-icon">
+                                <img src="images/heart-icon.svg" alt="Wishlist">
+                            </div>
+                            <div class="card-info">
+                                <h3>Wishlist</h3>
+                                <p>5 items saved</p>
+                            </div>
+                            <a href="#" class="card-link" data-section="wishlist">View Wishlist</a>
+                        </div>
+                        
+                        <div class="dashboard-card">
+                            <div class="card-icon">
+                                <img src="images/student-icon.svg" alt="Student Deals">
+                            </div>
+                            <div class="card-info">
+                                <h3>Student Deals</h3>
+                                <p>Unlock special discounts</p>
+                            </div>
+                            <a href="student-deals.html" class="card-link">View Deals</a>
+                        </div>
+                    </div>
+                    
+                    <div class="recent-activity">
+                        <h2>Recent Activity</h2>
+                        
+                        <div class="activity-list">
+                            <div class="activity-item">
+                                <div class="activity-icon order-icon"></div>
+                                <div class="activity-details">
+                                    <h4>Order #12345 Shipped</h4>
+                                    <p>Your order has been shipped and is on its way.</p>
+                                    <span class="activity-time">2 hours ago</span>
+                                </div>
+                                <a href="#" class="activity-action">Track</a>
+                            </div>
+                            
+                            <div class="activity-item">
+                                <div class="activity-icon review-icon"></div>
+                                <div class="activity-details">
+                                    <h4>Review Requested</h4>
+                                    <p>Please review your recent purchase: Campus Backpack</p>
+                                    <span class="activity-time">Yesterday</span>
+                                </div>
+                                <a href="#" class="activity-action">Review</a>
+                            </div>
+                            
+                            <div class="activity-item">
+                                <div class="activity-icon deal-icon"></div>
+                                <div class="activity-details">
+                                    <h4>New Student Deal Available</h4>
+                                    <p>25% off all tech accessories this week only!</p>
+                                    <span class="activity-time">2 days ago</span>
+                                </div>
+                                <a href="#" class="activity-action">View</a>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                
+                <!-- Orders Section -->
+                <section class="account-section" id="orders">
+                    <h2>My Orders</h2>
+                    
+                    <div class="orders-tabs">
+                        <button class="order-tab active" data-tab="all">All Orders</button>
+                        <button class="order-tab" data-tab="processing">Processing</button>
+                        <button class="order-tab" data-tab="shipped">Shipped</button>
+                        <button class="order-tab" data-tab="delivered">Delivered</button>
+                    </div>
+                    
+                    <div class="orders-list">
+                        <div class="order-card">
+                            <div class="order-header">
+                                <div class="order-info">
+                                    <h3>Order #12345</h3>
+                                    <span class="order-date">March 1, 2025</span>
+                                </div>
+                                <div class="order-status">
+                                    <span class="status-shipped">Shipped</span>
+                                </div>
+                            </div>
+                            
+                            <div class="order-items">
+                                <div class="order-item">
+                                    <img src="images/backpack.jpg" alt="Campus Backpack">
+                                    <div class="item-name">Campus Backpack</div>
+                                    <div class="item-price">$42.50</div>
+                                </div>
+                                <div class="order-item">
+                                    <img src="images/notebook.jpg" alt="5-Subject Spiral Notebook">
+                                    <div class="item-name">5-Subject Spiral Notebook</div>
+                                    <div class="item-price">$12.99</div>
+                                </div>
+                            </div>
+                            
+                            <div class="order-footer">
+                                <div class="order-total">
+                                    <span>Total:</span>
+                                    <span class="total-amount">$55.49</span>
+                                </div>
+                                <div class="order-actions">
+                                    <a href="#" class="btn-outline">Track Order</a>
+                                    <a href="#" class="btn-link">View Details</a>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="order-card">
+                            <div class="order-header">
+                                <div class="order-info">
+                                    <h3>Order #12339</h3>
+                                    <span class="order-date">February 20, 2025</span>
+                                </div>
+                                <div class="order-status">
+                                    <span class="status-delivered">Delivered</span>
+                                </div>
+                            </div>
+                            
+                            <div class="order-items">
+                                <div class="order-item">
+                                    <img src="images/calculator.jpg" alt="Scientific Calculator">
+                                    <div class="item-name">Scientific Calculator</div>
+                                    <div class="item-price">$19.99</div>
+                                </div>
+                            </div>
+                            
+                            <div class="order-footer">
+                                <div class="order-total">
+                                    <span>Total:</span>
+                                    <span class="total-amount">$19.99</span>
+                                </div>
+                                <div class="order-actions">
+                                    <a href="#" class="btn-outline">Buy Again</a>
+                                    <a href="#" class="btn-link">View Details</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                
+                <!-- Other sections would be similarly structured -->
+                <section class="account-section" id="wishlist">
+                    <h2>My Wishlist</h2>
+                    <!-- Wishlist content -->
+                </section>
+                
+                <section class="account-section" id="addresses">
+                    <h2>My Addresses</h2>
+                    <!-- Addresses content -->
+                </section>
+                
+                <section class="account-section" id="payment-methods">
+                    <h2>Payment Methods</h2>
+                    <!-- Payment methods content -->
+                </section>
+                
+                <section class="account-section" id="student-verification">
+                    <h2>Student Verification</h2>
+                    <!-- Student verification content -->
+                </section>
+                
+                <section class="account-section" id="account-settings">
+                    <h2>Account Settings</h2>
+                    <!-- Account settings content -->
+                </section>
+            </div>
+        </div>
+    </main>
+    
+    <%- include('./partials/footer') %>
+    <style>
+        
+    </style>
+    <script>
+        // Simple script to handle account section navigation
+        document.querySelectorAll('.account-nav a, .card-link').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                // Get section to show
+                const sectionId = this.getAttribute('data-section');
+                
+                // Hide all sections
+                document.querySelectorAll('.account-section').forEach(section => {
+                    section.classList.remove('active');
+                });
+                
+                // Show selected section
+                document.getElementById(sectionId).classList.add('active');
+                
+                // Update active nav link
+                document.querySelectorAll('.account-nav a').forEach(navLink => {
+                    if (navLink.getAttribute('data-section') === sectionId) {
+                        navLink.classList.add('active');
+                    } else {
+                        navLink.classList.remove('active');
+                    }
+                });
+            });
+        });
+    </script>
+    <link rel="stylesheet" href="account.css">
+</body>
+</html>

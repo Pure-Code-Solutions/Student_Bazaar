@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Campus Backpack | CampusShop</title>
+    <link rel="stylesheet" href="css/main.css">
+</head>
+<body>
+
+    
+    <main class="product-detail">
+        <div class="breadcrumbs">
+            <a href="index.html">Home</a> &gt;
+            <a href="categories.html?category=supplies">Supplies</a> &gt;
+            <a href="products.html?category=backpacks">Backpacks</a> &gt;
+            <span>Campus Backpack</span>
+        </div>
+        
+        <div class="product-layout">
+            <div class="product-images">
+                <div class="primary-image">
+                    <img src="images/backpack-large.jpg" alt="Campus Backpack" id="main-product-image">
+                </div>
+                <div class="thumbnail-images">
+                    <img src="images/backpack-thumb1.jpg" alt="Campus Backpack Front" onclick="changeImage('images/backpack-large.jpg')">
+                    <img src="images/backpack-thumb2.jpg" alt="Campus Backpack Side" onclick="changeImage('images/backpack-side.jpg')">
+                    <img src="images/backpack-thumb3.jpg" alt="Campus Backpack Inside" onclick="changeImage('images/backpack-inside.jpg')">
+                    <img src="images/backpack-thumb4.jpg" alt="Campus Backpack Back" onclick="changeImage('images/backpack-back.jpg')">
+                </div>
+            </div>
+            
+            <div class="product-info">
+                <div class="product-header">
+                    <h1>Campus Backpack</h1>
+                    <div class="product-rating">
+                        <div class="stars">★★★★☆</div>
+                        <a href="#reviews">128 Reviews</a>
+                    </div>
+                </div>
+                
+                <div class="product-price">
+                    <span class="current-price">$42.50</span>
+                    <span class="original-price">$50.00</span>
+                    <span class="discount-percent">15% Off</span>
+                </div>
+                
+                <div class="product-availability">
+                    <span class="in-stock">In Stock</span> - Free shipping for orders over $35
+                </div>
+                
+                <div class="product-options">
+                    <div class="option-group">
+                        <label for="color">Color:</label>
+                        <div class="color-options">
+                            <button class="color-option active" style="background-color: #3a4a6d;" data-color="navy"></button>
+                            <button class="color-option" style="background-color: #000000;" data-color="black"></button>
+                            <button class="color-option" style="background-color: #8c8c8c;" data-color="gray"></button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="product-actions">
+                    <div class="quantity-selector">
+                        <button class="qty-btn minus">-</button>
+                        <input type="number" value="1" min="1" max="10">
+                        <button class="qty-btn plus">+</button>
+                    </div>
+                    <button class="btn-primary btn-add-to-cart">Add to Cart</button>
+                    <button class="btn-outline btn-add-to-wishlist">Add to Wishlist</button>
+                </div>
+                
+                <div class="product-description">
+                    <h2>Description</h2>
+                    <p>Designed specifically for campus life, this durable backpack features padded laptop compartment (fits up to 15" laptop), multiple organization pockets, water bottle holders, and ergonomic shoulder straps for all-day comfort.</p>
+                    
+                    <h3>Features:</h3>
+                    <ul>
+                        <li>Water-resistant material</li>
+                        <li>Padded laptop compartment</li>
+                        <li>Front organizer pocket</li>
+                        <li>Side water bottle pockets</li>
+                        <li>Padded back panel and shoulder straps</li>
+                        <li>Volume: 28L</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <div class="product-tabs">
+            <div class="tabs-nav">
+                <button class="tab-btn active" data-tab="specs">Specifications</button>
+                <button class="tab-btn" data-tab="reviews">Reviews</button>
+                <button class="tab-btn" data-tab="shipping">Shipping & Returns</button>
+            </div>
+            
+            <div class="tab-content active" id="specs">
+                <table class="specs-table">
+                    <tr>
+                        <th>Dimensions</th>
+                        <td>18.5" x 12" x 8"</td>
+                    </tr>
+                    <tr>
+                        <th>Weight</th>
+                        <td>1.2 lbs</td>
+                    </tr>
+                    <tr>
+                        <th>Materials</th>
+                        <td>600D Polyester, YKK Zippers</td>
+                    </tr>
+                    <tr>
+                        <th>Warranty</th>
+                        <td>Limited 2-year warranty</td>
+                    </tr>
+                </table>
+            </div>
+            
+            <div class="tab-content" id="reviews">
+                <!-- Reviews content -->
+                <div class="review-summary">
+                    <div class="average-rating">
+                        <span class="big-rating">4.2</span>
+                        <div class="stars">★★★★☆</div>
+                        <span>128 reviews</span>
+                    </div>
+                    <div class="rating-bars">
+                        <!-- Rating distribution -->
+                    </div>
+                </div>
+                
+                <div class="reviews-list">
+                    <!-- Individual reviews -->
+                </div>
+            </div>
+            
+            <div class="tab-content" id="shipping">
+                <!-- Shipping & return info -->
+                <h3>Shipping Information</h3>
+                <p>Free standard shipping on orders over $35. Expedited shipping available at checkout.</p>
+                
+                <h3>Return Policy</h3>
+                <p>Return within 30 days of purchase for a full refund. Items must be in original condition with tags attached.</p>
+            </div>
+        </div>
+        
+        <div class="related-products">
+            <h2>You Might Also Like</h2>
+            <div class="products-row">
+                <!-- Related product cards -->
+            </div>
+        </div>
+    </main>
+    
+    <%- include('./partials/footer') %>
+    
+    <script src="js/main.js"></script>
+    <script>
+        function changeImage(src) {
+            document.getElementById('main-product-image').src = src;
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Account | CampusShop</title>
+    <link rel="stylesheet" href="css/main.css">
+</head>
+<body>
+    <%- include('./partials/navbar')%>
+    
+    <main class="auth-page">
+        <div class="auth-container">
+            <div class="auth-form-container">
+                <h1>Create Account</h1>
+                <p class="auth-subtitle">Join the student marketplace with exclusive discounts.</p>
+                
+                <form class="auth-form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="first-name">First Name</label>
+                            <input type="text" id="first-name" placeholder="Enter your first name" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="last-name">Last Name</label>
+                            <input type="text" id="last-name" placeholder="Enter your last name" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" placeholder="Enter your email" required>
+                        <p class="form-hint">Use your .edu email for additional student benefits</p>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" placeholder="Create a password" required>
+                        <p class="form-hint">Must be at least 8 characters with a number and a special character</p>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="confirm-password">Confirm Password</label>
+                        <input type="password" id="confirm-password" placeholder="Confirm your password" required>
+                    </div>
+                    
+                    <div class="form-checkbox">
+                        <input type="checkbox" id="student-status">
+                        <label for="student-status">I am a current student</label>
+                    </div>
+                    
+                    <div class="form-checkbox">
+                        <input type="checkbox" id="terms" required>
+                        <label for="terms">I agree to the <a href="terms.html">Terms of Service</a> and <a href="privacy.html">Privacy Policy</a></label>
+                    </div>
+                    
+                    <div class="form-checkbox">
+                        <input type="checkbox" id="marketing">
+                        <label for="marketing">I'd like to receive emails about deals and new products</label>
+                    </div>
+                    
+                    <button type="submit" class="btn-primary btn-full">Create Account</button>
+                    
+                    <div class="divider">
+                        <span>or</span>
+                    </div>
+                    
+                    <button type="button" class="btn-outline btn-full btn-with-icon">
+                        <img src="images/google-icon.svg" alt="Google">
+                        Sign up with Google
+                    </button>
+                    
+                    <button type="button" class="btn-outline btn-full btn-with-icon">

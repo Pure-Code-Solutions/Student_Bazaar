@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CampusShop - Student Marketplace</title>
+    <link rel="stylesheet" href="css/main.css">
+</head>
+<body>
+    <%- include('./partials/navbar') %>
+    
+    <main>
+        <section class="hero">
+            <div class="hero-content">
+                <h1>Everything You Need for Campus Life</h1>
+                <p>Exclusive student discounts on textbooks, tech, supplies, and more!</p>
+                <a href="products.html" class="btn-primary">Shop Now</a>
+            </div>
+        </section>
+        
+        <section class="featured-categories">
+            <h2>Shop by Category</h2>
+            <div class="category-grid">
+                <a href="categories.html?category=textbooks" class="category-card">
+                    <img src="images/textbooks.jpg" alt="Textbooks">
+                    <h3>Textbooks</h3>
+                </a>
+                <a href="categories.html?category=tech" class="category-card">
+                    <img src="images/tech.jpg" alt="Tech">
+                    <h3>Tech</h3>
+                </a>
+                <a href="categories.html?category=supplies" class="category-card">
+                    <img src="images/supplies.jpg" alt="Supplies">
+                    <h3>Supplies</h3>
+                </a>
+                <a href="categories.html?category=apparel" class="category-card">
+                    <img src="images/apparel.jpg" alt="Apparel">
+                    <h3>Apparel</h3>
+                </a>
+            </div>
+        </section>
+        
+        <section class="deals">
+            <h2>Student Deals</h2>
+            <div class="deals-grid">
+                <!-- Product cards with discounts -->
+                <div class="product-card">
+                    <div class="discount-badge">20% OFF</div>
+                    <img src="images/laptop.jpg" alt="Laptop">
+                    <h3>Student Laptop Bundle</h3>
+                    <p class="price">$799.99 <span class="original-price">$999.99</span></p>
+                    <a href="product-detail.html?id=123" class="btn-secondary">View Details</a>
+                </div>
+                <!-- More product cards... -->
+            </div>
+            <a href="student-deals.html" class="btn-outline">View All Deals</a>
+        </section>
+    </main>
+    
+    <%- include('./partials/footer') %>
+    <link rel="stylesheet" href="main.css">
+    <script src="js/main.js"></script>
+</body>
+</html>

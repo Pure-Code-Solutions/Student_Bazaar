@@ -1,0 +1,126 @@
+/* General Styles */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    color: #333;
+    margin: 0;
+    padding: 0;
+}
+
+/* Header Styles */
+header nav {
+    background: #333;
+    color: #fff;
+    padding: 10px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+header nav .logo img {
+    max-width: 100px;
+}
+
+header nav .nav-links a,
+header nav .nav-actions a {
+    color: #fff;
+    text-decoration: none;
+    margin: 0 10px;
+    font-size: 14px;
+}
+
+header nav .cart-count {
+    background: #00b4d8;
+    color: #fff;
+    padding: 2px 5px;
+    border-radius: 50%;
+    font-size: 12px;
+}
+
+/* Page Header */
+.cart-page .page-header {
+    text-align: center;
+    padding: 20px;
+    background: #00b4d8;
+    color: #fff;
+}
+
+/* Cart Container */
+.cart-container {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px;
+}
+
+.cart-items {
+    width: 70%;
+}
+
+.cart-sidebar {
+    width: 25%;
+    background: #fff;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    border-radius: 3px;
+}
+
+/* Cart Item */
+.cart-item {
+    display: flex;
+    justify-content: space-between;
+    background: #fff;
+    padding: 20px;
+    border-radius: 3px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    margin-bottom: 20px;
+}
+
+.cart-item .item-image img {
+    max-width: 100px;
+    border-radius: 3px;
+}
+
+.cart-item .item-details {
+    flex: 1;
+    margin-left: 20px;
+}
+
+.cart-item .item-details h3 a {
+    color: #00b4d8;
+    text-decoration: none;
+}
+
+.cart-item .item-details .item-price {
+    font-size: 16px;
+    margin: 10px 0;
+}
+
+.cart-item .item-actions {
+    display: flex;
+    align-items: center;
+}
+
+.cart-item .item-actions .quantity-selector {
+    display: flex;
+    align-items: center;
+    margin-right: 10px;
+}
+
+.cart-item .item-actions .qty-btn {
+    background: none;
+    border: 1px solid #ccc;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+.cart-item .item-actions input[type="number"] {
+    width: 40px;
+    text-align: center;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    margin: 0 5px;
+}
+
+.cart-item .item-actions button {
+    background: #00b4d8;
+}
