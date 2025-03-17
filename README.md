@@ -1,4 +1,13 @@
 # Student_Bazaar
+RUNNING INSTRUCTIONS ON TERMINAL:
+
+"npm run dev" -runs project in development mode, changes made in realtime
+
+"npm start" - runs project with the latest changes before this command is made
+
+
+hosted on "localhost:5000"
+
 Table of Contents
 1. Project Description
 2. Features

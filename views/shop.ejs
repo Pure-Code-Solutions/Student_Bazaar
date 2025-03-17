@@ -85,12 +85,11 @@
                                     <div class="product-info">
                                         <h3><a href="product-detail.html?id=123"><%= product.name %></a></h3>
                                         <div class="product-rating">
+                                        <% for(var i= 1; i <= product.number_stars; i++) { %> 
                                             <i class="fas fa-star"></i>
-                                            <i class="fas fa-star"></i>
-                                            <i class="fas fa-star"></i>
-                                            <i class="fas fa-star"></i>
-                                            <i class="fas fa-star-half-alt"></i>
-                                            <span>(42 reviews)</span>
+                                        <% }; %>
+
+                                            <!--i class="fas fa-star-half-alt"></i-->
                                         </div>
                                         <div class="product-price">
                                             <span class="current-price"><%= product.price %></span>
@@ -107,12 +106,12 @@
                         </div>
 
                         <div class="pagination">
-                            <a href="#" class="active">1</a>
-                            <a href="#">2</a>
-                            <a href="#">3</a>
-                            <a href="#">4</a>
-                            <span>...</span>
-                            <a href="#">Next &raquo;</a>
+                            <a href="#" onclick="changePage(event, <%= page-1 %>)" > < </a>
+                            <% for(var i= 1; i <= numberOfPages; i++) { %> 
+                                <a href="#"  onclick="changePage(event, <%= i %>)" class="<%= i === page ? 'active' : '' %>"><%= i %> </a>
+
+                            <% }; %>
+                            <a href="#" onclick="changePage(event, <%= page+1 %>)" > > </a>
                         </div>
                     </div>
                 </div>
@@ -131,7 +130,50 @@
             <%} %>
         </div>
     </main>
+    <script>
+        function changePage(event, page) {
+            event.preventDefault(); // Prevent default link behavior
+    
+            // Get the current URL parameters
+            const params = new URLSearchParams(window.location.search);
+            let currentPage = parseInt(params.get("page")) || 1;
+    
+            // Determine the new page number
+            if (page === 'next') {
+                currentPage += 1;
+            } else if (page === 'prev' && currentPage > 1) {
+                currentPage -= 1;
+            } else {
+                currentPage = page;
+            }
+    
+            // Update the URL parameter for the page
+            params.set("page", currentPage);
+            const newUrl = window.location.pathname + "?" + params.toString();
+    
+            // Push new state to URL without reloading the page
+            window.history.pushState({}, "", newUrl);
+    
+            // Call a function to reload the products dynamically
+            fetchProducts(newUrl);
 
+            event.preventDefault(); // Prevent default link behavior
+
+            // Update URL with new page number
+            const url = new URL(window.location.href);
+            url.searchParams.set("page", page); // Set or update the "page" query parameter
+
+            // Reload the page with the updated URL
+            window.location.href = url.toString();
+        }
+    
+        function fetchProducts(url) {
+            // Example: Fetch new products based on the updated URL (AJAX request)
+            console.log("Fetching products for URL:", url);
+            
+            // You can replace this with an actual fetch() request to your backend
+        }
+    </script>
     
 
 </body>
