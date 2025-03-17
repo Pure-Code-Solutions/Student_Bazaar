@@ -3,5 +3,5 @@ import { renderLogin, renderRegister } from "../controllers/authentication_contr
 export const authenticationRouter = Router();
 
 
-authenticationRouter.get("/login", renderLogin);
+authenticationRouter.get("/signin", renderLogin);
 authenticationRouter.get("/register", renderRegister);

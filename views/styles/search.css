@@ -76,7 +76,56 @@ header .main-nav ul li a {
 header .main-nav ul li a:hover {
     background: #00b4d8;
 }
-
+/* Search Bar Styles (add to your search.css file) */
+.search-container {
+    width: 90%;
+    margin: 10px auto;
+    display: flex;
+    justify-content: center;
+  }
+  
+  .search-container form {
+    display: flex;
+    width: 100%;
+    max-width: 600px;
+  }
+  
+  .search-input {
+    padding: 10px 15px;
+    width: 100%;
+    border: 1px solid #ddd;
+    border-radius: 5px 0 0 5px;
+    font-size: 1rem;
+  }
+  
+  .search-button {
+    background-color: #ff9900;
+    border: none;
+    padding: 0 15px;
+    border-radius: 0 5px 5px 0;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .search-button:hover {
+    background-color: #e68a00;
+  }
+  
+  .search-icon {
+    width: 20px;
+    height: 20px;
+    filter: brightness(0) invert(1); /* Makes the icon white */
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .search-container {
+      width: 95%;
+    }
+  }
+  
 /* Breadcrumb */
 .breadcrumb {
     background: #e9ecef;

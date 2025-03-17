@@ -13,11 +13,13 @@ export const renderCategories = async (req, res) => {
 }
 
 export const renderShopByCategory = async (req, res) => {
+
     const { category } = req.params;
+    const { subcategory} = req.query;
+    console.log("tags: ",subcategory);
     const page = parseInt(req.query.page) || 1;
     const tempLimit = 4; //Items per page
     const offset = (page - 1) * tempLimit;
-    console.log(`offset:${offset} limit:${tempLimit} `);
     const products = await fetchProductsFromDB(tempLimit, offset);
     //console.log(products);
     const subcategories = [
