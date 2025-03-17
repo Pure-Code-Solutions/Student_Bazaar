@@ -4,20 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Search Results | StudentStore</title>
-    <link rel="stylesheet" href="css/search.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
-
+    
+    <link rel="stylesheet" href="./styles/search.css">
     <%- include('./partials/navbar') %>
     <main>
         <div class="container">
-            <% if (false) { %>
                 <div class="breadcrumb">
-                    <a href="/">Home</a> 
+                    <a href="/">Home </a> &gt; <%= category %>
                 </div>
-                
-             <% } %>
+   
         
  
             <section class="search-results-section">
@@ -35,36 +33,26 @@
                         <div class="filter-group">
                             <h3>Category</h3>
                             <ul>
-                                <li><input type="checkbox" id="cat-textbooks"> <label for="cat-textbooks">Textbooks </label></li>
-                                <li><input type="checkbox" id="cat-ebooks"> <label for="cat-ebooks">E-Books </label></li>
-                                <li><input type="checkbox" id="cat-electronics"> <label for="cat-electronics">Electronics </label></li>
-                                <li><input type="checkbox" id="cat-accessories"> <label for="cat-accessories">Accessories </label></li>
+                                <% subcategories.subcategories.forEach(sub => { %>
+                                    <li>
+                                        <input type="checkbox" id="<%= sub %>">
+                                        <label for="<%= sub %>"><%= sub %></label>
+                                    </li>
+                                <% }) %>
                             </ul>
                         </div>
                         <div class="filter-group">
                             <h3>Price Range</h3>
                             <ul>
-                                <li><input type="checkbox" id="price-0-25"> <label for="price-0-25">$0 - $25 </label></li>
-                                <li><input type="checkbox" id="price-25-50" > <label for="price-25-50">$25 - $50</label></li>
-                                <li><input type="checkbox" id="price-50-100"> <label for="price-50-100">$50 - $100 </label></li>
-                                <li><input type="checkbox" id="price-100plus"> <label for="price-100plus">$100+ </label></li>
+                                <% prices.forEach(price => { %>
+                                    <li>
+                                        <input type="checkbox" id="<%= price.range %>">
+                                        <label for="<%= price.range %>"><%= price.range %></label>
+                                    </li>
+                            <% }) %>
                             </ul>
                         </div>
-                        <div class="filter-group">
-                            <h3>Availability</h3>
-                            <ul>
-                                <li><input type="checkbox" id="avail-instock" > <label for="avail-instock">In Stock </label></li>
-                                <li><input type="checkbox" id="avail-preorder"> <label for="avail-preorder">Pre-Order </label></li>
-                                <li><input type="checkbox" id="avail-digital"> <label for="avail-digital">Digital Download </label></li>
-                            </ul>
-                        </div>
-                        <div class="filter-group">
-                            <h3>Format</h3>
-                            <ul>
-                                <li><input type="checkbox" id="format-physical" > <label for="format-physical">Physical </label></li>
-                                <li><input type="checkbox" id="format-digital"> <label for="format-digital">Digital </label></li>
-                            </ul>
-                        </div>
+
                     </div>
 
                     <div class="search-results-content">
@@ -145,7 +133,6 @@
     </main>
 
     
-    <link rel="stylesheet" href="search.css">
-    <script src="js/script.js"></script>
+
 </body>
 </html>

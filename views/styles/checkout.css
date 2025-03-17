@@ -1,10 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Checkout | CampusShop</title>
-    <style>
+
         body {
             font-family: Arial, sans-serif;
             background-color: #f4f4f4;
@@ -346,26 +340,3 @@
             margin-top: 20px;
             font-size: 14px;
         }
-
-        /* JavaScript to handle section visibility and step updates */
-        <script>
-            function showSection(sectionId) {
-                // Hide all sections
-                document.querySelectorAll('.checkout-section').forEach(section => {
-                    section.classList.remove('active');
-                });
-
-                // Show requested section
-                document.getElementById(sectionId).classList.add('active');
-
-                // Update steps
-                const stepIndex = ['shipping-section', 'payment-section', 'review-section'].indexOf(sectionId);
-                document.querySelectorAll('.checkout-steps .step').forEach((step, index) => {
-                    if (index <= stepIndex) {
-                        step.classList.add('active');
-                    } else {
-                        step.classList.remove('active');
-                    }
-                });
-            }
-        </script

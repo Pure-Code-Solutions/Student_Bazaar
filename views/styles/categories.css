@@ -1,0 +1,62 @@
+
+        /* Reset CSS */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #f4f6f9;
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            color: #333;
+        }
+
+        .navbar {
+            background-color: #007bff;
+        }
+
+
+
+
+
+        .container {
+            padding-top: 60px;
+        }
+
+        .category-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            margin-bottom: 20px;
+            padding: 20px;
+            background: #fff;
+            border: none;
+            border-radius: 10px;
+        }
+
+        .category-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .category-icon {
+            font-size: 3rem;
+            color: #007bff;
+            margin-bottom: 15px;
+        }
+
+        footer {
+            background-color: #007bff;
+            color: #fff;
+            padding: 20px 0;
+        }
+
+        footer p {
+            margin: 0;
+        }
+
+        @media (max-width: 768px) {
+            .navbar-nav {
+                text-align: center;
+            }
+        }

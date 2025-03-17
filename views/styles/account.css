@@ -1,10 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Account | CampusShop</title>
-    <style>
+
         /* General Styles */
         * {
 			margin: 0;
@@ -260,67 +254,4 @@
             padding: 20px 0;
             text-align: center;
         }
-    </style>
-</head>
-<body>
-    <header>
-        <nav>
-            <div class="logo">
-                <a href="index.html"><img src="images/logo.svg" alt="CampusShop Logo"></a>
-            </div>
-            <div class="nav-links">
-                <a href="products.html">Shop</a>
-                <a href="categories.html">Categories</a>
-                <a href="student-deals.html">Student Deals</a>
-                <a href="about.html">About</a>
-            </div>
-            <div class="nav-actions">
-                <a href="search-results.html" class="search-icon"><img src="images/search.svg" alt="Search"></a>
-                <a href="cart.html" class="cart-icon"><img src="images/cart.svg" alt="Cart"></a>
-                <a href="account.html" class="account-icon active"><img src="images/account.svg" alt="Account"></a>
-            </div>
-        </nav>
-    </header>
-    
-    <main class="account-page">
-        <div class="page-header">
-            <h1>My Account</h1>
-            <p>Welcome back, Jane!</p>
-        </div>
-        
-        <div class="account-container">
-            <aside class="account-sidebar">
-                <div class="user-profile-brief">
-                    <div class="user-avatar">
-                        <img src="images/avatar-placeholder.svg" alt="User Avatar">
-                    </div>
-                    <div class="user-info">
-                        <h3>Jane Smith</h3>
-                        <p>jane.smith@university.edu</p>
-                        <span class="student-badge">Verified Student</span>
-                    </div>
-                </div>
-                
-                <nav class="account-nav">
-                    <a href="#" class="active" data-section="dashboard">Dashboard</a>
-                    <a href="#" data-section="orders">My Orders</a>
-                    <a href="#" data-section="wishlist">Wishlist</a>
-                    <a href="#" data-section="addresses">Addresses</a>
-                    <a href="#" data-section="payment-methods">Payment Methods</a>
-                    <a href="#" data-section="student-verification">Student Verification</a>
-                    <a href="#" data-section="account-settings">Account Settings</a>
-                </nav>
-                
-                <div class="account-help">
-                    <h4>Need Help?</h4>
-                    <a href="contact.html">Contact Support</a>
-                    <a href="faq.html">FAQ</a>
-                </div>
-                
-                <div class="logout-button">
-                    <button class="btn-outline">Log Out</button>
-                </div>
-            </aside>
-            
-            <div class="account-content">
-                <section class="account-section
+ 
