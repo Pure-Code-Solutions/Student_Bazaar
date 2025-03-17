@@ -15,8 +15,8 @@ export const renderCategories = async (req, res) => {
 export const renderShopByCategory = async (req, res) => {
 
     const { category } = req.params;
-    const { subcategory} = req.query;
-    console.log("tags: ",subcategory);
+    const { subcategory} = req.query.tags ? req.query.tags.split(",") : [];
+    //console.log("tags: ",subcategory);
     const page = parseInt(req.query.page) || 1;
     const tempLimit = 4; //Items per page
     const offset = (page - 1) * tempLimit;

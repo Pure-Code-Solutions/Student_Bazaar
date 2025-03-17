@@ -108,14 +108,18 @@
 
 
                         </div>
-
                         <div class="pagination">
-                            <a href="#" onclick="changePage(event, <%= page-1 %>)" > < </a>
-                            <% for(var i= 1; i <= numberOfPages; i++) { %> 
-                                <a href="#"  onclick="changePage(event, <%= i %>)" class="<%= i === page ? 'active' : '' %>"><%= i %> </a>
-                                
-                            <% }; %>
-                            <a href="#" onclick="changePage(event, <%= page+1 %>)" > > </a>
+                            <% if (page > 1) { %>
+                                <a href="#" data-page="<%= page - 1 %>" class="page-link"> < </a>
+                            <% } %>
+                        
+                            <% for (var i = 1; i <= numberOfPages; i++) { %> 
+                                <a href="#" data-page="<%= i %>" class="page-link <%= i === page ? 'active' : '' %>"><%= i %> </a>
+                            <% } %>
+                        
+                            <% if (page < numberOfPages) { %>
+                                <a href="#" data-page="<%= page + 1 %>" class="page-link"> > </a>
+                            <% } %>
                         </div>
                     </div>
                 </div>
@@ -135,86 +139,90 @@
         </div>
     </main>
     <script>
+    document.addEventListener("DOMContentLoaded", function () {
         
-        function changePage(event, page) {
-            event.preventDefault(); // Prevent default link behavior
-    
-            // Get the current URL parameters
-            const params = new URLSearchParams(window.location.search);
-            let currentPage = parseInt(params.get("page")) || 1;
-    
+        async function fetchFilteredProducts(event, page = 1) {
+            event?.preventDefault(); // Prevent default link behavior if event exists
+
+            let currentPage = parseInt(page) || 1;
+            
             // Determine the new page number
             if (page === 'next') {
                 currentPage += 1;
             } else if (page === 'prev' && currentPage > 1) {
                 currentPage -= 1;
-            } else {
-                currentPage = page;
             }
-    
-            // Update the URL parameter for the page
-            params.set("page", currentPage);
-            const newUrl = window.location.pathname + "?" + params.toString();
-    
-            // Push new state to URL without reloading the page
-            window.history.pushState({}, "", newUrl);
-    
-            event.preventDefault(); // Prevent default link behavior
 
-            // Update URL with new page number
-            const url = new URL(window.location.href);
-            url.searchParams.set("page", page); // Set or update the "page" query parameter
-
-            // Reload the page with the updated URL
-            window.location.href = url.toString();
-        }
-    document.addEventListener("DOMContentLoaded", function () {
-        function fetchFilteredProducts() {
             let subcategories = Array.from(document.querySelectorAll(".subcategory-checkbox:checked"))
-                .map(cb => cb.value); // Get selected subcategories
+        .map(cb => cb.value); // Get selected subcategories
 
-            // Get the current category from the URL
             const pathParts = window.location.pathname.split("/"); 
             let category = pathParts.length > 2 ? pathParts[2] : ""; // Extracts "Electronics" from `/shop/Electronics`
+            
 
             let url = category ? `/shop/${category}` : `/shop`; // Determine base URL
+            
 
-            // Construct query parameters for filters
-            let queryParams = new URLSearchParams();
+            // Convert selected subcategories to a comma-separated string
+            let selectedTags = subcategories.join(",");
 
-            if (subcategories.length > 0) {
-                subcategories.forEach(sub => queryParams.append("subcategory", sub));
-            }
+            // Construct query parameters manually to avoid %2C encoding
+            let queryParams = `tags=${selectedTags}&page=${currentPage}`;
 
-            // Append the query string if there are filters
-            if (queryParams.toString()) {
-                url += `?${queryParams.toString()}`;
+            // Append query parameters if there are filters
+            if (selectedTags.length > 0) {
+                url += `?${queryParams}`;
+            } else {
+                url += `?page=${currentPage}`;
             }
 
             // Update URL without reloading the page
             window.history.pushState({}, "", url);
-            
 
-            // Fetch filtered data from the backend
-            fetch(url, {  
-                method: "GET",
-                headers: { "Content-Type": "application/json" },
-            })
-            .then(response => response.text()) // Assuming the server returns HTML
-            /*.then(data => {
-                document.querySelector(".search-results-grid").innerHTML = data;
-            })*/
-            .catch(error => console.error("Error fetching filtered products:", error));
-            
+
+            // Reload the page with the updated URL
+            window.location.href = url.toString();
+
+            console.log("Fetching:", url); // Debugging
+
+            try {
+                const response = await fetch(url, {  
+                    method: "GET",
+                    headers: { "Content-Type": "application/json" },
+                });
+
+                const data = await response.text(); // Assuming the server returns HTML
+                const tempDiv = document.createElement("div");
+                tempDiv.innerHTML = data;
+
+                const newResults = tempDiv.querySelector(".search-results-grid");
+            } catch (error) {
+                console.error("Error fetching filtered products:", error);
+            }
         }
 
-        // Attach event listeners to checkboxes
-        const checkboxes = document.querySelectorAll(".subcategory-checkbox");
-        checkboxes.forEach(checkbox => {
-            checkbox.addEventListener("change", fetchFilteredProducts);
+            // Attach event listeners to checkboxes
+            document.querySelectorAll(".subcategory-checkbox").forEach(checkbox => {
+                checkbox.addEventListener("change", () => fetchFilteredProducts(null, 1)); // Reset to page 1 when filter changes
+            });
+
+            // Handle Pagination Clicks
+            document.querySelectorAll(".pagination a").forEach(link => {
+                link.addEventListener("click", function (event) {
+                    event.preventDefault();
+                    const page = this.getAttribute("data-page");
+                    fetchFilteredProducts(event, page);
+                });
+            });
+
+            // Preserve checkboxes state from URL on page load
+            const params = new URLSearchParams(window.location.search);
+            const selectedTags = params.get("tags") ? params.get("tags").split(",") : [];
+            document.querySelectorAll(".subcategory-checkbox").forEach(cb => {
+                cb.checked = selectedTags.includes(cb.value);
+            });
         });
-    });
-    
+
        
     </script>
     
