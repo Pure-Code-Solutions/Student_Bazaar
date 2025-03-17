@@ -3,6 +3,6 @@ import { renderCategories, renderShop, renderShopByCategory } from "../controlle
 export const shopRouter = Router();
 
 //Direct to shop page and item page
-//shopRouter.get("/shop", renderShop);
+shopRouter.get("/shop", renderShop);
 shopRouter.get("/shop/:category", renderShopByCategory);
 shopRouter.get("/categories", renderCategories);

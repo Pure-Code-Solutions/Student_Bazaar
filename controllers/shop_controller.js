@@ -4,8 +4,18 @@
 
 const tempNumberOfPages = 3;
 export const renderShop = async (req, res) => {
-
-    res.render("shop", {products});
+    let empty = [{}];
+    const query = req.query.query;
+    console.log("query: ", query);
+    res.render("shop", { 
+        query,
+        category:  [], 
+        products:[], 
+        prices:[],  // Ensure prices is an array, even if empty
+        subcategories:  null,  // Ensure subcategories is an array
+        numberOfPages: 0, 
+        page: 0 
+    });
 }
 
 export const renderCategories = async (req, res) => {
@@ -17,7 +27,8 @@ export const renderShopByCategory = async (req, res) => {
     const { category } = req.params;
     const subcategory = req.query.tags;
     const pricesParam = req.query.prices;
-    console.log("tags: " + subcategory + "prices: " + pricesParam);
+    const query = req.query.query;
+    //console.log("tags: " + subcategory + "prices: " + pricesParam);
     const page = parseInt(req.query.page) || 1;
     const tempLimit = 4; //Items per page
     const offset = (page - 1) * tempLimit;
@@ -50,7 +61,7 @@ export const renderShopByCategory = async (req, res) => {
     if (!categoryData) {
         return res.status(404).send("Category not found");
     }
-    res.render("shop", {category,products, prices, subcategories: categoryData, numberOfPages: tempNumberOfPages, page});
+    res.render("shop", {query, category,products, prices, subcategories: categoryData, numberOfPages: tempNumberOfPages, page});
 }
 
 
