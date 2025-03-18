@@ -1,7 +1,11 @@
 # Student_Bazaar
-RUNNING INSTRUCTIONS ON TERMINAL:
+INSTRUCTIONS FOR RUNNING THE PROJECT:
 
-"npm run dev" -runs project in development mode, changes made in realtime
+1. Have node.js and npm installed in terminal
+2. CD to the main directory
+3. "npm install" to import all packages listed in package.json
+
+"npm run dev" -runs project in development mode, changes made in realtime update
 
 "npm start" - runs project with the latest changes before this command is made
 

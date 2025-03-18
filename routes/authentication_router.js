@@ -1,7 +1,8 @@
 import Router from "express";
-import { renderLogin, renderRegister } from "../controllers/authentication_controller.js";
+import {postRegister, renderRegister, renderSignin, postRegister } from "../controllers/authentication_controller.js";
 export const authenticationRouter = Router();
 
 
-authenticationRouter.get("/signin", renderLogin);
+authenticationRouter.get("/signin", renderSignin);
 authenticationRouter.get("/register", renderRegister);
+authenticationRouter.post("/register", postRegister);
