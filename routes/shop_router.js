@@ -7,3 +7,7 @@ shopRouter.get("/shop", renderShop);
 shopRouter.get("/shop/:category", renderShopByCategory);
 shopRouter.get("/categories", renderCategories);
 shopRouter.get("/item/:item", renderItemDetail);
+shopRouter.get("/sidebar",  
+    async (req, res) => {
+    res.render("sidebar");
+} )
