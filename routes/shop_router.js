@@ -6,4 +6,4 @@ export const shopRouter = Router();
 shopRouter.get("/shop", renderShop);
 shopRouter.get("/shop/:category", renderShopByCategory);
 shopRouter.get("/categories", renderCategories);
-shopRouter.get("/item", renderItemDetail);
+shopRouter.get("/item/:item", renderItemDetail);

@@ -3,6 +3,20 @@
 
 
 const tempNumberOfPages = 3;
+const tempProducts = [
+    { id: "1", name: "Scientific Calculator", price: "24.99", number_stars: 2 },
+    { id: "2", name: "Wireless Mouse", price: "19.99", number_stars: 3 },
+    { id: "3", name: "Laptop Stand", price: "35.00", number_stars: 4 },
+    { id: "4", name: "Noise-Canceling Headphones", price: "89.99", number_stars: 5},
+    { id: "5", name: "Graph Paper Notebook", price: "7.99", number_stars: 5},
+    { id: "6", name: "Mechanical Keyboard", price: "49.99", number_stars: 5 },
+    { id: "7", name: "USB Flash Drive (64GB)", price: "12.99", number_stars: 1 },
+    { id: "8", name: "Ergonomic Backpack", price: "59.99", number_stars: 5 },
+    { id: "9", name: "Adjustable Desk Lamp", price: "29.99", number_stars: 5 },
+    { id: "10", name: "Reusable Smart Notebook", price: "38.99", number_stars:4 },
+    { id: "11", name: "Portable Power Bank", price: "34.99", number_stars: 5 },
+    { id: "12", name: "Desk Organizer Set", price: "22.99", number_stars: 5 }
+];
 export const renderShop = async (req, res) => {
     let empty = [{}];
     const query = req.query.query;
@@ -65,29 +79,28 @@ export const renderShopByCategory = async (req, res) => {
 }
 
 
+export const renderItemDetail = async (req, res) => 
+{
+    const  itemID  = req.params.item;
+    console.log("itemID: ", itemID);
+    const tempItem =  getObjectByKey(tempProducts, 'id', itemID);
+    res.render("product-detail", {item:tempItem});
+ }
+
+function getObjectByKey(list, key, value) {
+    for (let i = 0; i < list.length; i++) {
+        if (list[i][key] === value) {
+        return list[i];
+        }
+    }
+    return undefined;
+    }
+
+
 async function fetchProductsFromDB(limit, offset)
 {
-    const tempProducts = [
-        { id: "1", name: "Scientific Calculator", price: "24.99", number_stars: 2 },
-        { id: "2", name: "Wireless Mouse", price: "19.99", number_stars: 3 },
-        { id: "3", name: "Laptop Stand", price: "35.00", number_stars: 4 },
-        { id: "4", name: "Noise-Canceling Headphones", price: "89.99", number_stars: 5},
-        { id: "5", name: "Graph Paper Notebook", price: "7.99", number_stars: 5},
-        { id: "6", name: "Mechanical Keyboard", price: "49.99", number_stars: 5 },
-        { id: "7", name: "USB Flash Drive (64GB)", price: "12.99", number_stars: 1 },
-        { id: "8", name: "Ergonomic Backpack", price: "59.99", number_stars: 5 },
-        { id: "9", name: "Adjustable Desk Lamp", price: "29.99", number_stars: 5 },
-        { id: "10", name: "Reusable Smart Notebook", price: "38.99", number_stars:4 },
-        { id: "11", name: "Portable Power Bank", price: "34.99", number_stars: 5 },
-        { id: "12", name: "Desk Organizer Set", price: "22.99", number_stars: 5 }
-    ];
+  
 
 
     return tempProducts.slice(offset, limit+offset);
-}
-
-export const renderItemDetail = async (req, res) => 
-{
-    const tempItem = {name: "Nintendo DSi Light Blue Handheld", seller: "dinodude", price:"80"}
-    res.render("product-detail", {item:tempItem});
 }

@@ -91,10 +91,10 @@
                                         <a href="product-detail.html?id=123">
                                             <img src="/api/placeholder/200/250" alt=<%= product.name %>>
                                         </a>
-                                        <button class="quick-view-btn">Quick View</button>
+                                        <a class="quick-view-btn" value=<%= product.id%>  href="/item/<%= product.id %>" >Quick View</a>
                                     </div>
                                     <div class="product-info">
-                                        <h3><a href="product-detail.html?id=123"><%= product.name %></a></h3>
+                                        <h3><a href="/item/<%= product.id %>"><%= product.name%></a></h3>
                                         <div class="product-rating">
                                         <% for(var i= 1; i <= product.number_stars; i++) { %> 
                                             <i class="fas fa-star"></i>
@@ -103,7 +103,7 @@
                                             <!--i class="fas fa-star-half-alt"></i-->
                                         </div>
                                         <div class="product-price">
-                                            <span class="current-price"><%= product.price %></span>
+                                            <span class="current-price">$<%= product.price %></span>
                                         </div>
                                         <div class="product-actions">
                                             <button class="add-to-cart-btn">Add to Cart</button>
