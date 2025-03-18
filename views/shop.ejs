@@ -6,10 +6,10 @@
     <title>Shop | StudentStore</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
+<%- include('./partials/navbar') %>
 <body>
     
     <link rel="stylesheet" href="./styles/search.css">
-    <%- include('./partials/navbar') %>
     <main>
         <div class="container">
                 <div class="breadcrumb">
@@ -202,8 +202,6 @@
                console.error("Error fetching filtered products:", error);
             }
 
-           // await updateSearchResults();;
-         
 
         }
 
@@ -242,18 +240,7 @@
                 checkbox.addEventListener("change", () => fetchFilteredProducts(null, 1)); // Reset to page 1 when filter changes
             });
 
-            //Get search box element
-            const searchBox = document.querySelector("#search-box");
-            searchBox.addEventListener("keypress", function(event) {
-                if(event.keyCode == 13) {//Check if Enter key is pressed
-                    //Redirects to shop
-                    if (searched) {
-                        window.location.href = `/shop/${encodeURIComponent(searched)}`;
-                        fetchFilteredProducts(event, page = 1);
-                    }
 
-                }
-            });
             attachPaginationListeners(); // Initial binding on page load
 
            

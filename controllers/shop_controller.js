@@ -85,3 +85,9 @@ async function fetchProductsFromDB(limit, offset)
 
     return tempProducts.slice(offset, limit+offset);
 }
+
+export const renderItemDetail = async (req, res) => 
+{
+    const tempItem = {name: "Nintendo DSi Light Blue Handheld", seller: "dinodude", price:"80"}
+    res.render("product-detail", {item:tempItem});
+}

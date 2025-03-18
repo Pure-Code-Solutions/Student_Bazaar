@@ -6,40 +6,7 @@
 			box-sizing: border-box;
 		}
 
-		body {
-			margin: 0;
-			padding: 0;
-			font-family: Arial, sans-serif;
-			line-height: 1.6;
-			background-color: #f4f4f4;
-			color: #333;
-		}
 
-        header nav {
-            background: #333;
-            color: #fff;
-            padding: 10px 0;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        header nav .logo img {
-            max-width: 100px;
-        }
-
-        header nav .nav-links a,
-        header nav .nav-actions a {
-            color: #fff;
-            text-decoration: none;
-            margin: 0 10px;
-            font-size: 14px;
-        }
-
-        header nav .nav-actions .active img {
-            border: 2px solid #00b4d8;
-            border-radius: 50%;
-        }
 
         .account-page .page-header {
             text-align: center;
@@ -120,6 +87,10 @@
             padding: 20px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             border-radius: 3px;
+        }
+
+        .account-nav {
+            display:block;
         }
 
         .dashboard-cards {
@@ -254,4 +225,5 @@
             padding: 20px 0;
             text-align: center;
         }
- 
+        
+        
