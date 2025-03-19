@@ -1,5 +1,5 @@
 import Router from "express";
-import {postRegister, renderRegister, renderSignin, postRegister } from "../controllers/authentication_controller.js";
+import { renderRegister, renderSignin, postRegister } from "../controllers/authentication_controller.js";
 export const authenticationRouter = Router();
 
 
