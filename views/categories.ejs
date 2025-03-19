@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Categories | Student Store</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <%- include('./partials/navbar') %>
+</head>
+<body>
+
+
+    <div class="container py-5">
+        <h1 class="text-center mb-5">Product Categories</h1>
+        
+        <div class="row">
+            <div class="col-md-4 col-sm-6">
+                <div class="card category-card text-center p-4">
+                    <div class="category-icon">
+                        <i class="fas fa-book"></i>
+                    </div>
+                    <h3>Textbooks</h3>
+                    <p>Comprehensive study materials for all subjects</p>
+                    <a href="/shop/Textbooks" class="btn btn-primary">Browse Textbooks</a>
+                </div>
+            </div>
+            
+            <div class="col-md-4 col-sm-6">
+                <div class="card category-card text-center p-4">
+                    <div class="category-icon">
+                        <i class="fas fa-laptop"></i>
+                    </div>
+                    <h3>Electronics</h3>
+                    <p>Laptops, tablets, and study gadgets</p>
+                    <a href="/shop/Electronics" class="btn btn-primary">Browse Electronics</a>
+                </div>
+            </div>
+            
+            <div class="col-md-4 col-sm-6">
+                <div class="card category-card text-center p-4">
+                    <div class="category-icon">
+                        <i class="fas fa-pencil-alt"></i>
+                    </div>
+                    <h3>Stationery</h3>
+                    <p>Notebooks, pens, and study supplies</p>
+                    <a href="/shop/Stationery" class="btn btn-primary">Browse Stationery</a>
+                </div>
+            </div>
+            
+            <div class="col-md-4 col-sm-6">
+                <div class="card category-card text-center p-4">
+                    <div class="category-icon">
+                        <i class="fas fa-graduation-cap"></i>
+                    </div>
+                    <h3>Campus Gear</h3>
+                    <p>Backpacks, university merch, and accessories</p>
+                    <a href="/shop/Campus-Gear" class="btn btn-primary">Browse Campus Gear</a>
+                </div>
+            </div>
+            
+            <div class="col-md-4 col-sm-6">
+                <div class="card category-card text-center p-4">
+                    <div class="category-icon">
+                        <i class="fas fa-headphones"></i>
+                    </div>
+                    <h3>Tech Accessories</h3>
+                    <p>Headphones, chargers, and device protection</p>
+                    <a href="/shop/Tech-Accessories" class="btn btn-primary">Browse Tech Accessories</a>
+                </div>
+            </div>
+            
+            <div class="col-md-4 col-sm-6">
+                <div class="card category-card text-center p-4">
+                    <div class="category-icon">
+                        <i class="fas fa-glasses"></i>
+                    </div>
+                    <h3>Lab Equipment</h3>
+                    <p>Medical, electric, and shop equipment</p>
+                    <a href="/shop/Lab-Equipment" class="btn btn-primary">Browse Lab Equipment</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <%- include('./partials/footer') %>
+    <link rel="stylesheet" href="./styles/categories.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

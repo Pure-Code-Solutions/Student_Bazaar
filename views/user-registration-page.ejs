@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Account | CampusShop</title>
+    <link rel="stylesheet" href="./styles/main.css">
+</head>
+<%- include('./partials/navbar') %>
+<body>
+
+    
+    <main class="auth-page">
+        <div class="auth-container">
+            <div class="auth-form-container">
+                <h1>Create Account</h1>
+                <p class="auth-subtitle">Join the student marketplace with exclusive discounts.</p>
+                
+                <form class="auth-form" method="post">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="first-name">First Name</label>
+                            <input type="text" id="first-name" name="firstName" placeholder="Enter your first name">
+                            <div id="first-name-errors" class="form-error" style="color: #ff2626;"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="last-name">Last Name</label>
+                            <input type="text" id="last-name" name="lastName" placeholder="Enter your last name">
+                            <div id="last-name-error" class="form-errors" style="color: #ff2626;"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="text" id="email" name="email" placeholder="Enter your email">
+                        <div id="email-errors" class="form-error" style="color: #ff2626;"></div>
+                       
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" name="password" placeholder="Create a password">
+                        <div id="email-error" class="email-form-errors" style="color: #ff2626;">
+                        
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="confirm-password">Confirm Password</label>
+                        <input type="password" id="confirm-password" name="confirm-password" placeholder="Confirm your password">
+                    </div>
+                    
+                    <div class="form-checkbox">
+                        <input type="checkbox" id="student-status" name="studentStatus">
+                        <label for="student-status">I am a current student</label>
+                    </div>
+                
+                    <div class="form-checkbox">
+                        <input type="checkbox" id="terms" name="terms" >
+                        <label for="terms">I agree to the <a href="terms.html">Terms of Service</a> and <a href="privacy.html">Privacy Policy</a></label>
+                    </div>
+                
+                    <div class="form-checkbox">
+                        <input type="checkbox" id="marketing" name="marketing">
+                        <label for="marketing">I'd like to receive emails about deals and new products</label>
+                    </div>
+ 
+                    <button type="submit" class="btn-primary btn-full" type="reset" value="Reset" onClick="window.location.reload()">Create Account</button>
+                </form>
+                    <div class="divider">
+                        <span>or</span>
+                    </div>
+                    
+                    <button type="button" class="btn-outline btn-full btn-with-icon">
+                        <img src="images/google-icon.svg" alt="Google">
+                        Sign up with Google
+                    </button>
+                    <% if (locals.errors) {%>
+                        <ul>
+                          <% errors.forEach(function(error) { %>
+                            <li><%= error.msg %></li>
+                          <% }); %>
+                        </ul>
+                      <% } %>

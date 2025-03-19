@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<link rel="stylesheet" href="/styles/product-details.css">
+<%- include('./partials/navbar') %>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= item.name %></title>
+
+</head>
+
+
+<body>
+
+    <div class="product-container">
+        <!-- Left side - Image Gallery -->
+        <div class="image-gallery">
+            <div class="thumbnail-column">
+                <img src="images/nintendo-dsi-blue-thumb1.jpg" class="thumbnail active" onclick="changeImage('images/nintendo-dsi-blue-main.jpg')">
+                <img src="images/nintendo-dsi-blue-thumb2.jpg" class="thumbnail" onclick="changeImage('images/nintendo-dsi-blue-2.jpg')">
+                <img src="images/nintendo-dsi-blue-thumb3.jpg" class="thumbnail" onclick="changeImage('images/nintendo-dsi-blue-3.jpg')">
+                <img src="images/nintendo-dsi-blue-thumb4.jpg" class="thumbnail" onclick="changeImage('images/nintendo-dsi-blue-4.jpg')">
+                <img src="images/nintendo-dsi-blue-thumb5.jpg" class="thumbnail" onclick="changeImage('images/nintendo-dsi-blue-5.jpg')">
+            </div>
+            
+            <div class="main-image-container">
+                <img id="main-product-image" src="images/nintendo-dsi-blue-main.jpg" class="main-image" alt="<% item.name %>">
+                
+                <div class="image-controls">
+                    <button class="image-control-btn prev-btn" onclick="previousImage()">❮</button>
+                    <button class="image-control-btn next-btn" onclick="nextImage()">❯</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Right side - Product Information -->
+        <div class="product-info">
+            <h1 class="product-title"><%= item.name %></h1>
+            
+            <div class="seller-info">
+                <img src="images/user-avatar.png" class="seller-avatar" alt="Seller Avatar">
+                <div class="seller-details">
+                    <span class="seller-name"><%= item.seller %></span>
+                    <span class="seller-rating">
+                        (<span class="positive-rating">90.6% positive</span>)
+                    </span>
+                    <div class="seller-links">
+                        <a href="#">Seller's other items</a>
+                        <a href="#">Contact seller</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="price-container">
+                <span class="price-label">US</span>
+                <span class="current-price">$<%= item.price %></span>
+                <span class="or-best-offer">or Best Offer</span>
+            </div>
+            
+            <div class="condition">
+                <span class="condition-label">Condition:</span>
+                <span class="condition-value">Used</span>
+            </div>
+            
+            <div class="action-buttons">
+                <button class="btn btn-primary">Buy It Now</button>
+                <button class="btn btn-secondary">Add to cart</button>
+                <button class="btn btn-secondary">Make offer</button>
+                <button class="btn btn-tertiary">❤ Add to Watchlist</button>
+            </div>
+            
+            <div class="additional-services">
+                <h3>Additional service available</h3>
+                <div class="service-option">
+                    <input type="checkbox" id="protection-plan">
+                    <label for="protection-plan">1-year protection plan from Allstate - $10.99</label>
+                </div>
+            </div>
+            
+            <div class="people-watching">
+                <img src="images/lightning.png" class="lightning-icon" alt="Lightning Icon">
+                <span>People want this. 16 people are watching this.</span>
+            </div>
+            
+            <div class="shipping-info">
+                <div class="shipping-detail">
+                    <span class="shipping-label">Shipping:</span>
+                    <span class="shipping-price">US $5.91 USPS Ground Advantage®. <a href="#">See details</a></span>
+                </div>
+                <div class="shipping-location">
+                    Located in: San Ysidro, California, United States
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Include your footer here -->
+    <%- include('./partials/footer') %>
+    
+    <script>
+        // Image gallery functionality
+        const images = [
+            'images/nintendo-dsi-blue-main.jpg',
+            'images/nintendo-dsi-blue-2.jpg',
+            'images/nintendo-dsi-blue-3.jpg',
+            'images/nintendo-dsi-blue-4.jpg',
+            'images/nintendo-dsi-blue-5.jpg'
+        ];
+        
+        let currentImageIndex = 0;
+        
+        function changeImage(src) {
+            document.getElementById('main-product-image').src = src;
+            
+            // Update active thumbnail
+            const thumbnails = document.querySelectorAll('.thumbnail');
+            thumbnails.forEach((thumb, index) => {
+                if (images[index] === src) {
+                    thumb.classList.add('active');
+                    currentImageIndex = index;
+                } else {
+                    thumb.classList.remove('active');
+                }
+            });
+        }
+        
+        function nextImage() {
+            currentImageIndex = (currentImageIndex + 1) % images.length;
+            changeImage(images[currentImageIndex]);
+        }
+        
+        function previousImage() {
+            currentImageIndex = (currentImageIndex - 1 + images.length) % images.length;
+            changeImage(images[currentImageIndex]);
+        }
+    </script>
+    
+</body>
+</html>

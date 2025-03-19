@@ -1,0 +1,43 @@
+<header>
+    <!-- Navigation (same as other pages) -->
+    <nav>
+        <div class="logo">
+            <a href="/"><img src="images/logo.svg" alt="CampusShop Logo"></a>
+        </div>
+        <div class="nav-links">
+            <a href="/">Home</a>
+            <a href="/categories">Categories</a>
+            <a href="/signin">Sign in</a>
+        </div>
+        <div class="nav-actions">
+            <a href="/cart" class="cart-icon"><img src="images/cart.svg" alt="Cart"></a>
+            <a href="/account" class="account-icon"><img src="images/account.svg" alt="Account"></a>
+        </div>
+
+    </nav>
+    <div class="search-container">
+        <form action="/shop">
+        
+          <input type="text" id="search-box" name="query" placeholder="Search for products..." class="search-input">
+          <button type="submit" class="search-button">
+            <img src="images/search.svg" alt="Search" class="search-icon">
+          </button>
+        </form>
+    </div>
+    <script>
+            //Get search box element
+            const searchBox = document.querySelector("#search-box");
+            searchBox.addEventListener("keypress", function(event) {
+                if(event.keyCode == 13) {//Check if Enter key is pressed
+                    //Redirects to shop
+                    if (searched) {
+                        window.location.href = `/shop/${encodeURIComponent(searched)}`;
+                        fetchFilteredProducts(event, page = 1);
+                    }
+
+                }
+            });
+    </script>
+<link rel="stylesheet" href="../styles/main.css">
+<link rel="stylesheet" href="../styles/search.css">
+</header>

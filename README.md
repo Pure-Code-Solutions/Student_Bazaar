@@ -1,4 +1,17 @@
 # Student_Bazaar
+INSTRUCTIONS FOR RUNNING THE PROJECT:
+
+1. Have node.js and npm installed in terminal
+2. CD to the main directory
+3. "npm install" to import all packages listed in package.json
+
+"npm run dev" -runs project in development mode, changes made in realtime update
+
+"npm start" - runs project with the latest changes before this command is made
+
+
+hosted on "localhost:5000"
+
 Table of Contents
 1. Project Description
 2. Features

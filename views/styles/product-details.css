@@ -1,0 +1,261 @@
+/* Product Detail Page Styles */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f8f8f8;
+    color: #333;
+}
+
+.breadcrumbs {
+    padding: 10px 0;
+    margin: 10px 0;
+    font-size: 14px;
+}
+
+.breadcrumbs a {
+    color: #0066c0;
+    text-decoration: none;
+}
+
+.breadcrumbs a:hover {
+    text-decoration: underline;
+}
+
+.product-container {
+    display: flex;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 15px;
+}
+
+.image-gallery {
+    width: 55%;
+    display: flex;
+}
+
+.thumbnail-column {
+    width: 70px;
+    margin-right: 15px;
+}
+
+.thumbnail {
+    width: 60px;
+    height: 60px;
+    border: 1px solid #ddd;
+    margin-bottom: 10px;
+    cursor: pointer;
+}
+
+.thumbnail:hover {
+    border-color: #0066c0;
+}
+
+.thumbnail.active {
+    border: 2px solid #0066c0;
+}
+
+.main-image-container {
+    flex-grow: 1;
+    position: relative;
+}
+
+.main-image {
+    width: 100%;
+    max-height: 500px;
+    object-fit: contain;
+}
+
+.image-controls {
+    position: absolute;
+    top: 50%;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+
+.image-control-btn {
+    background-color: rgba(255, 255, 255, 0.8);
+    border: 1px solid #ddd;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.product-info {
+    width: 45%;
+    padding-left: 20px;
+}
+
+.product-title {
+    font-size: 22px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #111;
+}
+
+.seller-info {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.seller-avatar {
+    width: 30px;
+    height: 30px;
+    margin-right: 10px;
+}
+
+.seller-rating {
+    font-size: 14px;
+    color: #555;
+}
+
+.positive-rating {
+    color: #2e8b57;
+    font-weight: bold;
+}
+
+.seller-links {
+    margin-left: 10px;
+}
+
+.seller-links a {
+    color: #0066c0;
+    text-decoration: none;
+    margin-right: 10px;
+    font-size: 14px;
+}
+
+.price-container {
+    margin: 20px 0;
+}
+
+.price-label {
+    font-size: 14px;
+    color: #555;
+}
+
+.current-price {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.condition {
+    margin: 15px 0;
+}
+
+.condition-label {
+    font-weight: bold;
+    margin-right: 5px;
+}
+
+.action-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin: 20px 0;
+}
+
+.btn {
+    padding: 12px 15px;
+    border-radius: 25px;
+    font-size: 16px;
+    font-weight: bold;
+    text-align: center;
+    cursor: pointer;
+    border: none;
+}
+
+.btn-primary {
+    background-color: #3665f3;
+    color: white;
+}
+
+.btn-secondary {
+    background-color: white;
+    color: #3665f3;
+    border: 1px solid #3665f3;
+}
+
+.btn-tertiary {
+    background-color: white;
+    color: #3665f3;
+    border: 1px solid #ddd;
+}
+
+.additional-services {
+    margin: 20px 0;
+    padding: 15px 0;
+    border-top: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
+}
+
+.service-option {
+    display: flex;
+    align-items: center;
+    margin: 10px 0;
+}
+
+.service-option input {
+    margin-right: 10px;
+}
+
+.people-watching {
+    display: flex;
+    align-items: center;
+    margin: 15px 0;
+    color: #555;
+    font-size: 14px;
+}
+
+.lightning-icon {
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+}
+
+.shipping-info {
+    margin: 15px 0;
+    padding-top: 15px;
+    border-top: 1px solid #ddd;
+}
+
+.shipping-detail {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.shipping-label {
+    font-weight: bold;
+}
+
+.shipping-price {
+    font-weight: normal;
+}
+
+.shipping-location {
+    color: #555;
+    font-size: 14px;
+    margin-top: 5px;
+}
+
+@media (max-width: 768px) {
+    .product-container {
+        flex-direction: column;
+    }
+    
+    .image-gallery, .product-info {
+        width: 100%;
+        padding-left: 0;
+    }
+    
+    .image-gallery {
+        margin-bottom: 20px;
+    }
+}

@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Results | StudentStore</title>
+    <link rel="stylesheet" href="css/search.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-top">
+                <div class="logo">
+                    <a href="index.html">
+                        <img src="/api/placeholder/200/50" alt="StudentStore Logo">
+                    </a>
+                </div>
+                <div class="search-bar">
+                    <form action="search-results.html" method="get">
+                        <input type="text" name="query" placeholder="Search for books, supplies, electronics..." value="computer science">
+                        <button type="submit"><i class="fas fa-search"></i></button>
+                    </form>
+                </div>
+                <div class="header-actions">
+                    <a href="wishlist.html" class="wishlist-icon"><i class="fas fa-heart"></i></a>
+                    <a href="cart.html" class="cart-icon"><i class="fas fa-shopping-cart"></i> <span class="cart-count">3</span></a>
+                    <a href="account.html" class="account-icon"><i class="fas fa-user"></i></a>
+                </div>
+            </div>
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="categories.html">Categories</a></li>
+                    <li><a href="products.html?category=textbooks">Textbooks</a></li>
+                    <li><a href="products.html?category=supplies">Supplies</a></li>
+                    <li><a href="products.html?category=electronics">Electronics</a></li>
+                    <li><a href="products.html?category=apparel">Apparel</a></li>
+                    <li><a href="products.html?category=deals">Student Deals</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            <div class="breadcrumb">
+                <a href="index.html">Home</a> &gt; Search Results
+            </div>
+
+            <section class="search-results-section">
+                <div class="search-results-header">
+                    <h1>Search Results for "computer science"</h1>
+                    <p>Found 24 results</p>
+                </div>
+
+                <div class="search-filter-container">
+                    <div class="search-filters">
+                        <div class="filter-group">
+                            <h3>Category</h3>
+                            <ul>
+                                <li><input type="checkbox" id="cat-textbooks" checked> <label for="cat-textbooks">Textbooks (12)</label></li>
+                                <li><input type="checkbox" id="cat-ebooks"> <label for="cat-ebooks">E-Books (5)</label></li>
+                                <li><input type="checkbox" id="cat-electronics"> <label for="cat-electronics">Electronics (4)</label></li>
+                                <li><input type="checkbox" id="cat-accessories"> <label for="cat-accessories">Accessories (3)</label></li>
+                            </ul>
+                        </div>
+                        <div class="filter-group">
+                            <h3>Price Range</h3>
+                            <ul>
+                                <li><input type="checkbox" id="price-0-25"> <label for="price-0-25">$0 - $25 (5)</label></li>
+                                <li><input type="checkbox" id="price-25-50" checked> <label for="price-25-50">$25 - $50 (8)</label></li>
+                                <li><input type="checkbox" id="price-50-100"> <label for="price-50-100">$50 - $100 (6)</label></li>
+                                <li><input type="checkbox" id="price-100plus"> <label for="price-100plus">$100+ (5)</label></li>
+                            </ul>
+                        </div>
+                        <div class="filter-group">
+                            <h3>Availability</h3>
+                            <ul>
+                                <li><input type="checkbox" id="avail-instock" checked> <label for="avail-instock">In Stock (18)</label></li>
+                                <li><input type="checkbox" id="avail-preorder"> <label for="avail-preorder">Pre-Order (3)</label></li>
+                                <li><input type="checkbox" id="avail-digital"> <label for="avail-digital">Digital Download (3)</label></li>
+                            </ul>
+                        </div>
+                        <div class="filter-group">
+                            <h3>Format</h3>
+                            <ul>
+                                <li><input type="checkbox" id="format-physical" checked> <label for="format-physical">Physical (16)</label></li>
+                                <li><input type="checkbox" id="format-digital"> <label for="format-digital">Digital (8)</label></li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="search-results-content">
+                        <div class="search-results-sorting">
+                            <label for="sort-by">Sort by:</label>
+                            <select id="sort-by">
+                                <option value="relevance" selected>Relevance</option>
+                                <option value="price-low">Price: Low to High</option>
+                                <option value="price-high">Price: High to Low</option>
+                                <option value="newest">Newest</option>
+                                <option value="bestselling">Best Selling</option>
+                            </select>
+                            <div class="view-options">
+                                <button class="view-grid active"><i class="fas fa-th"></i></button>
+                                <button class="view-list"><i class="fas fa-list"></i></button>
+                            </div>
+                        </div>
+
+                        <div class="search-results-grid">
+                            <!-- Product Card 1 -->
+                            <div class="product-card">
+                                <div class="product-badge bestseller">Bestseller</div>
+                                <div class="product-image">
+                                    <a href="product-detail.html?id=123">
+                                        <img src="/api/placeholder/200/250" alt="Introduction to Computer Science">
+                                    </a>
+                                    <button class="quick-view-btn">Quick View</button>
+                                </div>
+                                <div class="product-info">
+                                    <h3><a href="product-detail.html?id=123">Introduction to Computer Science: Principles and Practice</a></h3>
+                                    <p class="product-author">by John Smith</p>
+                                    <div class="product-rating">
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star-half-alt"></i>
+                                        <span>(42 reviews)</span>
+                                    </div>
+                                    <div class="product-price">
+                                        <span class="current-price">$45.99</span>
+                                        <span class="original-price">$59.99</span>
+                                        <span class="discount-percentage">23% OFF</span>
+                                    </div>
+                                    <div class="product-actions">
+                                        <button class="add-to-cart-btn">Add to Cart</button>
+                                        <button class="add-to-wishlist-btn"><i class="far fa-heart"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Product Card 2 -->
+                            <div class="product-card">
+                                <div class="product-badge new">New</div>
+                                <div class="product-image">
+                                    <a href="product-detail.html?id=124">
+                                        <img src="/api/placeholder/200/250" alt="Data Structures and Algorithms">
+                                    </a>
+                                    <button class="quick-view-btn">Quick View</button>
+                                </div>
+                                <div class="product-info">
+                                    <h3><a href="product-detail.html?id=124">Data Structures and Algorithms in Python</a></h3>
+                                    <p class="product-author">by Maria Rodriguez</p>
+                                    <div class="product-rating">
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="far fa-star"></i>
+                                        <span>(28 reviews)</span>
+                                    </div>
+                                    <div class="product-price">
+                                        <span class="current-price">$39.95</span>
+                                    </div>
+                                    <div class="product-actions">
+                                        <button class="add-to-cart-btn">Add to Cart</button>
+                                        <button class="add-to-wishlist-btn"><i class="far fa-heart"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Product Card 3 -->
+                            <div class="product-card">
+                                <div class="product-image">
+                                    <a href="product-detail.html?id=125">
+                                        <img src="/api/placeholder/200/250" alt="Computer Science USB Drive">
+                                    </a>
+                                    <button class="quick-view-btn">Quick View</button>
+                                </div>
+                                <div class="product-info">
+                                    <h3><a href="product-detail.html?id=125">64GB USB Drive with CS Educational Resources</a></h3>
+                                    <p class="product-author">by TechEdu Supplies</p>
+                                    <div class="product-rating">
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star-half-alt"></i>
+                                        <i class="far fa-star"></i>
+                                        <span>(15 reviews)</span>
+                                    </div>
+                                    <div class="product-price">
+                                        <span class="current-price">$29.99</span>
+                                        <span class="original-price">$34.99</span>
+                                        <span class="discount-percentage">14% OFF</span>
+                                    </div>
+                                    <div class="product-actions">
+                                        <button class="add-to-cart-btn">Add to Cart</button>
+                                        <button class="add-to-wishlist-btn"><i class="far fa-heart"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Product Card 4 -->
+                            <div class="product-card">
+                                <div class="product-badge sale">Sale</div>
+                                <div class="product-image">
+                                    <a href="product-detail.html?id=126">
+                                        <img src="/api/placeholder/200/250" alt="Fundamentals of Programming">
+                                    </a>
+                                    <button class="quick-view-btn">Quick View</button>
+                                </div>
+                                <div class="product-info">
+                                    <h3><a href="product-detail.html?id=126">Fundamentals of Programming: Computer Science Principles</a></h3>
+                                    <p class="product-author">by Alex Johnson</p>
+                                    <div class="product-rating">
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <span>(37 reviews)</span>
+                                    </div>
+                                    <div class="product-price">
+                                        <span class="current-price">$32.50</span>
+                                        <span class="original-price">$49.99</span>
+                                        <span class="discount-percentage">35% OFF</span>
+                                    </div>
+                                    <div class="product-actions">
+                                        <button class="add-to-cart-btn">Add to Cart</button>
+                                        <button class="add-to-wishlist-btn"><i class="far fa-heart"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Product Card 5 -->
+                            <div class="product-card">
+                                <div class="product-image">
+                                    <a href="product-detail.html?id=127">
+                                        <img src="/api/placeholder/200/250" alt="Computer Science Study Guide">
+                                    </a>
+                                    <button class="quick-view-btn">Quick View</button>
+                                </div>
+                                <div class="product-info">
+                                    <h3><a href="product-detail.html?id=127">Computer Science Study Guide: Complete Edition</a></h3>
+                                    <p class="product-author">by Emily Chen</p>
+                                    <div class="product-rating">
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="far fa-star"></i>
+                                        <span>(19 reviews)</span>
+                                    </div>
+                                    <div class="product-price">
+                                        <span class="current-price">$27.99</span>
+                                    </div>
+                                    <div class="product-actions">
+                                        <button class="add-to-cart-btn">Add to Cart</button>
+                                        <button class="add-to-wishlist-btn"><i class="far fa-heart"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Product Card 6 -->
+                            <div class="product-card out-of-stock">
+                                <div class="product-image">
+                                    <a href="product-detail.html?id=128">
+                                        <img src="/api/placeholder/200/250" alt="Advanced Computer Science Topics">
+                                    </a>
+                                    <div class="out-of-stock-overlay">Out of Stock</div>
+                                </div>
+                                <div class="product-info">
+                                    <h3><a href="product-detail.html?id=128">Advanced Computer Science Topics: Machine Learning</a></h3>
+                                    <p class="product-author">by David Williams</p>
+                                    <div class="product-rating">
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star-half-alt"></i>
+                                        <span>(52 reviews)</span>
+                                    </div>
+                                    <div class="product-price">
+                                        <span class="current-price">$55.99</span>
+                                    </div>
+                                    <div class="product-actions">
+                                        <button class="notify-btn">Notify Me</button>
+                                        <button class="add-to-wishlist-btn"><i class="far fa-heart"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="pagination">
+                            <a href="#" class="active">1</a>
+                            <a href="#">2</a>
+                            <a href="#">3</a>
+                            <a href="#">4</a>
+                            <span>...</span>
+                            <a href="#">Next &raquo;</a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="related-searches">
+                <h2>Related Searches</h2>
+                <div class="related-search-tags">
+                    <a href="search-results.html?query=programming+textbooks">Programming Textbooks</a>
+                    <a href="search-results.html?query=computer+science+degree">Computer Science Degree</a>
+                    <a href="search-results.html?query=coding+bootcamp">Coding Bootcamp</a>
+                    <a href="search-results.html?query=python+books">Python Books</a>
+                    <a href="search-results.html?query=algorithms">Algorithms</a>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-columns">
+                <div class="footer-column">
+                    <h3>Shop</h3>
+                    <ul>
+                        <li><a href="products.html?category=textbooks">Textbooks</a></li>
+                        <li><a href="products.html?category=supplies">Supplies</a></li>
+                        <li><a href="products.html?category=electronics">Electronics</a></li>
+                        <li><a href="products.html?category=apparel">Apparel</a></li>
+                        <li><a href="products.html?category=deals">Student Deals</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Customer Service</h3>
+                    <ul>
+                        <li><a href="contact.html">Contact Us</a></li>
+                        <li><a href="faq.html">FAQs</a></li>
+                        <li><a href="#">Shipping Policy</a></li>
+                        <li><a href="#">Return Policy</a></li>
+                        <li><a href="#">Order Status</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>About Us</h3>
+                    <ul>
+                        <li><a href="about.html">Our Story</a></li>
+                        <li><a href="#">Campus Partnerships</a></li>
+                        <li><a href="#">Careers</a></li>
+                        <li><a href="blog.html">Blog</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Get Connected</h3>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-pinterest"></i></a>
+                    </div>
+                    <div class="newsletter">
+                        <h4>Subscribe to our newsletter</h4>
+                        <form>
+                            <input type="email" placeholder="Your email address">
+                            <button type="submit">Subscribe</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <div class="payment-methods">
+                    <span>We Accept:</span>
+                    <i class="fab fa-cc-visa"></i>
+                    <i class="fab fa-cc-mastercard"></i>
+                    <i class="fab fa-cc-amex"></i>
+                    <i class="fab fa-cc-paypal"></i>
+                    <i class="fab fa-cc-discover"></i>
+                </div>
+                <div class="copyright">
+                    <p>&copy; 2025 StudentStore. All rights reserved.</p>
+                    <a href="terms.html">Terms of Service</a>
+                    <a href="privacy.html">Privacy Policy</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/script.js"></script>
+</body>
+</html>

@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include('./partials/navbar') %>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Cart | CampusShop</title>
+    <link rel="stylesheet" href="styles/cart.css">
+</head>
+<body>
+
+    
+    <main class="cart-page">
+        <div class="page-header">
+            <h1>Your Cart</h1>
+            <p>3 items in your cart</p> 
+        </div>
+        
+        <div class="cart-container">
+
+            <div class="cart-items">
+                <% cart.forEach(item => { %>
+                    <!-- Cart item 1 -->
+                <div class="cart-item">
+                    <div class="item-image">
+                        <img src="images/backpack.jpg" alt="Campus Backpack">
+                    </div>
+                    <div class="item-details">
+                        <h3><a href="product-detail.html?id=102"><%= item.name %></a></h3>
+                        <p class="item-variant"></p>
+                        <div class="item-price">
+                            <span class="current-price">$<%= item.price %></span>
+                        </div>
+                        <div class="item-actions">
+                            <div class="quantity-selector">
+                                <button class="qty-btn minus">-</button>
+                                <input type="number" value="1" min="1" max="10">
+                                <button class="qty-btn plus">+</button>
+                            </div>
+                            <button class="btn-remove">Remove</button>
+                            <button class="btn-save">Save for Later</button>
+                        </div>
+                    </div>
+                </div>
+                <% }); %>
+                
+              
+            </div>
+            
+            <div class="cart-sidebar">
+                <div class="order-summary">
+                    <h2>Order Summary</h2>
+                    <div class="summary-row">
+                        <span>Subtotal (3 items)</span>
+                        <span>$75.48</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>Shipping</span>
+                        <span>FREE</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>Estimated Tax</span>
+                        <span>$6.04</span>
+                    </div>
+                    <div class="summary-row total">
+                        <span>Total</span>
+                        <span>$81.52</span>
+                    </div>
+                    
+                    <a href="checkout.html" class="btn-primary btn-checkout">Proceed to Checkout</a>
+                    
+                    <div class="promo-code">
+                        <h3>Promo Code</h3>
+                        <div class="promo-form">
+                            <input type="text" placeholder="Enter promo code">
+                            <button class="btn-apply">Apply</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="continue-shopping">
+                    <a href="/">Continue Shopping</a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="saved-items">
+            <h2>Saved for Later</h2>
+            <div class="saved-items-grid">
+                <!-- Saved items would appear here -->
+                <p class="empty-state">You don't have any saved items.</p>
+            </div>
+        </div>
+        
+        <div class="recommended-products">
+            <h2>You Might Also Like</h2>
+            <div class="products-row">
+                <!-- Recommended product cards -->
+            </div>
+        </div>
+    </main>
+    
+    <footer>
+        <!-- Same footer as other pages -->
+    </footer>
+    
+
+</body>
+</html>
