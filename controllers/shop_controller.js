@@ -1,8 +1,11 @@
 //Handles the request and response of the shop page item page
-//import { connection } from "../data/pool.js";
+import { pool } from "../data/pool.js";
+import { LocalStorage } from "node-localstorage";
+
+const localStorage = new LocalStorage('./scratch');
 
 
-const tempNumberOfPages = 3;
+localStorage.setItem("cursor", 1);
 const tempProducts = [
     { id: "1", name: "Scientific Calculator", price: "24.99", number_stars: 2 },
     { id: "2", name: "Wireless Mouse", price: "19.99", number_stars: 3 },
@@ -37,21 +40,25 @@ export const renderCategories = async (req, res) => {
 }
 
 export const renderShopByCategory = async (req, res) => {
+    //console.log(await queryItems());
+    const limit = 6;  // Number of records per page
+    const page = parseInt(req.query.page) || 1;  // Get page number from query string
+    const offset = (page - 1) * limit;  // Calculate the offset
+
+    //console.log(localStorage.getItem("cursor"));
+    const products = await queryItems(offset, limit);
 
     const { category } = req.params;
-    const subcategory = req.query.tags;
-    const pricesParam = req.query.prices;
     const query = req.query.query;
     //console.log("tags: " + subcategory + "prices: " + pricesParam);
-    const page = parseInt(req.query.page) || 1;
-    const tempLimit = 4; //Items per page
-    const offset = (page - 1) * tempLimit;
-    const products = await fetchProductsFromDB(tempLimit, offset);
+
+
+
     //console.log(products);
     const subcategories = [
-        { category: "Textbooks", subcategories: ["Science", "Mathematics", "Engineering", "Arts", "Business", "Law"] },
-        { category: "Electronics", subcategories: ["Laptops", "Tablets", "Smartphones", "Monitors", "Printers"] },
-        { category: "Stationery", subcategories: ["Notebooks", "Pens", "Highlighters", "Planners", "Study Supplies"] },
+        { category: "Textbooks", subcategories: ["Science", "Mathematics", "Engineering", "Arts", "Business", "Law", "Government", "Biology", "Chemistry"] },
+        { category: "Electronics", subcategories: ["Laptops", "Tablets", "Smartphones", "Monitors", "Printers", "Headphones"] },
+        { category: "Stationery", subcategories: ["Notebooks", "Pens", "Highlighters", "Planners", "Study Supplies", "Art Supplies"] },
         { category: "Campus-Gear", subcategories: ["Backpacks", "University Hoodies", "T-Shirts", "Water Bottles", "Keychains"] },
         { category: "Tech-Accessories", subcategories: ["Headphones", "Chargers", "Laptop Sleeves", "USB Drives", "Screen Protectors"] },
         { category: "Lab-Equipment", subcategories: ["Medical Tools", "Microscopes", "Multimeters", "Beakers", "Circuit Kits"] }
@@ -75,7 +82,7 @@ export const renderShopByCategory = async (req, res) => {
     if (!categoryData) {
         return res.status(404).send("Category not found");
     }
-    res.render("shop", {query, category,products, prices, subcategories: categoryData, numberOfPages: tempNumberOfPages, page});
+    res.render("shop", {query, category,products, prices, subcategories: categoryData, numberOfPages: Math.ceil(await getNumberOfPages()/6), page});
 }
 
 
@@ -96,11 +103,27 @@ function getObjectByKey(list, key, value) {
     return undefined;
     }
 
+async function getNumberOfPages() {
+    const [count] = await pool.query(`SELECT COUNT(*) AS total_rows FROM item`);
+    return count[0].total_rows;
+}
 
-async function fetchProductsFromDB(limit, offset)
+async function queryItems(offset, limit)
 {
-  
+    const [records] = await pool.query(`
+        SELECT 
+        item.*,                         
+        seller_profile.store_name AS seller_name,  
+        GROUP_CONCAT(tag.name SEPARATOR ', ') AS tags
+        FROM item
+        JOIN seller_profile ON item.sellerID = seller_profile.sellerID
+        JOIN item_tag ON item.itemID = item_tag.itemID
+        JOIN tag ON item_tag.tagID = tag.tagID
+        GROUP BY item.itemID, seller_profile.store_name
+        LIMIT ${limit} OFFSET ${offset};
+    `);
 
 
-    return tempProducts.slice(offset, limit+offset);
+    return records;
+
 }

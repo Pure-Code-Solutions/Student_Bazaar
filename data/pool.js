@@ -1,12 +1,21 @@
 //Connects to the database
 import mysql from 'mysql2'
 import * as dotenv from 'dotenv';
-dotenv.config({ path: './.env' })
-dotenv.config();
+import path from 'path';
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+// Load .env from the parent directory
+dotenv.config({ path: path.resolve(__dirname, '../.env') });
+
 export const pool = mysql.createPool({
-    host    : process.env.HOST,
-    user : 'root',
-    password : '',
-    database: process.env.DATABASE
+    host            : '127.0.0.1',
+    user            : 'root',
+    password        : '',
+    database: 'studentbazaardb',
+    port: '3307',
 
 }).promise();

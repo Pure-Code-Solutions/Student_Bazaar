@@ -10,7 +10,7 @@ import { accountRouter } from "./routes/account_router.js";
 import { checkoutRouter } from "./routes/checkout_routes.js";
 
 const app = express();
-const PORT = process.env.PORT || 5000;
+const PORT = 5000;
 
 
 const __filename = fileURLToPath(import.meta.url);
