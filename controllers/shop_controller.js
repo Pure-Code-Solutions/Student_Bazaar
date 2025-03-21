@@ -18,7 +18,6 @@ export const renderShop = async (req, res) => {
  
      //const products = await queryItems(offset, limit);
 
-    console.log("query:" + query);  
     let numberOfPages = 0;
     //if query is undefined, then set number of pages to 0
     if(req.query.page == undefined)
@@ -52,14 +51,27 @@ export const renderCategories = async (req, res) => {
 
 export const renderShopByCategory = async (req, res) => {
     //console.log(await queryItems());
+
     const limit = 6;  // Number of records per page
     const page = parseInt(req.query.page) || 1;  // Get page number from query string
     const offset = (page - 1) * limit;  // Calculate the offset
 
-    const { category } = req.params;
+
     const query = req.query.query;
-    const numberOfPages = Math.ceil(await getNumberOfPages(category)/limit);
-    let products = await queryItemsByCategory(category, offset, limit);
+    let tags;
+    tags = req.query.tags ? req.query.tags.split('|') : []; // Parse tags into an array
+    let { category } = req.params;
+
+    //console.log(tags);
+
+
+    // Append additional tags based on the category
+    if (category) {
+        tags.push(category);
+    }
+    const numberOfPages = Math.ceil(await getNumberOfPages(tags)/limit);
+    let products = await queryItemsByTags(tags, offset, limit);
+
 
 
     //console.log(products);
@@ -93,36 +105,40 @@ export const renderShopByCategory = async (req, res) => {
 export const renderItemDetail = async (req, res) => 
 {
     const  itemID  = req.params.item;
+    const item = await queryItemByID(itemID);
 
-    const tempItem =  getObjectByKey(tempProducts, 'id', itemID);
-    res.render("product-detail", {item:tempItem});
+    res.render("product-detail", {item});
  }
 
-function getObjectByKey(list, key, value) {
-    for (let i = 0; i < list.length; i++) {
-        if (list[i][key] === value) {
-        return list[i];
-        }
+
+async function getNumberOfPages(tags) {
+    // Ensure tags is an array
+    if (typeof tags === "string") {
+        tags = tags.split("|");
     }
-    return undefined;
+    tags = tags || []; // Default to an empty array if tags is null or undefined
+
+    const placeholders = tags.map(() => "?").join(",");
+    let count = [{ total_rows: 0 }];
+
+    if (tags.length > 0) {
+        [count] = await pool.query(`
+            SELECT COUNT(*) AS total_rows FROM (
+                SELECT item.itemID
+                FROM item
+                JOIN item_tag ON item.itemID = item_tag.itemID
+                JOIN tag ON item_tag.tagID = tag.tagID
+                WHERE tag.name IN (${placeholders})
+                GROUP BY item.itemID
+                HAVING COUNT(DISTINCT tag.name) = ?
+            ) AS matched_items;
+        `, [...tags, tags.length]); // Pass tags and their count to the query
+    } else {
+        [count] = await pool.query(`
+            SELECT COUNT(*) AS total_rows FROM item;
+        `);
     }
 
-async function getNumberOfPages(category) {
-    let count = [{total_rows: 0}];
-    //Based count on whether category is defined
-    if(category)
-     {
-        [count] = await pool.query(`
-            SELECT COUNT(*) AS total_rows FROM item
-            JOIN item_tag ON item.itemID = item_tag.itemID
-            JOIN tag ON item_tag.tagID = tag.tagID
-            WHERE tag.name = (?);
-            `, category);
-    } else {
-         [count] = await pool.query(`
-            SELECT COUNT(*) AS total_rows FROM item;`);
-    }
-    console.log("category: " + category);
     return count[0].total_rows;
 }
 
@@ -146,22 +162,27 @@ async function queryItems(offset, limit)
 
 }
 
-async function queryItemsByCategory(category, offset, limit)
+async function queryItemsByTags(tags, offset, limit)
 {
+    
 
+    const placeholders =  tags.map(() => "?").join(",");
+    console.log("Placeholders:", placeholders);
     const [records] = await pool.query(`
-        SELECT DISTINCT item.*,                         
+        SELECT item.*,                         
         seller_profile.store_name AS seller_name,  
         GROUP_CONCAT(tag.name SEPARATOR ', ') AS tags
         FROM item
         JOIN seller_profile ON item.sellerID = seller_profile.sellerID
         JOIN item_tag ON item.itemID = item_tag.itemID
         JOIN tag ON item_tag.tagID = tag.tagID
-        WHERE tag.name = (?)
-        GROUP BY item.itemID, seller_profile.store_name 
+        WHERE tag.name IN (${placeholders})
+        GROUP BY item.itemID, seller_profile.store_name
+        HAVING COUNT(DISTINCT tag.name) = ?
         LIMIT ${limit} OFFSET ${offset};
-    `, category);
+    `, [...tags, tags.length]); // Pass tags and their count to the query
 
+    console.log(records);
     return records;
 }
 
@@ -182,4 +203,22 @@ async function queryLikeTitles(value, offset, limit)
     `);
 
     return records;
+}
+
+async function queryItemByID(itemID)
+{
+    const [records] = await pool.query(`
+        SELECT 
+        item.*,                         
+        seller_profile.store_name AS seller_name,  
+        GROUP_CONCAT(tag.name SEPARATOR ', ') AS tags
+        FROM item
+        JOIN seller_profile ON item.sellerID = seller_profile.sellerID
+        JOIN item_tag ON item.itemID = item_tag.itemID
+        JOIN tag ON item_tag.tagID = tag.tagID
+        WHERE item.itemID = ${itemID}
+        GROUP BY item.itemID, seller_profile.store_name;
+    `);
+
+    return records[0];
 }
