@@ -50,14 +50,17 @@ export const renderCategories = async (req, res) => {
 }
 
 export const renderShopByCategory = async (req, res) => {
-    //console.log(await queryItems());
+
+    //Get all query parameters
+    const query = req.query.query;
+    const page = parseInt(req.query.page) || 1;  // Get page number from query string
+    const minPrice = parseInt(req.query.minPrice) || 0;
+    const maxPrice = parseInt(req.query.maxPrice) || 1000000;
 
     const limit = 6;  // Number of records per page
-    const page = parseInt(req.query.page) || 1;  // Get page number from query string
     const offset = (page - 1) * limit;  // Calculate the offset
 
-
-    const query = req.query.query;
+    //Parse tags into an array
     let tags;
     tags = req.query.tags ? req.query.tags.split('|') : []; // Parse tags into an array
     let { category } = req.params;
@@ -69,8 +72,8 @@ export const renderShopByCategory = async (req, res) => {
     if (category) {
         tags.push(category);
     }
-    const numberOfPages = Math.ceil(await getNumberOfPages(tags)/limit);
-    let products = await queryItemsByTags(tags, offset, limit);
+    const numberOfPages = Math.ceil(await getNumberOfPages(((tags)), minPrice, maxPrice)/limit);
+    let products = await queryItemsByFilters(tags, minPrice, maxPrice, offset, limit);
 
 
 
@@ -111,7 +114,7 @@ export const renderItemDetail = async (req, res) =>
  }
 
 
-async function getNumberOfPages(tags) {
+async function getNumberOfPages(tags, minPrice, maxPrice) {
     // Ensure tags is an array
     if (typeof tags === "string") {
         tags = tags.split("|");
@@ -129,10 +132,11 @@ async function getNumberOfPages(tags) {
                 JOIN item_tag ON item.itemID = item_tag.itemID
                 JOIN tag ON item_tag.tagID = tag.tagID
                 WHERE tag.name IN (${placeholders})
+                AND item.price BETWEEN ? AND ?
                 GROUP BY item.itemID
                 HAVING COUNT(DISTINCT tag.name) = ?
             ) AS matched_items;
-        `, [...tags, tags.length]); // Pass tags and their count to the query
+        `, [...tags, minPrice, maxPrice, tags.length]); // Pass tags and their count to the query
     } else {
         [count] = await pool.query(`
             SELECT COUNT(*) AS total_rows FROM item;
@@ -162,12 +166,10 @@ async function queryItems(offset, limit)
 
 }
 
-async function queryItemsByTags(tags, offset, limit)
-{
-    
-
-    const placeholders =  tags.map(() => "?").join(",");
+async function queryItemsByFilters(tags, minPrice, maxPrice, offset, limit) {
+    const placeholders = tags.map(() => "?").join(",");
     console.log("Placeholders:", placeholders);
+
     const [records] = await pool.query(`
         SELECT item.*,                         
         seller_profile.store_name AS seller_name,  
@@ -177,10 +179,11 @@ async function queryItemsByTags(tags, offset, limit)
         JOIN item_tag ON item.itemID = item_tag.itemID
         JOIN tag ON item_tag.tagID = tag.tagID
         WHERE tag.name IN (${placeholders})
+        AND item.price BETWEEN ? AND ?
         GROUP BY item.itemID, seller_profile.store_name
         HAVING COUNT(DISTINCT tag.name) = ?
         LIMIT ${limit} OFFSET ${offset};
-    `, [...tags, tags.length]); // Pass tags and their count to the query
+    `, [...tags, minPrice, maxPrice, tags.length]); // Pass tags, price range, and their count to the query
 
     console.log(records);
     return records;
