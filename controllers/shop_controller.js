@@ -51,6 +51,7 @@ export const renderCategories = async (req, res) => {
 
 export const renderShopByCategory = async (req, res) => {
 
+
     //Get all query parameters
     const query = req.query.query;
     const page = parseInt(req.query.page) || 1;  // Get page number from query string
@@ -146,6 +147,14 @@ async function getNumberOfPages(tags, minPrice, maxPrice) {
     return count[0].total_rows;
 }
 
+export const postAddToCart = async (req, res) => {
+    const { itemID } = req.body;
+    const userID = localStorage.getItem("userID");
+    const cartID = await getCartID(userID);
+    await insertItemToCart(itemID, cartID);
+    res.redirect("/cart");
+}
+
 async function queryItems(offset, limit)
 {
     const [records] = await pool.query(`
@@ -168,7 +177,6 @@ async function queryItems(offset, limit)
 
 async function queryItemsByFilters(tags, minPrice, maxPrice, offset, limit) {
     const placeholders = tags.map(() => "?").join(",");
-    console.log("Placeholders:", placeholders);
 
     const [records] = await pool.query(`
         SELECT item.*,                         
@@ -185,7 +193,7 @@ async function queryItemsByFilters(tags, minPrice, maxPrice, offset, limit) {
         LIMIT ${limit} OFFSET ${offset};
     `, [...tags, minPrice, maxPrice, tags.length]); // Pass tags, price range, and their count to the query
 
-    console.log(records);
+
     return records;
 }
 
@@ -224,4 +232,20 @@ async function queryItemByID(itemID)
     `);
 
     return records[0];
+}
+
+//Insert items into cart
+async function insertItemToCart(itemID, cartID) {
+    await pool.query(`
+        INSERT INTO cart_item (cartID, itemID, quantity)
+        VALUES (?, ?, 1);
+    `, [itemID, userID]);
+}
+
+async function getCartID(userID){
+    const [records] = await pool.query(`
+        SELECT cartID FROM cart WHERE userID = ?;
+    `, [userID]);
+
+    return records[0].cartID;
 }

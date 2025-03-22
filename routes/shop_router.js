@@ -5,6 +5,7 @@ export const shopRouter = Router();
 //Direct to shop page and item page
 shopRouter.get("/shop", renderShop);
 shopRouter.get("/shop/:category", renderShopByCategory);
+shopRouter.post("/shop/:category", renderShopByCategory);
 shopRouter.get("/categories", renderCategories);
 shopRouter.get("/item/:item", renderItemDetail);
 shopRouter.get("/sidebar",  
