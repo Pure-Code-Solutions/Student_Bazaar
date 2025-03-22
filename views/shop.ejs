@@ -32,10 +32,11 @@
                 <div class="search-filter-container">
                     <div class="search-filters">
                         <div class="filter-group">
+                        <!--Only appears when specific category chosen-->
+                        <% if (subcategories) {%>
                             <h3>Category</h3>
                             <ul>
-                                <!--If subcategories are defined-->
-                                <% if (subcategories) {%>
+                    
                                 <% subcategories.subcategories.forEach(sub => { %>
                                     <li>
                                         <input type="checkbox"
@@ -50,6 +51,8 @@
                             </ul>
                         </div>
                         <div class="filter-group">
+                            <!--Only appears when specific category chosen-->
+                            <% if (subcategories) {%>
                             <h3>Price Range</h3>
                             <div class="price-range-control">
                                 <input 
@@ -72,6 +75,7 @@
                                     </div>
                                 </div>
                             </div>
+                            <% }; %>
                         </div>
 
                     </div>
@@ -97,12 +101,12 @@
                              <% if (products) {%>
                             <% products.forEach(product => { %> 
                                 <div class="product-card">
-                                    <div class="product-badge bestseller">Bestseller</div>
+                                    <!--div class="product-badge bestseller">Bestseller</div-->
                                     <div class="product-image">
                                         <a href="product-detail.html?id=123">
-                                            <img src="/api/placeholder/200/250" alt=<%= product.name %>>
+           
                                         </a>
-                                        <a class="quick-view-btn" value=<%= product.itemID%>  href="/item/<%= product.itemID %>" >Quick View</a>
+                                        <a class="quick-view-btn" value=<%= product.itemID%>  href="/item/<%= product.itemID %>" ><button type="button">View More</button></a>
                                     </div>
                                     <div class="product-info">
                                         <h3><a href="/item/<%= product.itemID %>"><%= product.name%></a></h3>
@@ -117,8 +121,8 @@
                                             <span class="current-price">$<%= product.price %></span>
                                         </div>
                                         <div class="product-actions">
-                                            <button class="add-to-cart-btn" id="add-to-cart-btn", value=<%= products.itemID %>>Add to Cart</button>
-                                            <button class="add-to-wishlist-btn"><i class="far fa-heart"></i></button>
+                                            <button class="add-to-cart-btn" value="<%= product.itemID %>">Add to Cart</button>
+                                            <!--button class="add-to-wishlist-btn"><i class="far fa-heart"></i></button-->
                                         </div>
                                     </div>
                                 </div>
@@ -312,6 +316,37 @@
         document.querySelectorAll(".subcategory-checkbox").forEach(cb => {
             cb.checked = selectedTags.includes(cb.value);
         });
+        document.querySelectorAll(".add-to-cart-btn").forEach(button => {
+    button.addEventListener("click", async (event) => {
+        const itemID = button.value;
+        const userID = 777; // Hardcoded for now
+        console.log("Add to Cart clicked", itemID);
+
+        const data = {
+            userID: parseInt(userID),
+            itemID: parseInt(itemID),
+            quantity: 1 // Default to 1
+        };
+
+        try {
+            const response = await fetch(`/shop`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            });
+
+            if (response.ok) {
+                alert('Item added to cart successfully!');
+            } else {
+                alert('Failed to add item to cart.');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    });
+});
 
         
     });

@@ -21,6 +21,15 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 
+app.use((req, res, next) => {
+  res.locals.user = {
+    cartCount: 10,
+  };
+  next();
+});
+
+
+
 //Mount routers
 app.use("/", shopRouter);
 app.use("/", homeRouter);
@@ -39,6 +48,7 @@ app.use((err, req, res, next) => {
     console.error(err.stack);
     res.status(500).send('Something went wrong');
   });
-  
+
+
 
 app.listen(PORT, () => console.log(`Express app listening on port ${PORT}!`));

@@ -14,7 +14,7 @@ export const renderShop = async (req, res) => {
 
      const { category } = req.params;
      const query = req.query.query;
-
+    
  
      //const products = await queryItems(offset, limit);
 
@@ -148,8 +148,11 @@ async function getNumberOfPages(tags, minPrice, maxPrice) {
 }
 
 export const postAddToCart = async (req, res) => {
+    //Post request made when add cart button is clicked
     const { itemID } = req.body;
-    const userID = localStorage.getItem("userID");
+    const userID = 777; // Hardcoded user ID for now
+
+
     const cartID = await getCartID(userID);
     await insertItemToCart(itemID, cartID);
     res.redirect("/cart");
@@ -236,16 +239,28 @@ async function queryItemByID(itemID)
 
 //Insert items into cart
 async function insertItemToCart(itemID, cartID) {
-    await pool.query(`
-        INSERT INTO cart_item (cartID, itemID, quantity)
-        VALUES (?, ?, 1);
-    `, [itemID, userID]);
+    const [existingItem] = await pool.query(`
+        SELECT quantity FROM cart_item WHERE cartID = ? AND itemID = ?;
+    `, [cartID, itemID]);
+
+    if (existingItem.length > 0) {
+        // Update the quantity if the item already exists in the cart
+        await pool.query(`
+            UPDATE cart_item SET quantity = quantity + 1 WHERE cartID = ? AND itemID = ?;
+        `, [cartID, itemID]);
+    } else {
+        // Insert the item if it does not exist in the cart
+        await pool.query(`
+            INSERT INTO cart_item (cartID, itemID, quantity)
+            VALUES (?, ?, 1);
+        `, [cartID, itemID]);
+    }
 }
 
 async function getCartID(userID){
     const [records] = await pool.query(`
         SELECT cartID FROM cart WHERE userID = ?;
-    `, [userID]);
+    `, userID);
 
     return records[0].cartID;
 }

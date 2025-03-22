@@ -1,14 +1,7 @@
 import { pool } from "../data/pool.js";
 export const renderCart = async (req, res) => {
-    let cart = [ {
-        name: "Book1",
-        price: "$0.00"
-    }, 
-    {
-        name: "Book12",
-        price: "$0.00"
-    }
-    ];
+    let cart = await queryItemByID(777);
+    console.log(cart);
     console.log(await queryItemByID(777));
     res.render("cart", {cart: cart});
 }
