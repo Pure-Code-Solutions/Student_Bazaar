@@ -62,10 +62,10 @@
             </div>
             
             <div class="action-buttons">
-                <button class="btn btn-primary">Buy It Now</button>
-                <button class="btn btn-secondary">Add to cart</button>
-                <button class="btn btn-secondary">Make offer</button>
-                <button class="btn btn-tertiary">❤ Add to Watchlist</button>
+                <!--button class="btn btn-primary">Buy It Now</button-->
+                <button class="add-to-cart-btn" value="<%= item.itemID %>">Add to cart</button>
+                <!--button class="btn btn-secondary">Make offer</button>
+                <button class="btn btn-tertiary">❤ Add to Watchlist</button-->
             </div>
             
             <div class="additional-services">
@@ -89,8 +89,7 @@
         </div>
     </div>
     
-    <!-- Include your footer here -->
-    <%- include('./partials/footer') %>
+
     
     <script>
         // Image gallery functionality
@@ -128,6 +127,39 @@
             currentImageIndex = (currentImageIndex - 1 + images.length) % images.length;
             changeImage(images[currentImageIndex]);
         }
+
+
+        document.querySelectorAll(".add-to-cart-btn").forEach(button => {
+         button.addEventListener("click", async (event) => {
+        const itemID = button.value;
+        const userID = 777; // Hardcoded for now
+        console.log("Add to Cart clicked", itemID);
+
+        const data = {
+            userID: parseInt(userID),
+            itemID: parseInt(itemID),
+            quantity: 1 // Default to 1
+        };
+
+        try {
+            const response = await fetch(`/item`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            });
+
+            if (response.ok) {
+                alert('Item added to cart successfully!');
+            } else {
+                alert('Failed to add item to cart.');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    });
+});   
     </script>
     
 </body>

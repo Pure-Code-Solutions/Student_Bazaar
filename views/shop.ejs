@@ -81,7 +81,7 @@
                     </div>
 
                     <div class="search-results-content">
-                        <div class="search-results-sorting">
+                        <!--div class="search-results-sorting">
                             <label for="sort-by">Sort by:</label>
                             <select id="sort-by">
                                 <option value="relevance" selected>Relevance</option>
@@ -94,7 +94,7 @@
                                 <button class="view-grid active"><i class="fas fa-th"></i></button>
                                 <button class="view-list"><i class="fas fa-list"></i></button>
                             </div>
-                        </div>
+                        </div-->
 
                         <div class="search-results-grid">
                             <!-- Product Card 1 -->
@@ -121,7 +121,7 @@
                                             <span class="current-price">$<%= product.price %></span>
                                         </div>
                                         <div class="product-actions">
-                                            <button class="add-to-cart-btn" value="<%= product.itemID %>">Add to Cart</button>
+                                            <button class="add-to-cart-btn" href="/cart" value="<%= product.itemID %>">Add to Cart</button>
                                             <!--button class="add-to-wishlist-btn"><i class="far fa-heart"></i></button-->
                                         </div>
                                     </div>
@@ -317,7 +317,7 @@
             cb.checked = selectedTags.includes(cb.value);
         });
         document.querySelectorAll(".add-to-cart-btn").forEach(button => {
-    button.addEventListener("click", async (event) => {
+         button.addEventListener("click", async (event) => {
         const itemID = button.value;
         const userID = 777; // Hardcoded for now
         console.log("Add to Cart clicked", itemID);
@@ -348,6 +348,7 @@
     });
 });
 
+    
         
     });
 

@@ -33,11 +33,12 @@
                         </div>
                         <div class="item-actions">
                             <div class="quantity-selector">
-                                <button class="qty-btn minus">-</button>
-                                <input type="number" value="<%= item.quantity %>" min="1" max="10">
-                                <button class="qty-btn plus">+</button>
+                                <button class="qty-btn-minus" value="<%= item.itemID %>">-</button>
+                                <!--input type="number" value="<%= item.quantity %>" min="1" max="10"-->
+                                <span><%= item.quantity %></span>
+                                <button class="qty-btn-plus" value="<%= item.itemID %>">+</button>
                             </div>
-                            <button class="btn-remove">Remove</button>
+                            <button class="btn-remove" value="<%= item.itemID %>">Remove</button>
                             <button class="btn-save">Save for Later</button>
                         </div>
                     </div>
@@ -100,7 +101,113 @@
         </div-->
     </main>
     
+    <script>
+        //Remove item from cart
+        document.addEventListener("DOMContentLoaded", () => {
+            const removeButtons = document.querySelectorAll(".btn-remove");
+            //Handles when removed clicked
+            removeButtons.forEach((btn) => {
+                btn.addEventListener('click', async function() {
+                    const itemID = btn.value;
+  
 
+                    try {
+                        const response = await fetch("/cart", {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({ itemID: parseInt(itemID), removeItem: true}),
+                        });
+
+                        const result = await response.json();
+
+                        if (response.ok) {
+                            // Remove item from DOM without refreshing
+
+                            await updateCartContent(response.text());
+       
+                        } 
+                    } catch (error) {
+                        console.error("Error:", error);
+                    }
+                });
+            });
+
+            //Handles when quantity is increment
+            const plusButtons = document.querySelectorAll(".qty-btn-plus");
+            plusButtons.forEach((btn) => {
+                btn.addEventListener('click', async function() {
+                    const itemID = btn.value;
+       
+
+                    try {
+                        const response = await fetch("/cart", {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({ itemID: parseInt(itemID), incrementItem: true}),
+                        });
+
+                        console.log("Response HTML:", responseText);
+                        const result = await response.json();
+                        if (response.ok) {
+                            await updateCartContent(response.text());
+                            
+                        } 
+                    } catch (error) {
+                        console.error("Error:", error);
+                    }
+                });
+            });
+
+             //Handles when quantity is decrement
+           const minusButtons = document.querySelectorAll(".qty-btn-minus");
+            minusButtons.forEach((btn) => {
+                btn.addEventListener('click', async function() {
+                    const itemID = btn.value;
+                    try {
+                        const response = await fetch("/cart", {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({ itemID: parseInt(itemID), decrementItem: true}),
+                        });
+
+             
+                        const result = await response.json();
+                        if (response.ok) {
+                            
+                            await updateCartContent(response.text());
+                            
+                        } 
+                    } catch (error) {
+                        console.error("Error:", error);
+                    }
+                });
+            });
+
+
+            //Not working idk ):
+            async function updateCartContent(data) 
+            {
+                console.log("Updating cart content with data:", data);
+
+                const tempDiv = document.createElement("div");
+                tempDiv.innerHTML = data;
+                const newCartContent = tempDiv.querySelector(".cart-container");
+
+                if (newCartContent) {
+                    document.querySelector(".cart-container").innerHTML = newCartContent.innerHTML;
+                } else {
+                    console.error("Failed to find updated cart content in response");
+                }
+            }
+
+            
+        });
+
+
+
+
+
+    </script>
     
 
 </body>

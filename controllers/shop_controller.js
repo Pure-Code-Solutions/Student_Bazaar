@@ -155,7 +155,7 @@ export const postAddToCart = async (req, res) => {
 
     const cartID = await getCartID(userID);
     await insertItemToCart(itemID, cartID);
-    res.redirect("/cart");
+    //res.redirect("/cart");
 }
 
 async function queryItems(offset, limit)
@@ -257,10 +257,11 @@ async function insertItemToCart(itemID, cartID) {
     }
 }
 
-async function getCartID(userID){
+export async function getCartID(userID){
     const [records] = await pool.query(`
         SELECT cartID FROM cart WHERE userID = ?;
     `, userID);
 
     return records[0].cartID;
 }
+
