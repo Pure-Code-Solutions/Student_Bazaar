@@ -30,7 +30,7 @@ app.use((req, res, next) => {
 
 
 
-//Mount routers
+//Mount routers //COMMENT THIS OUT
 app.use("/", shopRouter);
 app.use("/", homeRouter);
 app.use("/", authenticationRouter);

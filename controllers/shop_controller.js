@@ -66,15 +66,14 @@ export const renderShopByCategory = async (req, res) => {
     tags = req.query.tags ? req.query.tags.split('|') : []; // Parse tags into an array
     let { category } = req.params;
 
-    //console.log(tags);
-
-
+  
     // Append additional tags based on the category
-    if (category) {
-        tags.push(category);
-    }
-    const numberOfPages = Math.ceil(await getNumberOfPages(((tags)), minPrice, maxPrice)/limit);
-    let products = await queryItemsByFilters(tags, minPrice, maxPrice, offset, limit);
+   //tags.push(category);
+    
+
+
+    const numberOfPages = Math.ceil(await getNumberOfPages(category,((tags)), minPrice, maxPrice)/limit);
+    let products = await queryItemsByFilters(category, tags, minPrice, maxPrice, offset, limit);
 
 
 
@@ -88,21 +87,13 @@ export const renderShopByCategory = async (req, res) => {
         { category: "Lab-Equipment", subcategories: ["Medical Tools", "Microscopes", "Multimeters", "Beakers", "Circuit Kits"] }
     ];
 
-    
-    const prices = [
-        { range: "Under $25", min: 0, max: 25 },
-        { range: "$25 - $50", min: 25, max: 50 },
-        { range: "$50 - $100", min: 50, max: 100 },
-        { range: "$100 - $200", min: 100, max: 200 },
-        { range: "$200+", min: 200, max: null }
-    ];
 
     const categoryData = subcategories.find(c => c.category === category);
 
     if (!categoryData) {
         return res.status(404).send("Category not found");
     }
-    res.render("shop", {query, category,products, prices, subcategories: categoryData, numberOfPages, page});
+    res.render("shop", {query, category,products, subcategories: categoryData, numberOfPages, page});
 }
 
 
@@ -115,36 +106,49 @@ export const renderItemDetail = async (req, res) =>
  }
 
 
-async function getNumberOfPages(tags, minPrice, maxPrice) {
-    // Ensure tags is an array
-    if (typeof tags === "string") {
-        tags = tags.split("|");
-    }
-    tags = tags || []; // Default to an empty array if tags is null or undefined
+async function getNumberOfPages(category, tags, minPrice, maxPrice) {
+ // Ensure tags is an array
+ if (typeof tags === "string") {
+    tags = tags.split("|");
+}
+tags = tags || []; // Default to an empty array if tags is null or undefined
 
-    const placeholders = tags.map(() => "?").join(",");
-    let count = [{ total_rows: 0 }];
+const placeholders = tags.map(() => "?").join(",");
+let count = [{ total_rows: 0 }];
 
-    if (tags.length > 0) {
-        [count] = await pool.query(`
-            SELECT COUNT(*) AS total_rows FROM (
-                SELECT item.itemID
-                FROM item
-                JOIN item_tag ON item.itemID = item_tag.itemID
-                JOIN tag ON item_tag.tagID = tag.tagID
-                WHERE tag.name IN (${placeholders})
-                AND item.price BETWEEN ? AND ?
-                GROUP BY item.itemID
-                HAVING COUNT(DISTINCT tag.name) = ?
-            ) AS matched_items;
-        `, [...tags, minPrice, maxPrice, tags.length]); // Pass tags and their count to the query
-    } else {
-        [count] = await pool.query(`
-            SELECT COUNT(*) AS total_rows FROM item;
-        `);
-    }
+if (tags.length > 0) {
+    [count] = await pool.query(`
+        SELECT COUNT(DISTINCT item.itemID) AS total_rows
+        FROM item
+        JOIN item_tag ON item.itemID = item_tag.itemID
+        JOIN tag ON item_tag.tagID = tag.tagID
+        JOIN category ON item.categoryID = category.categoryID
+        WHERE 
+            (${category ? "category.name = ?" : "1=1"}) -- Match category by name
+            AND tag.name IN (${placeholders}) -- Match any of the tags
+            AND item.price BETWEEN ? AND ?;
+    `, [
+        ...(category ? [category] : []), // Add category name to query parameters if it exists
+        ...tags, // Add tags to query parameters
+        minPrice,
+        maxPrice,
+    ]);
+} else {
+    [count] = await pool.query(`
+        SELECT COUNT(*) AS total_rows
+        FROM item
+        JOIN category ON item.categoryID = category.categoryID
+        WHERE 
+            (${category ? "category.name = ?" : "1=1"}) -- Match category by name
+            AND item.price BETWEEN ? AND ?;
+    `, [
+        ...(category ? [category] : []),
+        minPrice,
+        maxPrice,
+    ]);
+}
 
-    return count[0].total_rows;
+return count[0].total_rows;
 }
 
 export const postAddToCart = async (req, res) => {
@@ -178,24 +182,42 @@ async function queryItems(offset, limit)
 
 }
 
-async function queryItemsByFilters(tags, minPrice, maxPrice, offset, limit) {
+async function queryItemsByFilters(category, tags, minPrice, maxPrice, offset, limit) {
+     
+        // Ensure `tags` is an array
+    if (typeof tags === "string") {
+        tags = tags.split("|");
+    }
+    tags = tags || []; // Default to an empty array if tags is null or undefined
+
+    // Prepare placeholders for tags
     const placeholders = tags.map(() => "?").join(",");
 
-    const [records] = await pool.query(`
+    const query = `
         SELECT item.*,                         
-        seller_profile.store_name AS seller_name,  
-        GROUP_CONCAT(tag.name SEPARATOR ', ') AS tags
+            seller_profile.store_name AS seller_name,  
+            GROUP_CONCAT(DISTINCT tag.name SEPARATOR ', ') AS tags
         FROM item
         JOIN seller_profile ON item.sellerID = seller_profile.sellerID
         JOIN item_tag ON item.itemID = item_tag.itemID
         JOIN tag ON item_tag.tagID = tag.tagID
-        WHERE tag.name IN (${placeholders})
-        AND item.price BETWEEN ? AND ?
+        JOIN category ON item.categoryID = category.categoryID
+        WHERE 
+            (${category ? "category.name = ?" : "1=1"}) -- Match category by name
+            ${tags.length > 0 ? `AND (tag.name IN (${placeholders}))` : ""} -- Match any of the tags (union)
+            AND item.price BETWEEN ? AND ?
         GROUP BY item.itemID, seller_profile.store_name
-        HAVING COUNT(DISTINCT tag.name) = ?
         LIMIT ${limit} OFFSET ${offset};
-    `, [...tags, minPrice, maxPrice, tags.length]); // Pass tags, price range, and their count to the query
+    `;
 
+    const queryParams = [
+        ...(category ? [category] : []), // Add category name to query parameters if it exists
+        ...tags, // Add tags to query parameters
+        minPrice,
+        maxPrice,
+    ];
+
+    const [records] = await pool.query(query, queryParams);
 
     return records;
 }
@@ -264,4 +286,3 @@ export async function getCartID(userID){
 
     return records[0].cartID;
 }
-
