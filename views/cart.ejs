@@ -119,13 +119,14 @@
                         });
 
                         const result = await response.json();
-
-                        if (response.ok) {
+        
+                      
                             // Remove item from DOM without refreshing
 
-                            await updateCartContent(response.text());
-       
-                        } 
+                       
+                        const responseText = await response.text(); // Get the updated HTML
+                        await updateCartContent(responseText);
+                        
                     } catch (error) {
                         console.error("Error:", error);
                     }
@@ -145,13 +146,14 @@
                             headers: { "Content-Type": "application/json" },
                             body: JSON.stringify({ itemID: parseInt(itemID), incrementItem: true}),
                         });
-
+                      
                         console.log("Response HTML:", responseText);
                         const result = await response.json();
-                        if (response.ok) {
-                            await updateCartContent(response.text());
-                            
-                        } 
+          
+                        const responseText = await response.text(); // Get the updated HTML
+                        await updateCartContent(responseText);
+                
+                        
                     } catch (error) {
                         console.error("Error:", error);
                     }
@@ -170,13 +172,11 @@
                             body: JSON.stringify({ itemID: parseInt(itemID), decrementItem: true}),
                         });
 
-             
-                        const result = await response.json();
-                        if (response.ok) {
+                        const responseText = await response.text();
+
+                        await updateCartContent(responseText);
                             
-                            await updateCartContent(response.text());
-                            
-                        } 
+                        
                     } catch (error) {
                         console.error("Error:", error);
                     }

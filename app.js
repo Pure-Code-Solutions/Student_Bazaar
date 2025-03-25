@@ -8,6 +8,7 @@ import { homeRouter } from "./routes/home_router.js";
 import { authenticationRouter } from "./routes/authentication_router.js";
 import { accountRouter } from "./routes/account_router.js";
 import { checkoutRouter } from "./routes/checkout_routes.js";
+import { sellingRouter } from "./routes/selling_router.js";
 
 const app = express();
 const PORT = 5000;
@@ -36,6 +37,7 @@ app.use("/", homeRouter);
 app.use("/", authenticationRouter);
 app.use("/", accountRouter);
 app.use("/", checkoutRouter);
+app.use("/", sellingRouter);
 
 
 //Setup file path for ejs assets

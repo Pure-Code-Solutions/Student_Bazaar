@@ -78,22 +78,23 @@ export const renderShopByCategory = async (req, res) => {
 
 
     //console.log(products);
-    const subcategories = [
+    /*const subcategories = [
         { category: "Textbooks", subcategories: ["Science", "Mathematics", "Engineering", "Arts", "Business", "Law", "Government", "Biology", "Chemistry"] },
         { category: "Electronics", subcategories: ["Laptops", "Tablets", "Smartphones", "Monitors", "Printers", "Headphones"] },
         { category: "Stationery", subcategories: ["Notebooks", "Pens", "Highlighters", "Planners", "Study Supplies", "Art Supplies"] },
         { category: "Campus-Gear", subcategories: ["Backpacks", "University Hoodies", "T-Shirts", "Water Bottles", "Keychains"] },
         { category: "Tech-Accessories", subcategories: ["Headphones", "Chargers", "Laptop Sleeves", "USB Drives", "Screen Protectors"] },
         { category: "Lab-Equipment", subcategories: ["Medical Tools", "Microscopes", "Multimeters", "Beakers", "Circuit Kits"] }
-    ];
+    ];*/
+
+    const tagData = {category: category, subcategories: await queryTags(category)};
+    console.log(tagData);
 
 
-    const categoryData = subcategories.find(c => c.category === category);
+    //const categoryData = subcategories.find(c => c.category === category);
 
-    if (!categoryData) {
-        return res.status(404).send("Category not found");
-    }
-    res.render("shop", {query, category,products, subcategories: categoryData, numberOfPages, page});
+
+    res.render("shop", {query, category,products, subcategories:tagData, numberOfPages, page});
 }
 
 
@@ -285,4 +286,33 @@ export async function getCartID(userID){
     `, userID);
 
     return records[0].cartID;
+}
+
+ async function queryCategoryAndTags() {
+    const [records] = await pool.query(`
+        SELECT 
+            c.name AS category, 
+            GROUP_CONCAT(t.name SEPARATOR ', ') AS tags
+        FROM category_tag ct
+        JOIN category c ON ct.categoryID = c.categoryID
+        JOIN tag t ON ct.tagID = t.tagID
+        GROUP BY c.name
+        ORDER BY c.name;
+    `);
+
+    return records;
+}
+
+async function queryTags(category) {
+    const [records] = await pool.query(`
+        SELECT 
+            t.name AS tag
+        FROM category_tag ct
+        JOIN category c ON ct.categoryID = c.categoryID
+        JOIN tag t ON ct.tagID = t.tagID
+        WHERE c.name = ?
+        ORDER BY t.name;
+    `, category);
+
+    return records.map(r => r.tag);
 }
