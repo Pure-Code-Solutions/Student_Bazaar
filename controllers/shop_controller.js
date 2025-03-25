@@ -287,8 +287,7 @@ export async function getCartID(userID){
 
     return records[0].cartID;
 }
-
- async function queryCategoryAndTags() {
+export async function queryCategoryAndTags() {
     const [records] = await pool.query(`
         SELECT 
             c.name AS category, 
@@ -300,10 +299,14 @@ export async function getCartID(userID){
         ORDER BY c.name;
     `);
 
-    return records;
+    return records.map(record => ({
+        category: record.category,
+        tags: record.tags ? record.tags.split(', ') : []
+    }));
 }
 
-async function queryTags(category) {
+
+export async function queryTags(category) {
     const [records] = await pool.query(`
         SELECT 
             t.name AS tag
@@ -315,4 +318,12 @@ async function queryTags(category) {
     `, category);
 
     return records.map(r => r.tag);
+}
+
+export async function queryCategories() {
+    const [records] = await pool.query(`
+        SELECT name FROM category;
+    `);
+
+    return records.map(r => r.name);
 }

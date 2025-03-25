@@ -42,51 +42,30 @@
                             <option value="">Select Condition</option>
                             <option value="new">New</option>
                             <option value="used">Used</option>
-                            <option value="for-parts">For Parts</option>
+       
                         </select>
                     </div>
                     <div class="specific-input">
                         <label>Category</label>
-                        <select required>
-                            <option value="">Select Condition</option>
-                            <option value="new">New</option>
-                            <option value="used">Used</option>
-                            <option value="for-parts">For Parts</option>
+                        <select id="category-select" required>
+                            <option value="">Select a Category</option>
+                            <% if (categories) { %>
+                                <% categories.forEach(category => { %>
+                                    <option value="<%= category.category %>"><%= category.category %></option>
+                                <% }); %>
+                            <% } %>
                         </select>
                     </div>
+                    
                     <div class="specific-input Tag-selection">
                         <label>Tag</label>
                         <div class="checkbox-dropdown">
                             <button type="button" class="dropdown-toggle">Select Tags</button>
-                            <div class="checkbox-options">
-                                <label>
-                                    <input type="checkbox" name="Tag" value="nintendo">
-                                    Nintendo
-                                </label>
-                                <label>
-                                    <input type="checkbox" name="Tag" value="sony">
-                                    Sony
-                                </label>
-                                <label>
-                                    <input type="checkbox" name="Tag" value="microsoft">
-                                    Microsoft
-                                </label>
-                                <label>
-                                    <input type="checkbox" name="Tag" value="other">
-                                    Other
-                                </label>
+                            <div class="checkbox-options" id="tag-options">
+                                <!-- Tags will be dynamically populated here -->
                             </div>
                         </div>
-                    </div>
-                    <!--div class="specific-input">
-                        <label>Model</label>
-                        <input type="text" placeholder="Enter model number">
-                    </div>
-                    <div class="specific-input">
-                        <label>Color</label>
-                        <input type="text" placeholder="Enter color">
-                    </div-->
-                </div>
+                        </div>
             </section>
 
             <!-- Photos & Video Section -->
@@ -154,24 +133,50 @@
         </form>
     </div>
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
+     document.addEventListener('DOMContentLoaded', () => {
+        const categoriesWithTags = <%- JSON.stringify(categories) %>; // Pass the data from the backend
+        const categorySelect = document.getElementById('category-select');
+        const tagOptions = document.getElementById('tag-options');
         const dropdownToggle = document.querySelector('.dropdown-toggle');
-        const checkboxes = document.querySelectorAll('.checkbox-options input[type="checkbox"]');
 
-        // Update dropdown text when checkboxes are selected
-        checkboxes.forEach(checkbox => {
-            checkbox.addEventListener('change', updateDropdownText);
+        // Listen for category selection changes
+        categorySelect.addEventListener('change', () => {
+            const selectedCategory = categorySelect.value;
+
+            // Find the tags for the selected category
+            const categoryData = categoriesWithTags.find(cat => cat.category === selectedCategory);
+
+            // Clear existing tags
+            tagOptions.innerHTML = '';
+
+            if (categoryData && categoryData.tags) {
+                // Populate the tags for the selected category
+                categoryData.tags.forEach(tag => {
+                    const label = document.createElement('label');
+                    const checkbox = document.createElement('input');
+                    checkbox.type = 'checkbox';
+                    checkbox.name = 'Tag';
+                    checkbox.value = tag;
+
+                    label.appendChild(checkbox);
+                    label.appendChild(document.createTextNode(tag));
+                    tagOptions.appendChild(label);
+                });
+            }
+
+            // Reset the dropdown text
+            dropdownToggle.textContent = 'Select Tags';
         });
 
-        function updateDropdownText() {
-            const selectedTags = Array.from(checkboxes)
-                .filter(cb => cb.checked)
-                .map(cb => cb.nextSibling.textContent.trim());
+        // Update dropdown text when checkboxes are selected
+        tagOptions.addEventListener('change', () => {
+            const selectedTags = Array.from(tagOptions.querySelectorAll('input[type="checkbox"]:checked'))
+                .map(cb => cb.value);
 
-            dropdownToggle.textContent = selectedTags.length > 0 
-                ? selectedTags.join(', ') 
+            dropdownToggle.textContent = selectedTags.length > 0
+                ? selectedTags.join(', ')
                 : 'Select Tags';
-        }
+        });
     });
     </script>
 </body>

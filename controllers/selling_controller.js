@@ -1,3 +1,7 @@
+import { queryCategoryAndTags } from "./shop_controller.js";
+
 export const renderCreateListing = async (req, res) => {
-    res.render("add-new-listing");
-}
+    const categories = await queryCategoryAndTags();
+
+    res.render("add-new-listing", {categories: categories});
+};
