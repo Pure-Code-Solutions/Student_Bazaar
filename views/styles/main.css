@@ -33,7 +33,7 @@ nav .nav-links a:hover, nav .nav-actions a:hover {
 /* Hero Section */
 .hero {
     background: url('../images/hero-bg.jpg') center/cover no-repeat;
-    color: white;
+    color: black;
     text-align: center;
     padding: 60px 20px;
 }

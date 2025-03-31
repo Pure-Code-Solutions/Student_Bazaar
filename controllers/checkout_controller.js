@@ -7,6 +7,10 @@ export const renderCart = async (req, res) => {
     res.render("cart", {cart: cart});
 }
 
+export const renderCheckout = async (req, res) => {
+    res.render("checkout");
+}
+
 export const updateItemFromCart = async (req, res) => {
     const { itemID } = req.body;
     const userID = 777; // Hardcoded for now

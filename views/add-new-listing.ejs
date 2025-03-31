@@ -18,13 +18,14 @@
     </header>
     
     <div class="listing-container">
-        <form id="ebay-listing-form">
+        <form id="ebay-listing-form" method="POST" >
             <!-- Title Section -->
             <section class="listing-section title-section">
                 <h2>Title</h2>
                 <input 
                     type="text" 
                     class="title-input" 
+                    name="title"
                     placeholder="Enter your listing title"
                     maxlength="80"
                     required
@@ -38,7 +39,7 @@
                 <div class="item-specifics-grid">
                     <div class="specific-input">
                         <label>Condition</label>
-                        <select required>
+                        <select name="condition" required>
                             <option value="">Select Condition</option>
                             <option value="new">New</option>
                             <option value="used">Used</option>
@@ -47,8 +48,8 @@
                     </div>
                     <div class="specific-input">
                         <label>Category</label>
-                        <select id="category-select" required>
-                            <option value="">Select a Category</option>
+                        <select id="category-select" name="category" required>
+                            <option value="" selected="selected">Select a Category</option>
                             <% if (categories) { %>
                                 <% categories.forEach(category => { %>
                                     <option value="<%= category.category %>"><%= category.category %></option>
@@ -72,10 +73,9 @@
             <section class="listing-section photos-section">
                 <h2>Photos & Video</h2>
                 <div class="photo-upload-area">
-                    <p>You can add up to 24 photos and a 1-minute video. Buyers want to see all details and angles.</p>
+                    <!--p>You can add up to 24 photos and a 1-minute video. Buyers want to see all details and angles.</p-->
                     <div class="upload-buttons">
-                        <button type="button" class="upload-btn">Upload from computer</button>
-                        <button type="button" class="upload-btn">Upload from mobile</button>
+                        <button type="button" class="upload-btn">Upload an image</button>
                     </div>
                 </div>
             </section>
@@ -84,6 +84,7 @@
             <section class="listing-section description-section">
                 <h2>Description</h2>
                 <textarea 
+                    name="description"
                     class="description-textarea" 
                     placeholder="Write a detailed description of your item"
                 ></textarea>
@@ -95,6 +96,7 @@
                 <div class="price-input">
                     <label>Price</label>
                     <input 
+                        name="price"
                         type="number" 
                         step="0.01" 
                         min="0" 
@@ -114,7 +116,7 @@
                 <h2>Shipping</h2>
                 <div class="shipping-option">
                     <label>Shipping Method</label>
-                    <select required>
+                    <select name="shippingMethod" required>
                         <option value="">Select Shipping Method</option>
                         <option value="usps-ground">USPS Ground Advantage</option>
                         <option value="ups-ground">UPS Ground</option>
@@ -133,8 +135,10 @@
         </form>
     </div>
     <script>
-     document.addEventListener('DOMContentLoaded', () => {
+    document.addEventListener('DOMContentLoaded', () => {
         const categoriesWithTags = <%- JSON.stringify(categories) %>; // Pass the data from the backend
+        console.log('Categories with Tags:', categoriesWithTags); // Debugging
+
         const categorySelect = document.getElementById('category-select');
         const tagOptions = document.getElementById('tag-options');
         const dropdownToggle = document.querySelector('.dropdown-toggle');
@@ -142,9 +146,11 @@
         // Listen for category selection changes
         categorySelect.addEventListener('change', () => {
             const selectedCategory = categorySelect.value;
+            console.log('Selected Category:', selectedCategory); // Debugging
 
             // Find the tags for the selected category
             const categoryData = categoriesWithTags.find(cat => cat.category === selectedCategory);
+            console.log('Category Data:', categoryData); // Debugging
 
             // Clear existing tags
             tagOptions.innerHTML = '';
@@ -155,7 +161,7 @@
                     const label = document.createElement('label');
                     const checkbox = document.createElement('input');
                     checkbox.type = 'checkbox';
-                    checkbox.name = 'Tag';
+                    checkbox.name = 'tags[]'; // Add a name attribute for form submission
                     checkbox.value = tag;
 
                     label.appendChild(checkbox);
@@ -172,12 +178,15 @@
         tagOptions.addEventListener('change', () => {
             const selectedTags = Array.from(tagOptions.querySelectorAll('input[type="checkbox"]:checked'))
                 .map(cb => cb.value);
-
+            console.log(selectedTags);
             dropdownToggle.textContent = selectedTags.length > 0
                 ? selectedTags.join(', ')
                 : 'Select Tags';
         });
-    });
+
+
+
+});
     </script>
 </body>
 </html>
