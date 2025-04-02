@@ -3,12 +3,20 @@ import { getCartID } from "./shop_controller.js";
 
 export const renderCart = async (req, res) => {
     let cart = await queryCartItems(777);
+    const userID = 777; // Hardcoded for now
+    const cartID = await getCartID(userID);
+
 
     res.render("cart", {cart: cart});
 }
 
 export const renderCheckout = async (req, res) => {
-    res.render("checkout");
+    let cart = await queryCartItems(777);
+    const userID = 777; // Hardcoded for now
+    const cartID = await getCartID(userID);
+
+    
+    res.render("checkout", {cart: cart});
 }
 
 export const updateItemFromCart = async (req, res) => {
