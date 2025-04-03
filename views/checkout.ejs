@@ -37,21 +37,21 @@
                                 </div>
                                 <div class="address-card-body">
                                     <p>Jane Smith</p>
-                                    <p>123 Campus Ave, Apt 4B</p>
-                                    <p>College Town, CA 90210</p>
-                                    <p>(555) 123-4567</p>
+                                    <p><%= userAddress.street %> <%= userAddress.premise %></p>
+                                    <p><%= userAddress.city %> <%= userAddress.postal_code %></p>
+
                                 </div>
                                 <div class="address-card-actions">
-                                    <a href="#">Edit</a>
+                                    <a class ="edit-address-button" href="#">Edit</a>
                                 </div>
                             </div>
                             
-                            <div class="address-card add-new">
+                            <!--div class="address-card add-new">
                                 <div class="add-new-content">
                                     <img src="images/plus.svg" alt="Add">
                                     <span>Add New Address</span>
                                 </div>
-                            </div>
+                            </div-->
                         </div>
                     </div>
                     
@@ -291,43 +291,156 @@
                 <p>&copy; 2025 CampusShop. All rights reserved.</p>
             </div>
         </footer>
-        
+        <dialog>
+        <!---Dialog for when edit address button is clicked-->
+        <div action="/checkout" class="address-dialog-box">
+            <h3>Shipping Address</h3>
+            <form method="POST">
+            <div class="form-row">
+              <div class="form-group">
+                <label for="first-name" >First name</label>
+                <input type="text" id="first-name" class="form-control" name="first-name" required>
+              </div>
+              <div class="form-group">
+                <label for="last-name">Last name</label>
+                <input type="text" id="last-name" class="form-control" name="last-name" required>
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <label for="address">Address</label>
+              <input type="text" id="address" class="form-control" name="address" required>
+            </div>
+            
+            <div class="form-group">
+              <label for="apartment">Apartment, suite, etc.</label>
+              <input type="text" id="apartment" class="form-control" name="premise" required>
+            </div>
+            
+            <div class="form-group">
+              <label for="city">City</label>
+              <input type="text" id="city" class="form-control" name="city" required>
+            </div>
+            
+            <div class="form-group">
+              <label for="state">State/province</label>
+              <select id="state" class="form-control" name="state" required>
+                <option value="" selected disabled>Select state</option>
+                <option value="AL">Alabama</option>
+                <option value="AK">Alaska</option>
+                <!-- Add more states as needed -->
+              </select>
+            </div>
+            
+            <div class="form-group">
+              <label for="country">Country</label>
+              <select id="country" class="form-control" name="country" required>
+                <option value="US" selected>United States</option>
+                <option value="CA">Canada</option>
+                <!-- Add more countries as needed -->
+              </select>
+            </div>
+            
+            <div class="form-group">
+              <label for="zip">ZIP/postal code</label>
+              <input type="text" id="zip" class="form-control" name="zip" required>
+            </div>
+            
+            <div class="dialog-buttons">
+              <button type="button" id="address-cancel-button" class="btn-secondary">Cancel</button>
+              <button type="submit" id="address-submit-button" class="btn-primary">Save Address</button>
+            </div>
+          </div>
+        </form>
+        </dialog>
         <script>
-            function showSection(sectionId) {
-                // Hide all sections
-                document.querySelectorAll('.checkout-section').forEach(section => {
-                    section.classList.remove('active');
+          
+                function showSection(sectionId) {
+                    // Hide all sections
+                    document.querySelectorAll('.checkout-section').forEach(section => {
+                        section.classList.remove('active');
+                    });
+                    
+                    // Show requested section
+                    const section = document.getElementById(sectionId);
+                    section.classList.add('active');
+                    
+                    // Update steps
+                    const stepIndex = ['shipping-section', 'payment-section', 'review-section'].indexOf(sectionId);
+                    document.querySelectorAll('.checkout-steps .step').forEach((step, index) => {
+                        if (index <= stepIndex) {
+                            step.classList.add('active');
+                        } else {
+                            step.classList.remove('active');
+                        }
+                    });
+
+                    // Update browser history
+                    const url = new URL(window.location);
+                    url.searchParams.set('section', sectionId);
+                    window.history.pushState({ sectionId }, '', url);
+                }
+
+                // Handle browser navigation
+                window.addEventListener('popstate', (event) => {
+                    const sectionId = event.state && event.state.sectionId ? event.state.sectionId : 'shipping-section';
+                    showSection(sectionId);
                 });
-                
-                // Show requested section
-                const section = document.getElementById(sectionId);
-                section.classList.add('active');
-                
-                // Update steps
-                const stepIndex = ['shipping-section', 'payment-section', 'review-section'].indexOf(sectionId);
-                document.querySelectorAll('.checkout-steps .step').forEach((step, index) => {
-                    if (index <= stepIndex) {
-                        step.classList.add('active');
-                    } else {
-                        step.classList.remove('active');
+
+                // Initialize section based on URL
+                const initialSection = new URL(window.location).searchParams.get('section') || 'shipping-section';
+                showSection(initialSection);
+            
+                const editButton = document.querySelector(".edit-address-button");
+                const addressCancelButton = document.querySelector("#address-cancel-button");
+                const submitAddressButton = document.querySelector("#address-submit-button");
+                const dialog = document.querySelector("dialog");
+                //Show address dialog
+                editButton.addEventListener("click", () => {
+                    dialog.showModal();
+                });
+                //Hides address dialog
+                addressCancelButton.addEventListener("click", () => {
+                    dialog.close();
+                });
+
+                //Hides dialog when new address submits
+                submitAddressButton.addEventListener("click", async () => {
+                    dialog.close();
+                    try {
+                    const response = await fetch(document.URL, {  
+                        method: "GET",
+                        headers: { "Content-Type": "application/json" },
+                    });
+                    const data = await response.text(); // Assuming the server returns HTML
+                    await updateAddressContent(data);
+
+                    } catch (error) {
+                        console.error("Error fetching filtered products:", error);
                     }
+        
+
+                    
                 });
 
-                // Update browser history
-                const url = new URL(window.location);
-                url.searchParams.set('section', sectionId);
-                window.history.pushState({ sectionId }, '', url);
+   
+
+            async function updateAddressContent(data) 
+            {
+                // ONLY Replaces the current search results with the new results and without changing the entire page
+                const tempDiv = document.createElement("div");
+                tempDiv.innerHTML = data;
+                const newAddress = tempDiv.querySelector(".address-card-body");
+
+                if (newAddress) {
+                    document.querySelector(".address-card-body").innerHTML = newAddress.innerHTML;
+
+                }
             }
+        
 
-            // Handle browser navigation
-            window.addEventListener('popstate', (event) => {
-                const sectionId = event.state && event.state.sectionId ? event.state.sectionId : 'shipping-section';
-                showSection(sectionId);
-            });
 
-            // Initialize section based on URL
-            const initialSection = new URL(window.location).searchParams.get('section') || 'shipping-section';
-            showSection(initialSection);
+                
         </script>
         <link rel="stylesheet" href="/styles/checkout.css">
     </body>

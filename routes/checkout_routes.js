@@ -1,5 +1,5 @@
 import Router from "express";
-import {updateItemFromCart, renderCart, renderCheckout } from "../controllers/checkout_controller.js";
+import {updateItemFromCart, renderCart, renderCheckout, submitAddress } from "../controllers/checkout_controller.js";
 export const checkoutRouter = Router();
 
 checkoutRouter.use((req, res, next) => {
@@ -12,3 +12,4 @@ checkoutRouter.use((req, res, next) => {
 checkoutRouter.get("/cart", renderCart);
 checkoutRouter.post("/cart", updateItemFromCart);
 checkoutRouter.get("/checkout", renderCheckout);
+checkoutRouter.post("/checkout", submitAddress);

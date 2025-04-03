@@ -68,7 +68,7 @@
                         <span></span>
                     </div>
                     
-                    <a href="checkout.html" class="btn-primary btn-checkout">Proceed to Checkout</a>
+                    <a href="/checkout" class="btn-primary btn-checkout">Proceed to Checkout</a>
                     
                     <div class="promo-code">
                         <h3>Promo Code</h3>
@@ -103,7 +103,7 @@
     
     <script>
         //Remove item from cart
-        document.addEventListener("DOMContentLoaded", () => {
+  
             const removeButtons = document.querySelectorAll(".btn-remove");
             //Handles when removed clicked
             removeButtons.forEach((btn) => {
@@ -125,6 +125,7 @@
 
                        
                         const responseText = await response.text(); // Get the updated HTML
+                       // window.location.reload();
                         await updateCartContent(responseText);
                         
                     } catch (error) {
@@ -151,6 +152,7 @@
                         const result = await response.json();
           
                         const responseText = await response.text(); // Get the updated HTML
+                       // window.location.reload();
                         await updateCartContent(responseText);
                 
                         
@@ -166,14 +168,14 @@
                 btn.addEventListener('click', async function() {
                     const itemID = btn.value;
                     try {
-                        const response = await fetch("/cart", {
+                        const response = await fetch(document.URL, {
                             method: "POST",
                             headers: { "Content-Type": "application/json" },
                             body: JSON.stringify({ itemID: parseInt(itemID), decrementItem: true}),
                         });
 
                         const responseText = await response.text();
-
+                       // window.location.reload();
                         await updateCartContent(responseText);
                             
                         
@@ -184,7 +186,7 @@
             });
 
 
-            //Not working idk ):
+            
             async function updateCartContent(data) 
             {
                 console.log("Updating cart content with data:", data);
@@ -199,12 +201,6 @@
                     console.error("Failed to find updated cart content in response");
                 }
             }
-
-            
-        });
-
-
-
 
 
     </script>

@@ -10,13 +10,25 @@ export const renderCart = async (req, res) => {
     res.render("cart", {cart: cart});
 }
 
+
 export const renderCheckout = async (req, res) => {
     let cart = await queryCartItems(777);
     const userID = 777; // Hardcoded for now
+    let userAddress = await getUserAddress(userID);
     const cartID = await getCartID(userID);
 
+    //console.log(userAddress);
+    res.render("checkout", {cart: cart, userAddress});
+}
+
+export const submitAddress = async(req, res) => {
+    const  address  = req.body;
+    const userID = 777; // Hardcoded for now
+
+    await insertUserAddress(userID, address.country, address.city, address.zip, address.street, address.premise, address.state);
     
-    res.render("checkout", {cart: cart});
+   // console.log(req.body);
+    //res.json({ success: true, message: "Address updated successfully" });
 }
 
 export const updateItemFromCart = async (req, res) => {
@@ -46,12 +58,24 @@ export const updateItemFromCart = async (req, res) => {
 
 };
 
+
+
+async function insertUserAddress(userID, country, city, zip, street, premise, state) {
+    console.log(userID + " " + country + " " + city);
+    const [rows] = await pool.query(`
+        UPDATE studentbazaardb.user_address
+        SET country = ?, city = ?, postal_code = ?, street = ?, premise = ?, state = ?
+        WHERE userID = '777'`, [country, city, zip, street, premise, state]);
+    
+    
+};
+
 async function getItemQuantity(itemID, cartID) {
     const [records] = await pool.query(`
         SELECT quantity FROM cart_item
         WHERE itemID = ? AND cartID = ?;
     `, [itemID, cartID]);
-    console.log("quantity: ", records[0].quantity);
+    //console.log("quantity: ", records[0].quantity);
     
     return records[0].quantity;
 }
@@ -94,4 +118,12 @@ async function incrementItemQuantity (itemID, cartID) {
         WHERE itemID = ? AND cartID =  ?;
     `, [itemID, cartID]);
 
+}
+
+async function getUserAddress (userID) {
+    const [records] = await pool.query(`
+        SELECT * FROM user_address
+        WHERE userID = ?;
+        `, [userID]);
+    return records[0];
 }

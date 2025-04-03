@@ -1,6 +1,7 @@
 import multer from 'multer';
 import express from "express";
 import path from "node:path";
+import { pool } from "./data/pool.js";
 import * as dotenv from 'dotenv';
 
 import { fileURLToPath } from 'url';
@@ -58,7 +59,6 @@ app.use((err, req, res, next) => {
     console.error(err.stack);
     res.status(500).send('Something went wrong');
   });
-
 
 
 app.listen(PORT, () => console.log(`Express app listening on port ${PORT}!`));
