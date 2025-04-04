@@ -6,7 +6,13 @@
 			box-sizing: border-box;
 		}
 
-
+        .account-section {
+            display: none; /* Hide all sections by default */
+        }
+        
+        .account-section.active {
+            display: block; /* Show the active section */
+        }
 
         .account-page .page-header {
             text-align: center;
