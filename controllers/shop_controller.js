@@ -88,7 +88,7 @@ export const renderShopByCategory = async (req, res) => {
     ];*/
 
     const tagData = {category: category, subcategories: await queryTags(category)};
-    console.log(tagData);
+   // console.log(tagData);
 
 
     //const categoryData = subcategories.find(c => c.category === category);

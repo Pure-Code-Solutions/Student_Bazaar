@@ -21,7 +21,7 @@ export const postListing = async (req, res) => {
         return res.status(400).send('Tags must be an array');
     }
 
-   // await createListing(1, title, category, tags, price);
+    await createListing(1, title, category, tags, price);
     res.send('Listing created successfully!');
 }
 

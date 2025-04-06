@@ -125,8 +125,11 @@
 
                        
                         const responseText = await response.text(); // Get the updated HTML
-                       // window.location.reload();
-                        await updateCartContent(responseText);
+                            // Reload the page to reflect changes
+                            setTimeout(function(){
+                            window.location.reload();
+                            });
+
                         
                     } catch (error) {
                         console.error("Error:", error);
@@ -152,9 +155,11 @@
                         const result = await response.json();
           
                         const responseText = await response.text(); // Get the updated HTML
-                       // window.location.reload();
-                        await updateCartContent(responseText);
-                
+                             // Reload the page to reflect changes
+                             setTimeout(function(){
+                            window.location.reload();
+                            });
+
                         
                     } catch (error) {
                         console.error("Error:", error);
@@ -175,8 +180,11 @@
                         });
 
                         const responseText = await response.text();
-                       // window.location.reload();
-                        await updateCartContent(responseText);
+                             // Reload the page to reflect changes
+                             setTimeout(function(){
+                            window.location.reload();
+                            });
+
                             
                         
                     } catch (error) {

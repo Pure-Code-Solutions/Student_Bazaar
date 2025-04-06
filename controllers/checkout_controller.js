@@ -12,13 +12,14 @@ export const renderCart = async (req, res) => {
 
 
 export const renderCheckout = async (req, res) => {
+    const section = req.params.section || 'shipping-section';
     let cart = await queryCartItems(777);
     const userID = 777; // Hardcoded for now
     let userAddress = await getUserAddress(userID);
     const cartID = await getCartID(userID);
 
     //console.log(userAddress);
-    res.render("checkout", {cart: cart, userAddress});
+    res.render("checkout", {cart: cart, userAddress, activeSection: section});
 }
 
 export const submitAddress = async(req, res) => {
@@ -26,7 +27,7 @@ export const submitAddress = async(req, res) => {
     const userID = 777; // Hardcoded for now
 
     await insertUserAddress(userID, address.country, address.city, address.zip, address.street, address.premise, address.state);
-    
+
    // console.log(req.body);
     //res.json({ success: true, message: "Address updated successfully" });
 }

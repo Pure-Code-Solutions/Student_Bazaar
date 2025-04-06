@@ -37,12 +37,12 @@
                                 </div>
                                 <div class="address-card-body">
                                     <p>Jane Smith</p>
-                                    <p><%= userAddress.street %> <%= userAddress.premise %></p>
-                                    <p><%= userAddress.city %> <%= userAddress.postal_code %></p>
-
+                                    <p><%= userAddress.street %>, <%= userAddress.premise %></p>
+                                    <p><%= userAddress.city %>, <%= userAddress.state %>  <%= userAddress.postal_code %></p>
+                                    <p><%= userAddress.country %></p>
                                 </div>
                                 <div class="address-card-actions">
-                                    <a class ="edit-address-button" href="#">Edit</a>
+                                    <a class ="edit-address-button" >Edit</a>
                                 </div>
                             </div>
                             
@@ -99,7 +99,7 @@
                         </div>
                         
                         <div class="form-actions">
-                            <button class="btn-outline" onclick="window.location.href='cart'">Return to Cart</button>
+                            <button class="btn-outline" onclick="window.location.href='/cart'">Return to Cart</button>
                             <button class="btn-primary" onclick="showSection('payment-section')">Continue to Payment</button>
                         </div>
                     </div>
@@ -181,13 +181,13 @@
                             <div class="review-section">
                                 <div class="review-header">
                                     <h3>Shipping Information</h3>
-                                    <a href="#" onclick="showSection('shipping-section')">Edit</a>
+                                    <a  onclick="showSection('shipping-section')">Edit</a>
                                 </div>
                                 <div class="review-content">
-                                    <p><strong>Jane Smith</strong></p>
-                                    <p>123 Campus Ave, Apt 4B</p>
-                                    <p>College Town, CA 90210</p>
-                                    <p>(555) 123-4567</p>
+                                    <p>Jane Smith</p>
+                                    <p><%= userAddress.street %>, <%= userAddress.premise %></p>
+                                    <p><%= userAddress.city %>, <%= userAddress.state %>  <%= userAddress.postal_code %></p>
+                                    <p><%= userAddress.country %></p>
                                     <p class="shipping-method">Standard Shipping (3-5 business days)</p>
                                 </div>
                             </div>
@@ -195,7 +195,7 @@
                             <div class="review-section">
                                 <div class="review-header">
                                     <h3>Payment Method</h3>
-                                    <a href="#" onclick="showSection('payment-section')">Edit</a>
+                                    <a onclick="showSection('payment-section')">Edit</a>
                                 </div>
                                 <div class="review-content">
                                     <p><img src="images/visa.svg" alt="Visa"> ending in 3456</p>
@@ -308,8 +308,8 @@
             </div>
             
             <div class="form-group">
-              <label for="address">Address</label>
-              <input type="text" id="address" class="form-control" name="address" required>
+              <label for="address">Street</label>
+              <input type="text" id="street" class="form-control" name="street" required>
             </div>
             
             <div class="form-group">
@@ -376,9 +376,11 @@
                     });
 
                     // Update browser history
-                    const url = new URL(window.location);
-                    url.searchParams.set('section', sectionId);
-                    window.history.pushState({ sectionId }, '', url);
+                    let url = new URL(window.location);
+                    url = `/checkout/${sectionId}`;
+                    /*url.searchParams.set('section', sectionId);
+                    window.history.pushState({ sectionId }, '', url)*/;
+                    window.history.pushState({}, "", url);
                 }
 
                 // Handle browser navigation
@@ -395,30 +397,56 @@
                 const addressCancelButton = document.querySelector("#address-cancel-button");
                 const submitAddressButton = document.querySelector("#address-submit-button");
                 const dialog = document.querySelector("dialog");
+                const addressForm = dialog.querySelector("form"); // Select the form inside the dialog
+                 //Sets url if dialog for address is open
+
+
                 //Show address dialog
                 editButton.addEventListener("click", () => {
+                    
+                    // Update browser history
+                    const url = new URL(window.location);
+                    url.searchParams.set('editAddress', '1');
+                    window.history.pushState({ editAddress: '1' }, '', url);
                     dialog.showModal();
                 });
                 //Hides address dialog
                 addressCancelButton.addEventListener("click", () => {
+                   // e.preventDefault(); // Prevent default behavior
+                      // Removes editAddress on browser history
+                    const url = new URL(window.location);
+                    url.searchParams.delete('editAddress' , '1');
+                    window.history.pushState({ editAddress: '1' }, '', url);
                     dialog.close();
                 });
 
                 //Hides dialog when new address submits
                 submitAddressButton.addEventListener("click", async () => {
-                    dialog.close();
-                    try {
-                    const response = await fetch(document.URL, {  
-                        method: "GET",
-                        headers: { "Content-Type": "application/json" },
-                    });
-                    const data = await response.text(); // Assuming the server returns HTML
-                    await updateAddressContent(data);
+                   // e.preventDefault(); // Prevent default behavior
+                    
+                    if (addressForm.checkValidity()) {
+                         // Removes editAddress on browser history
+                         dialog.close();
 
-                    } catch (error) {
-                        console.error("Error fetching filtered products:", error);
+                        const url = new URL(window.location);
+                        url.searchParams.delete('editAddress');
+                        window.history.pushState({}, '', url);
+
+                        addressForm.submit(); // Submit the form if needed
+                        
+                         // Reload the page to reflect changes
+                        /*setTimeout(function(){
+                            window.location.reload();
+                            });*/
+
+                        //await updateAddressContent(data);
+
+                    } else {
+                        // If the form is invalid, trigger the browser's validation UI
+                        addressForm.reportValidity();
+                        
                     }
-        
+                        
 
                     
                 });
@@ -438,7 +466,7 @@
                 }
             }
         
-
+            
 
                 
         </script>
