@@ -9,7 +9,7 @@
 <body>
     <header class="checkout-header">
         <div class="logo">
-            <a href="index.html"><img src="images/logo.svg" alt="CampusShop Logo"></a>
+            <a href="/"><img src="images/logo.svg" alt="CampusShop Logo"></a>
         </div>
         <div class="checkout-steps">
             <div class="step active">1. Shipping</div>
@@ -37,21 +37,21 @@
                                 </div>
                                 <div class="address-card-body">
                                     <p>Jane Smith</p>
-                                    <p>123 Campus Ave, Apt 4B</p>
-                                    <p>College Town, CA 90210</p>
-                                    <p>(555) 123-4567</p>
+                                    <p><%= userAddress.street %>, <%= userAddress.premise %></p>
+                                    <p><%= userAddress.city %>, <%= userAddress.state %>  <%= userAddress.postal_code %></p>
+                                    <p><%= userAddress.country %></p>
                                 </div>
                                 <div class="address-card-actions">
-                                    <a href="#">Edit</a>
+                                    <a class ="edit-address-button" >Edit</a>
                                 </div>
                             </div>
                             
-                            <div class="address-card add-new">
+                            <!--div class="address-card add-new">
                                 <div class="add-new-content">
                                     <img src="images/plus.svg" alt="Add">
                                     <span>Add New Address</span>
                                 </div>
-                            </div>
+                            </div-->
                         </div>
                     </div>
                     
@@ -99,7 +99,7 @@
                         </div>
                         
                         <div class="form-actions">
-                            <button class="btn-outline" onclick="window.location.href='cart.html'">Return to Cart</button>
+                            <button class="btn-outline" onclick="window.location.href='/cart'">Return to Cart</button>
                             <button class="btn-primary" onclick="showSection('payment-section')">Continue to Payment</button>
                         </div>
                     </div>
@@ -181,13 +181,13 @@
                             <div class="review-section">
                                 <div class="review-header">
                                     <h3>Shipping Information</h3>
-                                    <a href="#" onclick="showSection('shipping-section')">Edit</a>
+                                    <a  onclick="showSection('shipping-section')">Edit</a>
                                 </div>
                                 <div class="review-content">
-                                    <p><strong>Jane Smith</strong></p>
-                                    <p>123 Campus Ave, Apt 4B</p>
-                                    <p>College Town, CA 90210</p>
-                                    <p>(555) 123-4567</p>
+                                    <p>Jane Smith</p>
+                                    <p><%= userAddress.street %>, <%= userAddress.premise %></p>
+                                    <p><%= userAddress.city %>, <%= userAddress.state %>  <%= userAddress.postal_code %></p>
+                                    <p><%= userAddress.country %></p>
                                     <p class="shipping-method">Standard Shipping (3-5 business days)</p>
                                 </div>
                             </div>
@@ -195,7 +195,7 @@
                             <div class="review-section">
                                 <div class="review-header">
                                     <h3>Payment Method</h3>
-                                    <a href="#" onclick="showSection('payment-section')">Edit</a>
+                                    <a onclick="showSection('payment-section')">Edit</a>
                                 </div>
                                 <div class="review-content">
                                     <p><img src="images/visa.svg" alt="Visa"> ending in 3456</p>
@@ -207,43 +207,28 @@
                         <div class="review-items">
                             <h3>Items</h3>
                             <div class="review-item-list">
+                                <% cart.forEach(item => { %>
                                 <div class="review-item">
+                                
                                     <div class="item-image">
                                         <img src="images/backpack.jpg" alt="Campus Backpack">
                                     </div>
                                     <div class="item-details">
-                                        <h4>Campus Backpack</h4>
-                                        <p>Color: Navy</p>
-                                        <p>Qty: 1</p>
+                                        <h4><%= item.name %></h4>
+                                        <p>Qty: <%= item.quantity %></p>
                                     </div>
-                                    <div class="item-price">$42.50</div>
+                                    <div class="item-price">$<%= item.price %></div>
                                 </div>
                                 
-                                <div class="review-item">
-                                    <div class="item-image">
-                                        <img src="images/notebook.jpg" alt="5-Subject Spiral Notebook">
-                                    </div>
-                                    <div class="item-details">
-                                        <h4>5-Subject Spiral Notebook</h4>
-                                        <p>Color: Blue</p>
-                                        <p>Qty: 1</p>
-                                    </div>
-                                    <div class="item-price">$12.99</div>
-                                </div>
                                 
-                                <div class="review-item">
-                                    <div class="item-image">
-                                        <img src="images/calculator.jpg" alt="Scientific Calculator">
-                                    </div>
-                                    <div class="item-details">
-                                        <h4>Scientific Calculator</h4>
-                                        <p>Qty: 1</p>
-                                    </div>
-                                    <div class="item-price">$19.99</div>
-                                </div>
+                                <% }); %>
                             </div>
+                            
                         </div>
-                        
+                        <div class="form-actions">
+                            <button class="btn-outline" onclick="showSection('payment-section')">Return to Payment</button>
+                            <!--button class="btn-primary" onclick="window.location.href='cart'">Return to Cart </button-->
+                        </div>
                         <div class="place-order">
                             <p class="terms-agreement">
                                 <input type="checkbox" id="terms-agree" required>
@@ -254,6 +239,8 @@
                             <p class="order-disclaimer">You will not be charged until you place your order.</p>
                         </div>
                     </div>
+                         
+           
                 </div>
                 
                 <div class="checkout-sidebar">
@@ -261,21 +248,20 @@
                         <h2>Order Summary</h2>
                         <div class="summary-items">
                             <div class="summary-row">
-                                <span>Items (3)</span>
-                                <span>$75.48</span>
+                                <span>Items ((<%= cart.reduce((total, item) => total + item.quantity, 0) %>))</span>
+                                <span>$(X)</span>
                             </div>
                             <div class="summary-row">
                                 <span>Shipping</span>
-                                <span>FREE</span>
                             </div>
                             <div class="summary-row">
                                 <span>Estimated Tax</span>
-                                <span>$6.04</span>
+                                <span>$(X)</span>
                             </div>
                         </div>
                         <div class="summary-total">
                             <span>Order Total</span>
-                            <span>$81.52</span>
+                            <span>$(X)</span>
                         </div>
                         
                         <div class="promo-section">
@@ -286,20 +272,7 @@
                             </div>
                         </div>
                     </div>
-                    
-                    <div class="order-protection">
-                        <div class="protection-offer">
-                            <h3>Protect Your Purchase</h3>
-                            <div class="protection-option">
-                                <input type="checkbox" id="add-protection">
-                                <label for="add-protection">
-                                    <span class="protection-name">Product Protection Plan</span>
-                                    <span class="protection-price">$7.99</span>
-                                </label>
-                                <p class="protection-details">Covers accidental damage for 2 years</p>
-                            </div>
-                        </div>
-                    </div>
+             
                 </div>
             </div>
         </main>
@@ -318,28 +291,185 @@
                 <p>&copy; 2025 CampusShop. All rights reserved.</p>
             </div>
         </footer>
-        
+        <dialog>
+        <!---Dialog for when edit address button is clicked-->
+        <div action="/checkout" class="address-dialog-box">
+            <h3>Shipping Address</h3>
+            <form method="POST">
+            <div class="form-row">
+              <div class="form-group">
+                <label for="first-name" >First name</label>
+                <input type="text" id="first-name" class="form-control" name="first-name" required>
+              </div>
+              <div class="form-group">
+                <label for="last-name">Last name</label>
+                <input type="text" id="last-name" class="form-control" name="last-name" required>
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <label for="address">Street</label>
+              <input type="text" id="street" class="form-control" name="street" required>
+            </div>
+            
+            <div class="form-group">
+              <label for="apartment">Apartment, suite, etc.</label>
+              <input type="text" id="apartment" class="form-control" name="premise" required>
+            </div>
+            
+            <div class="form-group">
+              <label for="city">City</label>
+              <input type="text" id="city" class="form-control" name="city" required>
+            </div>
+            
+            <div class="form-group">
+              <label for="state">State/province</label>
+              <select id="state" class="form-control" name="state" required>
+                <option value="" selected disabled>Select state</option>
+                <option value="AL">Alabama</option>
+                <option value="AK">Alaska</option>
+                <!-- Add more states as needed -->
+              </select>
+            </div>
+            
+            <div class="form-group">
+              <label for="country">Country</label>
+              <select id="country" class="form-control" name="country" required>
+                <option value="US" selected>United States</option>
+                <option value="CA">Canada</option>
+                <!-- Add more countries as needed -->
+              </select>
+            </div>
+            
+            <div class="form-group">
+              <label for="zip">ZIP/postal code</label>
+              <input type="text" id="zip" class="form-control" name="zip" required>
+            </div>
+            
+            <div class="dialog-buttons">
+              <button type="button" id="address-cancel-button" class="btn-secondary">Cancel</button>
+              <button type="submit" id="address-submit-button" class="btn-primary">Save Address</button>
+            </div>
+          </div>
+        </form>
+        </dialog>
         <script>
-            function showSection(sectionId) {
-                // Hide all sections
-                document.querySelectorAll('.checkout-section').forEach(section => {
-                    section.classList.remove('active');
+          
+                function showSection(sectionId) {
+                    // Hide all sections
+                    document.querySelectorAll('.checkout-section').forEach(section => {
+                        section.classList.remove('active');
+                    });
+                    
+                    // Show requested section
+                    const section = document.getElementById(sectionId);
+                    section.classList.add('active');
+                    
+                    // Update steps
+                    const stepIndex = ['shipping-section', 'payment-section', 'review-section'].indexOf(sectionId);
+                    document.querySelectorAll('.checkout-steps .step').forEach((step, index) => {
+                        if (index <= stepIndex) {
+                            step.classList.add('active');
+                        } else {
+                            step.classList.remove('active');
+                        }
+                    });
+
+                    // Update browser history
+                    let url = new URL(window.location);
+                    url = `/checkout/${sectionId}`;
+                    /*url.searchParams.set('section', sectionId);
+                    window.history.pushState({ sectionId }, '', url)*/;
+                    window.history.pushState({}, "", url);
+                }
+
+                // Handle browser navigation
+                window.addEventListener('popstate', (event) => {
+                    const sectionId = event.state && event.state.sectionId ? event.state.sectionId : 'shipping-section';
+                    showSection(sectionId);
                 });
-                
-                // Show requested section
-                document.getElementById(sectionId).classList.add('active');
-                
-                // Update steps
-                const stepIndex = ['shipping-section', 'payment-section', 'review-section'].indexOf(sectionId);
-                document.querySelectorAll('.checkout-steps .step').forEach((step, index) => {
-                    if (index <= stepIndex) {
-                        step.classList.add('active');
+
+                // Initialize section based on URL
+                const initialSection = new URL(window.location).searchParams.get('section') || 'shipping-section';
+                showSection(initialSection);
+            
+                const editButton = document.querySelector(".edit-address-button");
+                const addressCancelButton = document.querySelector("#address-cancel-button");
+                const submitAddressButton = document.querySelector("#address-submit-button");
+                const dialog = document.querySelector("dialog");
+                const addressForm = dialog.querySelector("form"); // Select the form inside the dialog
+                 //Sets url if dialog for address is open
+
+
+                //Show address dialog
+                editButton.addEventListener("click", () => {
+                    
+                    // Update browser history
+                    const url = new URL(window.location);
+                    url.searchParams.set('editAddress', '1');
+                    window.history.pushState({ editAddress: '1' }, '', url);
+                    dialog.showModal();
+                });
+                //Hides address dialog
+                addressCancelButton.addEventListener("click", () => {
+                   // e.preventDefault(); // Prevent default behavior
+                      // Removes editAddress on browser history
+                    const url = new URL(window.location);
+                    url.searchParams.delete('editAddress' , '1');
+                    window.history.pushState({ editAddress: '1' }, '', url);
+                    dialog.close();
+                });
+
+                //Hides dialog when new address submits
+                submitAddressButton.addEventListener("click", async () => {
+                   // e.preventDefault(); // Prevent default behavior
+                    
+                    if (addressForm.checkValidity()) {
+                         // Removes editAddress on browser history
+                         dialog.close();
+
+                        const url = new URL(window.location);
+                        url.searchParams.delete('editAddress');
+                        window.history.pushState({}, '', url);
+
+                        addressForm.submit(); // Submit the form if needed
+                        
+                         // Reload the page to reflect changes
+                        /*setTimeout(function(){
+                            window.location.reload();
+                            });*/
+
+                        //await updateAddressContent(data);
+
                     } else {
-                        step.classList.remove('active');
+                        // If the form is invalid, trigger the browser's validation UI
+                        addressForm.reportValidity();
+                        
                     }
+                        
+
+                    
                 });
+
+   
+
+            async function updateAddressContent(data) 
+            {
+                // ONLY Replaces the current search results with the new results and without changing the entire page
+                const tempDiv = document.createElement("div");
+                tempDiv.innerHTML = data;
+                const newAddress = tempDiv.querySelector(".address-card-body");
+
+                if (newAddress) {
+                    document.querySelector(".address-card-body").innerHTML = newAddress.innerHTML;
+
+                }
             }
+        
+            
+
+                
         </script>
-        <link rel="stylesheet" href="checkout.css">
+        <link rel="stylesheet" href="/styles/checkout.css">
     </body>
     </html>

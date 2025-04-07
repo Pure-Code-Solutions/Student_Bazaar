@@ -1,34 +1,47 @@
 //Handles the request and response of the shop page item page
-//import { connection } from "../data/pool.js";
+import { pool } from "../data/pool.js";
+import { LocalStorage } from "node-localstorage";
+
+const localStorage = new LocalStorage('./scratch');
 
 
-const tempNumberOfPages = 3;
-const tempProducts = [
-    { id: "1", name: "Scientific Calculator", price: "24.99", number_stars: 2 },
-    { id: "2", name: "Wireless Mouse", price: "19.99", number_stars: 3 },
-    { id: "3", name: "Laptop Stand", price: "35.00", number_stars: 4 },
-    { id: "4", name: "Noise-Canceling Headphones", price: "89.99", number_stars: 5},
-    { id: "5", name: "Graph Paper Notebook", price: "7.99", number_stars: 5},
-    { id: "6", name: "Mechanical Keyboard", price: "49.99", number_stars: 5 },
-    { id: "7", name: "USB Flash Drive (64GB)", price: "12.99", number_stars: 1 },
-    { id: "8", name: "Ergonomic Backpack", price: "59.99", number_stars: 5 },
-    { id: "9", name: "Adjustable Desk Lamp", price: "29.99", number_stars: 5 },
-    { id: "10", name: "Reusable Smart Notebook", price: "38.99", number_stars:4 },
-    { id: "11", name: "Portable Power Bank", price: "34.99", number_stars: 5 },
-    { id: "12", name: "Desk Organizer Set", price: "22.99", number_stars: 5 }
-];
+
 export const renderShop = async (req, res) => {
-    let empty = [{}];
-    const query = req.query.query;
-    console.log("query: ", query);
+     //console.log(await queryItems());
+     const limit = 6;  // Number of records per page
+     const page = parseInt(req.query.page) || 1;  // Get page number from query string
+     const offset = (page - 1) * limit;  // Calculate the offset
+
+     const { category } = req.params;
+     const query = req.query.query;
+    
+ 
+     //const products = await queryItems(offset, limit);
+
+    let numberOfPages = 0;
+    //if query is undefined, then set number of pages to 0
+    if(req.query.page == undefined)
+    {
+        let numberOfPages = 0;
+    } else {
+
+        let numberOfPages = Math.ceil(await getNumberOfPages(category)/limit);
+    }
+    let products = await queryLikeTitles(query, offset, limit);
+
+    //let products = await queryItems(offset, limit);
+    
+    
+    
+
     res.render("shop", { 
         query,
         category:  [], 
-        products:[], 
+        products, 
         prices:[],  // Ensure prices is an array, even if empty
         subcategories:  null,  // Ensure subcategories is an array
-        numberOfPages: 0, 
-        page: 0 
+        numberOfPages: numberOfPages, 
+        page 
     });
 }
 
@@ -38,69 +51,279 @@ export const renderCategories = async (req, res) => {
 
 export const renderShopByCategory = async (req, res) => {
 
-    const { category } = req.params;
-    const subcategory = req.query.tags;
-    const pricesParam = req.query.prices;
+
+    //Get all query parameters
     const query = req.query.query;
-    //console.log("tags: " + subcategory + "prices: " + pricesParam);
-    const page = parseInt(req.query.page) || 1;
-    const tempLimit = 4; //Items per page
-    const offset = (page - 1) * tempLimit;
-    const products = await fetchProductsFromDB(tempLimit, offset);
+    const page = parseInt(req.query.page) || 1;  // Get page number from query string
+    const minPrice = parseInt(req.query.minPrice) || 0;
+    const maxPrice = parseInt(req.query.maxPrice) || 1000000;
+
+    const limit = 6;  // Number of records per page
+    const offset = (page - 1) * limit;  // Calculate the offset
+
+    //Parse tags into an array
+    let tags;
+    tags = req.query.tags ? req.query.tags.split('|') : []; // Parse tags into an array
+    let { category } = req.params;
+
+  
+    // Append additional tags based on the category
+   //tags.push(category);
+    
+
+
+    const numberOfPages = Math.ceil(await getNumberOfPages(category,((tags)), minPrice, maxPrice)/limit);
+    let products = await queryItemsByFilters(category, tags, minPrice, maxPrice, offset, limit);
+
+
+
     //console.log(products);
-    const subcategories = [
-        { category: "Textbooks", subcategories: ["Science", "Mathematics", "Engineering", "Arts", "Business", "Law"] },
-        { category: "Electronics", subcategories: ["Laptops", "Tablets", "Smartphones", "Monitors", "Printers"] },
-        { category: "Stationery", subcategories: ["Notebooks", "Pens", "Highlighters", "Planners", "Study Supplies"] },
+    /*const subcategories = [
+        { category: "Textbooks", subcategories: ["Science", "Mathematics", "Engineering", "Arts", "Business", "Law", "Government", "Biology", "Chemistry"] },
+        { category: "Electronics", subcategories: ["Laptops", "Tablets", "Smartphones", "Monitors", "Printers", "Headphones"] },
+        { category: "Stationery", subcategories: ["Notebooks", "Pens", "Highlighters", "Planners", "Study Supplies", "Art Supplies"] },
         { category: "Campus-Gear", subcategories: ["Backpacks", "University Hoodies", "T-Shirts", "Water Bottles", "Keychains"] },
         { category: "Tech-Accessories", subcategories: ["Headphones", "Chargers", "Laptop Sleeves", "USB Drives", "Screen Protectors"] },
         { category: "Lab-Equipment", subcategories: ["Medical Tools", "Microscopes", "Multimeters", "Beakers", "Circuit Kits"] }
-    ];
-    const  relevant_courses = [
-        {subject:"Math"},
-        {subject:"Science"}, 
-        {subject: "Language"}
-    ]
-    
-    const prices = [
-        { range: "Under $25", min: 0, max: 25 },
-        { range: "$25 - $50", min: 25, max: 50 },
-        { range: "$50 - $100", min: 50, max: 100 },
-        { range: "$100 - $200", min: 100, max: 200 },
-        { range: "$200+", min: 200, max: null }
-    ];
+    ];*/
 
-    const categoryData = subcategories.find(c => c.category === category);
+    const tagData = {category: category, subcategories: await queryTags(category)};
+   // console.log(tagData);
 
-    if (!categoryData) {
-        return res.status(404).send("Category not found");
-    }
-    res.render("shop", {query, category,products, prices, subcategories: categoryData, numberOfPages: tempNumberOfPages, page});
+
+    //const categoryData = subcategories.find(c => c.category === category);
+
+
+    res.render("shop", {query, category,products, subcategories:tagData, numberOfPages, page});
 }
 
 
 export const renderItemDetail = async (req, res) => 
 {
     const  itemID  = req.params.item;
-    console.log("itemID: ", itemID);
-    const tempItem =  getObjectByKey(tempProducts, 'id', itemID);
-    res.render("product-detail", {item:tempItem});
+    const item = await queryItemByID(itemID);
+
+    res.render("product-detail", {item});
  }
 
-function getObjectByKey(list, key, value) {
-    for (let i = 0; i < list.length; i++) {
-        if (list[i][key] === value) {
-        return list[i];
-        }
-    }
-    return undefined;
-    }
+
+async function getNumberOfPages(category, tags, minPrice, maxPrice) {
+ // Ensure tags is an array
+ if (typeof tags === "string") {
+    tags = tags.split("|");
+}
+tags = tags || []; // Default to an empty array if tags is null or undefined
+
+const placeholders = tags.map(() => "?").join(",");
+let count = [{ total_rows: 0 }];
+
+if (tags.length > 0) {
+    [count] = await pool.query(`
+        SELECT COUNT(DISTINCT item.itemID) AS total_rows
+        FROM item
+        JOIN item_tag ON item.itemID = item_tag.itemID
+        JOIN tag ON item_tag.tagID = tag.tagID
+        JOIN category ON item.categoryID = category.categoryID
+        WHERE 
+            (${category ? "category.name = ?" : "1=1"}) -- Match category by name
+            AND tag.name IN (${placeholders}) -- Match any of the tags
+            AND item.price BETWEEN ? AND ?;
+    `, [
+        ...(category ? [category] : []), // Add category name to query parameters if it exists
+        ...tags, // Add tags to query parameters
+        minPrice,
+        maxPrice,
+    ]);
+} else {
+    [count] = await pool.query(`
+        SELECT COUNT(*) AS total_rows
+        FROM item
+        JOIN category ON item.categoryID = category.categoryID
+        WHERE 
+            (${category ? "category.name = ?" : "1=1"}) -- Match category by name
+            AND item.price BETWEEN ? AND ?;
+    `, [
+        ...(category ? [category] : []),
+        minPrice,
+        maxPrice,
+    ]);
+}
+
+return count[0].total_rows;
+}
+
+export const postAddToCart = async (req, res) => {
+    //Post request made when add cart button is clicked
+    const { itemID } = req.body;
+    const userID = 777; // Hardcoded user ID for now
 
 
-async function fetchProductsFromDB(limit, offset)
+    const cartID = await getCartID(userID);
+    await insertItemToCart(itemID, cartID);
+    //res.redirect("/cart");
+}
+
+async function queryItems(offset, limit)
 {
-  
+    const [records] = await pool.query(`
+        SELECT 
+        item.*,                         
+        seller_profile.store_name AS seller_name,  
+        GROUP_CONCAT(tag.name SEPARATOR ', ') AS tags
+        FROM item
+        JOIN seller_profile ON item.sellerID = seller_profile.sellerID
+        JOIN item_tag ON item.itemID = item_tag.itemID
+        JOIN tag ON item_tag.tagID = tag.tagID
+        GROUP BY item.itemID, seller_profile.store_name
+        LIMIT ${limit} OFFSET ${offset};
+    `);
 
 
-    return tempProducts.slice(offset, limit+offset);
+    return records;
+
+}
+
+async function queryItemsByFilters(category, tags, minPrice, maxPrice, offset, limit) {
+     
+        // Ensure `tags` is an array
+    if (typeof tags === "string") {
+        tags = tags.split("|");
+    }
+    tags = tags || []; // Default to an empty array if tags is null or undefined
+
+    // Prepare placeholders for tags
+    const placeholders = tags.map(() => "?").join(",");
+
+    const query = `
+        SELECT item.*,                         
+            seller_profile.store_name AS seller_name,  
+            GROUP_CONCAT(DISTINCT tag.name SEPARATOR ', ') AS tags
+        FROM item
+        JOIN seller_profile ON item.sellerID = seller_profile.sellerID
+        JOIN item_tag ON item.itemID = item_tag.itemID
+        JOIN tag ON item_tag.tagID = tag.tagID
+        JOIN category ON item.categoryID = category.categoryID
+        WHERE 
+            (${category ? "category.name = ?" : "1=1"}) -- Match category by name
+            ${tags.length > 0 ? `AND (tag.name IN (${placeholders}))` : ""} -- Match any of the tags (union)
+            AND item.price BETWEEN ? AND ?
+        GROUP BY item.itemID, seller_profile.store_name
+        LIMIT ${limit} OFFSET ${offset};
+    `;
+
+    const queryParams = [
+        ...(category ? [category] : []), // Add category name to query parameters if it exists
+        ...tags, // Add tags to query parameters
+        minPrice,
+        maxPrice,
+    ];
+
+    const [records] = await pool.query(query, queryParams);
+
+    return records;
+}
+
+async function queryLikeTitles(value, offset, limit) 
+{   
+    const [records] = await pool.query(`
+        SELECT 
+        item.*,                         
+        seller_profile.store_name AS seller_name,  
+        GROUP_CONCAT(tag.name SEPARATOR ', ') AS tags
+        FROM item
+        JOIN seller_profile ON item.sellerID = seller_profile.sellerID
+        JOIN item_tag ON item.itemID = item_tag.itemID
+        JOIN tag ON item_tag.tagID = tag.tagID
+        WHERE item.name LIKE '%${value}%'
+        GROUP BY item.itemID, seller_profile.store_name
+        LIMIT ${limit} OFFSET ${offset};
+    `);
+
+    return records;
+}
+
+async function queryItemByID(itemID)
+{
+    const [records] = await pool.query(`
+        SELECT 
+        item.*,                         
+        seller_profile.store_name AS seller_name,  
+        GROUP_CONCAT(tag.name SEPARATOR ', ') AS tags
+        FROM item
+        JOIN seller_profile ON item.sellerID = seller_profile.sellerID
+        JOIN item_tag ON item.itemID = item_tag.itemID
+        JOIN tag ON item_tag.tagID = tag.tagID
+        WHERE item.itemID = ${itemID}
+        GROUP BY item.itemID, seller_profile.store_name;
+    `);
+
+    return records[0];
+}
+
+//Insert items into cart
+async function insertItemToCart(itemID, cartID) {
+    const [existingItem] = await pool.query(`
+        SELECT quantity FROM cart_item WHERE cartID = ? AND itemID = ?;
+    `, [cartID, itemID]);
+
+    if (existingItem.length > 0) {
+        // Update the quantity if the item already exists in the cart
+        await pool.query(`
+            UPDATE cart_item SET quantity = quantity + 1 WHERE cartID = ? AND itemID = ?;
+        `, [cartID, itemID]);
+    } else {
+        // Insert the item if it does not exist in the cart
+        await pool.query(`
+            INSERT INTO cart_item (cartID, itemID, quantity)
+            VALUES (?, ?, 1);
+        `, [cartID, itemID]);
+    }
+}
+
+export async function getCartID(userID){
+    const [records] = await pool.query(`
+        SELECT cartID FROM cart WHERE userID = ?;
+    `, userID);
+
+    return records[0].cartID;
+}
+export async function queryCategoryAndTags() {
+    const [records] = await pool.query(`
+        SELECT 
+            c.name AS category, 
+            GROUP_CONCAT(t.name SEPARATOR ', ') AS tags
+        FROM category_tag ct
+        JOIN category c ON ct.categoryID = c.categoryID
+        JOIN tag t ON ct.tagID = t.tagID
+        GROUP BY c.name
+        ORDER BY c.name;
+    `);
+
+    return records.map(record => ({
+        category: record.category,
+        tags: record.tags ? record.tags.split(', ') : []
+    }));
+}
+
+
+export async function queryTags(category) {
+    const [records] = await pool.query(`
+        SELECT 
+            t.name AS tag
+        FROM category_tag ct
+        JOIN category c ON ct.categoryID = c.categoryID
+        JOIN tag t ON ct.tagID = t.tagID
+        WHERE c.name = ?
+        ORDER BY t.name;
+    `, category);
+
+    return records.map(r => r.tag);
+}
+
+export async function queryCategories() {
+    const [records] = await pool.query(`
+        SELECT name FROM category;
+    `);
+
+    return records.map(r => r.name);
 }

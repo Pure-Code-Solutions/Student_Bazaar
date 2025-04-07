@@ -1,0 +1,56 @@
+<aside class="account-sidebar">
+    <div class="user-profile-brief">
+        <div class="user-avatar">
+            <img src="images/avatar-placeholder.svg" alt="User Avatar">
+        </div>
+        <div class="user-info">
+            <h3>Jane Smith</h3>
+            <p>jane.smith@university.edu</p>
+            <span class="student-badge">Verified Student</span>
+        </div>
+    </div>
+    
+    <nav class="account-nav">
+        <a href="/account/dashboard" class="active" data-section="dashboard" >Dashboard</a>
+        <a href="/account/orders" data-section="orders">My Orders</a>
+        <a href="#" data-section="wishlist">Wishlist</a>
+        <a href="#" data-section="account-settings">Account Settings</a>
+        <a href="#" data-section="selling">Selling</a>
+    </nav>
+    
+    <div class="account-help">
+
+    </div>
+    
+    <div class="logout-button">
+        <button class="btn-outline">Log Out</button>
+    </div>
+</aside>
+<script>
+    // Simple script to handle account section navigation
+    document.querySelectorAll('.account-nav a, .card-link').forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            // Get section to show
+            const sectionId = this.getAttribute('data-section');
+            
+            // Hide all sections
+            document.querySelectorAll('.account-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Show selected section
+            document.getElementById(sectionId).classList.add('active');
+            
+            // Update active nav link
+            document.querySelectorAll('.account-nav a').forEach(navLink => {
+                if (navLink.getAttribute('data-section') === sectionId) {
+                    navLink.classList.add('active');
+                } else {
+                    navLink.classList.remove('active');
+                }
+            });
+        });
+    });
+</script>

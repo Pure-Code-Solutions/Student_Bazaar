@@ -13,7 +13,7 @@
     <main class="cart-page">
         <div class="page-header">
             <h1>Your Cart</h1>
-            <p>3 items in your cart</p> 
+            <p>(<%= cart.reduce((total, item) => total + item.quantity, 0) %>) items in your cart</p>
         </div>
         
         <div class="cart-container">
@@ -33,11 +33,12 @@
                         </div>
                         <div class="item-actions">
                             <div class="quantity-selector">
-                                <button class="qty-btn minus">-</button>
-                                <input type="number" value="1" min="1" max="10">
-                                <button class="qty-btn plus">+</button>
+                                <button class="qty-btn-minus" value="<%= item.itemID %>">-</button>
+                                <!--input type="number" value="<%= item.quantity %>" min="1" max="10"-->
+                                <span><%= item.quantity %></span>
+                                <button class="qty-btn-plus" value="<%= item.itemID %>">+</button>
                             </div>
-                            <button class="btn-remove">Remove</button>
+                            <button class="btn-remove" value="<%= item.itemID %>">Remove</button>
                             <button class="btn-save">Save for Later</button>
                         </div>
                     </div>
@@ -51,23 +52,23 @@
                 <div class="order-summary">
                     <h2>Order Summary</h2>
                     <div class="summary-row">
-                        <span>Subtotal (3 items)</span>
-                        <span>$75.48</span>
+                        <span>Subtotal ((<%= cart.reduce((total, item) => total + item.quantity, 0) %>) items)</span>
+                        <span></span>
                     </div>
                     <div class="summary-row">
                         <span>Shipping</span>
-                        <span>FREE</span>
+                        <span></span>
                     </div>
                     <div class="summary-row">
                         <span>Estimated Tax</span>
-                        <span>$6.04</span>
+                        <span></span>
                     </div>
                     <div class="summary-row total">
                         <span>Total</span>
-                        <span>$81.52</span>
+                        <span></span>
                     </div>
                     
-                    <a href="checkout.html" class="btn-primary btn-checkout">Proceed to Checkout</a>
+                    <a href="/checkout" class="btn-primary btn-checkout">Proceed to Checkout</a>
                     
                     <div class="promo-code">
                         <h3>Promo Code</h3>
@@ -84,10 +85,10 @@
             </div>
         </div>
         
-        <div class="saved-items">
+        <!--div class="saved-items">
             <h2>Saved for Later</h2>
             <div class="saved-items-grid">
-                <!-- Saved items would appear here -->
+
                 <p class="empty-state">You don't have any saved items.</p>
             </div>
         </div>
@@ -95,14 +96,122 @@
         <div class="recommended-products">
             <h2>You Might Also Like</h2>
             <div class="products-row">
-                <!-- Recommended product cards -->
+
             </div>
-        </div>
+        </div-->
     </main>
     
-    <footer>
-        <!-- Same footer as other pages -->
-    </footer>
+    <script>
+        //Remove item from cart
+  
+            const removeButtons = document.querySelectorAll(".btn-remove");
+            //Handles when removed clicked
+            removeButtons.forEach((btn) => {
+                btn.addEventListener('click', async function() {
+                    const itemID = btn.value;
+  
+
+                    try {
+                        const response = await fetch("/cart", {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({ itemID: parseInt(itemID), removeItem: true}),
+                        });
+
+                        const result = await response.json();
+        
+                      
+                            // Remove item from DOM without refreshing
+
+                       
+                        const responseText = await response.text(); // Get the updated HTML
+                            // Reload the page to reflect changes
+                            setTimeout(function(){
+                            window.location.reload();
+                            });
+
+                        
+                    } catch (error) {
+                        console.error("Error:", error);
+                    }
+                });
+            });
+
+            //Handles when quantity is increment
+            const plusButtons = document.querySelectorAll(".qty-btn-plus");
+            plusButtons.forEach((btn) => {
+                btn.addEventListener('click', async function() {
+                    const itemID = btn.value;
+       
+
+                    try {
+                        const response = await fetch("/cart", {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({ itemID: parseInt(itemID), incrementItem: true}),
+                        });
+                      
+                        console.log("Response HTML:", responseText);
+                        const result = await response.json();
+          
+                        const responseText = await response.text(); // Get the updated HTML
+                             // Reload the page to reflect changes
+                             setTimeout(function(){
+                            window.location.reload();
+                            });
+
+                        
+                    } catch (error) {
+                        console.error("Error:", error);
+                    }
+                });
+            });
+
+             //Handles when quantity is decrement
+           const minusButtons = document.querySelectorAll(".qty-btn-minus");
+            minusButtons.forEach((btn) => {
+                btn.addEventListener('click', async function() {
+                    const itemID = btn.value;
+                    try {
+                        const response = await fetch(document.URL, {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({ itemID: parseInt(itemID), decrementItem: true}),
+                        });
+
+                        const responseText = await response.text();
+                             // Reload the page to reflect changes
+                             setTimeout(function(){
+                            window.location.reload();
+                            });
+
+                            
+                        
+                    } catch (error) {
+                        console.error("Error:", error);
+                    }
+                });
+            });
+
+
+            
+            async function updateCartContent(data) 
+            {
+                console.log("Updating cart content with data:", data);
+
+                const tempDiv = document.createElement("div");
+                tempDiv.innerHTML = data;
+                const newCartContent = tempDiv.querySelector(".cart-container");
+
+                if (newCartContent) {
+                    document.querySelector(".cart-container").innerHTML = newCartContent.innerHTML;
+                } else {
+                    console.error("Failed to find updated cart content in response");
+                }
+            }
+
+
+    </script>
     
 
 </body>

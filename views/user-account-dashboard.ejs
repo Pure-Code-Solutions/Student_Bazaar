@@ -1,15 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
-<%- include('./partials/navbar') %>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Account | CampusShop</title>
 
 </head>
+<%- include('./partials/navbar') %>
 <body>
 
-    
+        <!-- Navigation (same as other pages) -->
+
+
     <main class="account-page">
         <div class="page-header">
             <h1>My Account</h1>
@@ -30,13 +32,9 @@
                 </div>
                 
                 <nav class="account-nav">
-                    <a href="#" class="active" data-section="dashboard">Dashboard</a>
-                    <a href="#" data-section="orders">My Orders</a>
-                    <a href="#" data-section="wishlist">Wishlist</a>
-                    <a href="#" data-section="addresses">Addresses</a>
-                    <a href="#" data-section="payment-methods">Payment Methods</a>
-                    <a href="#" data-section="student-verification">Student Verification</a>
-                    <a href="#" data-section="account-settings">Account Settings</a>
+                    <a href="/account/dashboard" class="<%= activeSection === 'dashboard' ? 'active' : '' %>" data-section="dashboard">Dashboard</a>
+                    <a href="/account/orders" class="<%= activeSection === 'orders' ? 'active' : '' %>" data-section="orders">My Orders</a>
+                    <a href="/account/selling" class="<%= activeSection === 'selling' ? 'active' : '' %>" data-section="selling">Selling</a>
                 </nav>
                 
                 <div class="account-help">
@@ -52,7 +50,7 @@
             
             <div class="account-content">
                 <!-- Dashboard Section -->
-                <section class="account-section active" id="dashboard">
+                <section class="account-section <%= activeSection === 'dashboard' ? 'active' : '' %>" id="dashboard">
                     <div class="dashboard-cards">
                         <div class="dashboard-card">
                             <div class="card-icon">
@@ -126,7 +124,7 @@
                 </section>
                 
                 <!-- Orders Section -->
-                <section class="account-section" id="orders">
+                <section class="account-section <%= activeSection === 'orders' ? 'active' : '' %>" id="orders">
                     <h2>My Orders</h2>
                     
                     <div class="orders-tabs">
@@ -238,26 +236,37 @@
     <footer>
         <!-- Same footer as other pages -->
     </footer>
-    <style>
-        
-    </style>
+    
     <script>
         // Simple script to handle account section navigation
         document.querySelectorAll('.account-nav a, .card-link').forEach(link => {
-            link.addEventListener('click', function(e) {
-                e.preventDefault();
-                
-                // Get section to show
+            link.addEventListener('click', function (e) {
+                const href = this.getAttribute('href');
                 const sectionId = this.getAttribute('data-section');
-                
+                console.log('Href:', href);
+                console.log('Section ID:', sectionId);
+
+                // If the link has a valid href and no data-section, allow navigation
+                if (href && !sectionId) {
+                    return; // Let the default behavior (navigation) occur
+                }
+
+                // Prevent default behavior for links with data-section
+                e.preventDefault();
+
                 // Hide all sections
                 document.querySelectorAll('.account-section').forEach(section => {
                     section.classList.remove('active');
                 });
-                
-                // Show selected section
-                document.getElementById(sectionId).classList.add('active');
-                
+
+                // Show the selected section
+                if (sectionId) {
+                    document.getElementById(sectionId).classList.add('active');
+                            
+                    // Update the URL without reloading the page
+                    history.pushState(null, '', `/account/${sectionId}`);
+                }
+
                 // Update active nav link
                 document.querySelectorAll('.account-nav a').forEach(navLink => {
                     if (navLink.getAttribute('data-section') === sectionId) {
@@ -269,6 +278,6 @@
             });
         });
     </script>
-    <link rel="stylesheet" href="./styles/account.css">
+   <link rel="stylesheet" href="../styles/account.css">
 </body>
 </html>

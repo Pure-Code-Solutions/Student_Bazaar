@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
-<link rel="stylesheet" href="/styles/product-details.css">
+<link rel="stylesheet" href="../styles/product-details.css">
+<link rel="stylesheet" href="../styles/main.css">
 <%- include('./partials/navbar') %>
 <head>
     <meta charset="UTF-8">
@@ -38,15 +39,14 @@
             <h1 class="product-title"><%= item.name %></h1>
             
             <div class="seller-info">
-                <img src="images/user-avatar.png" class="seller-avatar" alt="Seller Avatar">
+                <!--img src="images/user-avatar.png" class="seller-avatar" alt="Seller Avatar"-->
                 <div class="seller-details">
-                    <span class="seller-name"><%= item.seller %></span>
-                    <span class="seller-rating">
+                    <span class="seller-name">Sold by: <%= item.seller_name %></span>
+                    <!--span class="seller-rating">
                         (<span class="positive-rating">90.6% positive</span>)
-                    </span>
+                    </span-->
                     <div class="seller-links">
-                        <a href="#">Seller's other items</a>
-                        <a href="#">Contact seller</a>
+
                     </div>
                 </div>
             </div>
@@ -54,48 +54,43 @@
             <div class="price-container">
                 <span class="price-label">US</span>
                 <span class="current-price">$<%= item.price %></span>
-                <span class="or-best-offer">or Best Offer</span>
+                <!--span class="or-best-offer">or Best Offer</span-->
             </div>
             
             <div class="condition">
                 <span class="condition-label">Condition:</span>
-                <span class="condition-value">Used</span>
+                <span class="condition-value"></span>
             </div>
             
             <div class="action-buttons">
-                <button class="btn btn-primary">Buy It Now</button>
-                <button class="btn btn-secondary">Add to cart</button>
-                <button class="btn btn-secondary">Make offer</button>
-                <button class="btn btn-tertiary">❤ Add to Watchlist</button>
+                <!--button class="btn btn-primary">Buy It Now</button-->
+                <button class="add-to-cart-btn" value="<%= item.itemID %>">Add to cart</button>
+                <!--button class="btn btn-secondary">Make offer</button>
+                <button class="btn btn-tertiary">❤ Add to Watchlist</button-->
             </div>
             
-            <div class="additional-services">
+            <!--div class="additional-services">
                 <h3>Additional service available</h3>
                 <div class="service-option">
-                    <input type="checkbox" id="protection-plan">
-                    <label for="protection-plan">1-year protection plan from Allstate - $10.99</label>
+                    
                 </div>
-            </div>
+            </div-->
             
-            <div class="people-watching">
-                <img src="images/lightning.png" class="lightning-icon" alt="Lightning Icon">
-                <span>People want this. 16 people are watching this.</span>
-            </div>
+
             
             <div class="shipping-info">
                 <div class="shipping-detail">
                     <span class="shipping-label">Shipping:</span>
-                    <span class="shipping-price">US $5.91 USPS Ground Advantage®. <a href="#">See details</a></span>
+                    <!--span class="shipping-price">US $5.91 USPS Ground Advantage®. <a href="#">See details</a></span-->
                 </div>
                 <div class="shipping-location">
-                    Located in: San Ysidro, California, United States
+                    Located in: 
                 </div>
             </div>
         </div>
     </div>
     
-    <!-- Include your footer here -->
-    <%- include('./partials/footer') %>
+
     
     <script>
         // Image gallery functionality
@@ -133,6 +128,39 @@
             currentImageIndex = (currentImageIndex - 1 + images.length) % images.length;
             changeImage(images[currentImageIndex]);
         }
+
+
+        document.querySelectorAll(".add-to-cart-btn").forEach(button => {
+         button.addEventListener("click", async (event) => {
+        const itemID = button.value;
+        const userID = 777; // Hardcoded for now
+        console.log("Add to Cart clicked", itemID);
+
+        const data = {
+            userID: parseInt(userID),
+            itemID: parseInt(itemID),
+            quantity: 1 // Default to 1
+        };
+
+        try {
+            const response = await fetch(`/item`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            });
+
+            if (response.ok) {
+                alert('Item added to cart successfully!');
+            } else {
+                alert('Failed to add item to cart.');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    });
+});   
     </script>
     
 </body>
