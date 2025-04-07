@@ -17,8 +17,8 @@ export const renderCheckout = async (req, res) => {
     const userID = 777; // Hardcoded for now
     let userAddress = await getUserAddress(userID);
     const cartID = await getCartID(userID);
-
-    //console.log(userAddress);
+    console.log(cart);
+    //console.log(cart);
     res.render("checkout", {cart: cart, userAddress, activeSection: section});
 }
 
@@ -30,6 +30,18 @@ export const submitAddress = async(req, res) => {
 
    // console.log(req.body);
     //res.json({ success: true, message: "Address updated successfully" });
+}
+
+export const submitOrder = async (req, res) => {
+    const userID = 777; // Hardcoded for now
+    const cart = await queryCartItems(userID);
+
+    //console.log("Cart: ", cart);
+    //console.log("Address ID: ", addressID);
+
+    await insertAllOrderItems(cart);
+
+    res.redirect("/");
 }
 
 export const updateItemFromCart = async (req, res) => {
@@ -64,7 +76,7 @@ export const updateItemFromCart = async (req, res) => {
 async function insertUserAddress(userID, country, city, zip, street, premise, state) {
     console.log(userID + " " + country + " " + city);
     const [rows] = await pool.query(`
-        UPDATE studentbazaardb.user_address
+        UPDATE user_address
         SET country = ?, city = ?, postal_code = ?, street = ?, premise = ?, state = ?
         WHERE userID = '777'`, [country, city, zip, street, premise, state]);
     
@@ -126,5 +138,50 @@ async function getUserAddress (userID) {
         SELECT * FROM user_address
         WHERE userID = ?;
         `, [userID]);
+    console.log("User Address: ", records[0]);
     return records[0];
+}
+
+async function getItemID (cartID) {
+    const [records] = await pool.query(`
+        SELECT itemID FROM cart_item
+        WHERE cartID = ?;
+    `, [cartID]);
+    return records[0].itemID;
+}
+
+async function insertOrder (userID,  addressID, itemID, quantity, price_at_purchase) {
+    const total_price = parseFloat((quantity * price_at_purchase).toFixed(2));
+    //Inserts new record in order table
+    const [order] = await pool.query(`
+        INSERT INTO \`order\` (userID, user_addressID, total_price)
+        VALUES (?, ?, ?);
+    `, [userID, addressID, total_price]);
+    
+    const orderID = order.insertId;
+    //Insert  record in order_item table
+    await pool.query(`
+        INSERT INTO order_item (orderID, itemID, quantity, price_at_purchase)
+        VALUES(?, ?, ?, ?);`, [orderID, itemID, quantity, price_at_purchase]);
+    
+}
+
+//Insert each cart item into order
+async function insertAllOrderItems (cart) {
+
+    for (let i = 0; i < cart.length; i++) {
+        const userID = 777; // Hardcoded for now
+        const userAddress = await getUserAddress(userID);
+        const addressID = userAddress.user_addressID;
+
+        const cartID = cart[i].cartID;
+        const itemID = cart[i].itemID;
+        const quantity = cart[i].quantity;
+        const price_at_purchase = cart[i].price;
+        console.log("addressID: ", addressID);
+        
+
+        await insertOrder(userID, addressID, itemID, quantity, price_at_purchase);
+        await removeItemFromCart(itemID, cartID);
+    }
 }
