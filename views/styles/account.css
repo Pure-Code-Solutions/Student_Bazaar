@@ -195,9 +195,15 @@
 
         .order-items {
             display: flex;
+            flex-direction: column;
+             align-items: flex-start;
             justify-content: space-between;
             padding: 20px 0;
             border-bottom: 1px solid #ccc;
+        }
+
+        .order-item {
+            
         }
 
         .order-item img {

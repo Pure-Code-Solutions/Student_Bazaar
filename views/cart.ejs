@@ -102,8 +102,23 @@
     </main>
     
     <script>
+                    
+            async function updateCartContent(data) 
+            {
+                console.log("Updating cart content with data:", data);
+
+                const tempDiv = document.createElement("div");
+                tempDiv.innerHTML = data;
+                const newCartContent = tempDiv.querySelector(".cart-items");
+
+                if (newCartContent) {
+                    document.querySelector(".cart-items").innerHTML = newCartContent.innerHTML;
+                } else {
+                    console.error("Failed to find updated cart content in response");
+                }
+            }
         //Remove item from cart
-  
+
             const removeButtons = document.querySelectorAll(".btn-remove");
             //Handles when removed clicked
             removeButtons.forEach((btn) => {
@@ -120,23 +135,16 @@
 
                         const result = await response.json();
         
-                      
-                            // Remove item from DOM without refreshing
-
                        
-                        const responseText = await response.text(); // Get the updated HTML
-                            // Reload the page to reflect changes
-                            setTimeout(function(){
-                            window.location.reload();
-                            });
-
+                        const responseText = await response.body(); // Get the updated HTML
+                         await updateCartContent(responseText); // Update the cart content with the new HTML
                         
                     } catch (error) {
                         console.error("Error:", error);
                     }
                 });
             });
-
+            
             //Handles when quantity is increment
             const plusButtons = document.querySelectorAll(".qty-btn-plus");
             plusButtons.forEach((btn) => {
@@ -154,11 +162,8 @@
                         console.log("Response HTML:", responseText);
                         const result = await response.json();
           
-                        const responseText = await response.text(); // Get the updated HTML
-                             // Reload the page to reflect changes
-                             setTimeout(function(){
-                            window.location.reload();
-                            });
+                        const responseText = await response.body(); // Get the updated HTML
+                        await updateCartContent(responseText); // Update the cart content with the new HTML
 
                         
                     } catch (error) {
@@ -173,18 +178,14 @@
                 btn.addEventListener('click', async function() {
                     const itemID = btn.value;
                     try {
-                        const response = await fetch(document.URL, {
+                        const response = await fetch("/cart", {
                             method: "POST",
                             headers: { "Content-Type": "application/json" },
                             body: JSON.stringify({ itemID: parseInt(itemID), decrementItem: true}),
                         });
 
-                        const responseText = await response.text();
-                             // Reload the page to reflect changes
-                             setTimeout(function(){
-                            window.location.reload();
-                            });
-
+                        const responseText = await response.body();
+                        await updateCartContent(responseText); // Update the cart content with the new HTML
                             
                         
                     } catch (error) {
@@ -194,21 +195,7 @@
             });
 
 
-            
-            async function updateCartContent(data) 
-            {
-                console.log("Updating cart content with data:", data);
 
-                const tempDiv = document.createElement("div");
-                tempDiv.innerHTML = data;
-                const newCartContent = tempDiv.querySelector(".cart-container");
-
-                if (newCartContent) {
-                    document.querySelector(".cart-container").innerHTML = newCartContent.innerHTML;
-                } else {
-                    console.error("Failed to find updated cart content in response");
-                }
-            }
 
 
     </script>

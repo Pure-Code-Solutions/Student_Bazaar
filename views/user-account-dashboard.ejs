@@ -51,7 +51,7 @@
             <div class="account-content">
                 <!-- Dashboard Section -->
                 <section class="account-section <%= activeSection === 'dashboard' ? 'active' : '' %>" id="dashboard">
-                    <div class="dashboard-cards">
+                    <!--div class="dashboard-cards">
                         <div class="dashboard-card">
                             <div class="card-icon">
                                 <img src="images/box-icon.svg" alt="Orders">
@@ -120,72 +120,60 @@
                                 <a href="#" class="activity-action">View</a>
                             </div>
                         </div>
-                    </div>
+                    </div-->
                 </section>
                 
                 <!-- Orders Section -->
                 <section class="account-section <%= activeSection === 'orders' ? 'active' : '' %>" id="orders">
                     <h2>My Orders</h2>
                     
-                    <div class="orders-tabs">
+                    <!--div class="orders-tabs">
                         <button class="order-tab active" data-tab="all">All Orders</button>
                         <button class="order-tab" data-tab="processing">Processing</button>
                         <button class="order-tab" data-tab="shipped">Shipped</button>
                         <button class="order-tab" data-tab="delivered">Delivered</button>
-                    </div>
+                    </div-->
                     
                     <div class="orders-list">
-                        <!--div class="order-card">
+                        <% if (locals.groupedOrders) {%>
+                            <% locals.groupedOrders.forEach(order => { %> 
+                        <div class="order-card">
                             <div class="order-header">
                                 <div class="order-info">
-                                    <h3>Order #12345</h3>
-                                    <span class="order-date">March 1, 2025</span>
+                                    <h3>Order #(X)</h3>
+                                    <span class="order-date"><%= order.purchase_date %></span>
                                 </div>
                                 <div class="order-status">
-                                    <span class="status-shipped">Shipped</span>
+                                    
                                 </div>
                             </div>
                             
                             <div class="order-items">
+                                <% order.orders.forEach(currentOrder => { %> 
                                 <div class="order-item">
-                                    <img src="images/backpack.jpg" alt="Campus Backpack">
-                                    <div class="item-name">Campus Backpack</div>
-                                    <div class="item-price">$42.50</div>
+                                    <!--img src="images/backpack.jpg" alt="Campus Backpack"-->
+                                    <div class="item-name"><%= currentOrder.item_name %></div>
+                                    <div class="item-price">$<%= currentOrder.price_at_purchase %></div>
                                 </div>
-                                <div class="order-item">
-                                    <img src="images/notebook.jpg" alt="5-Subject Spiral Notebook">
-                                    <div class="item-name">5-Subject Spiral Notebook</div>
-                                    <div class="item-price">$12.99</div>
-                                </div>
+
+                                <% }); %>
                             </div>
-                            
+          
                             <div class="order-footer">
                                 <div class="order-total">
                                     <span>Total:</span>
-                                    <span class="total-amount">$55.49</span>
+                                    <span class="total-amount">$(X)</span>
                                 </div>
                                 <div class="order-actions">
                                     <a href="#" class="btn-outline">Track Order</a>
                                     <a href="#" class="btn-link">View Details</a>
                                 </div>
                             </div>
-                        </div-->
-
-                        
-                        
-                        
-                            
-                            <div class="order-footer">
-                                <div class="order-total">
-                                    <span>Total:</span>
-                                    <span class="total-amount">$19.99</span>
-                                </div>
-                                <div class="order-actions">
-                                    <a href="#" class="btn-outline">Buy Again</a>
-                                    <a href="#" class="btn-link">View Details</a>
-                                </div>
-                            </div>
                         </div>
+                        <% }); %>
+                        <% }; %> 
+                        
+                        
                     </div>
                 </section>
                 
@@ -217,15 +205,14 @@
             </div>
         </div>
     </main>
-    
-    <footer>
+  
         <!-- Same footer as other pages -->
-    </footer>
+ 
     
     <script>
         // Simple script to handle account section navigation
         document.querySelectorAll('.account-nav a, .card-link').forEach(link => {
-            link.addEventListener('click', function (e) {
+            link.addEventListener('click', async function (e) {
                 const href = this.getAttribute('href');
                 const sectionId = this.getAttribute('data-section');
                 console.log('Href:', href);
@@ -259,9 +246,40 @@
                     } else {
                         navLink.classList.remove('active');
                     }
+                
                 });
+                try {
+                    const url = `/account/${sectionId}`;
+                    const response = await fetch(url, {  
+                        method: "GET",
+                        headers: { "Content-Type": "application/json" },
+                    });
+                    const data = await response.text(); // Assuming the server returns HTML
+                    await updateOrderContent(data);
+
+                    } catch (error) {
+                    console.error("Error fetching filtered products:", error);
+                    }
+        
             });
         });
+
+        
+  
+
+
+        async function updateOrderContent(data) 
+        {
+            // ONLY Replaces the current search results with the new results and without changing the entire page
+            const tempDiv = document.createElement("div");
+            tempDiv.innerHTML = data;
+            const newSearchResults = tempDiv.querySelector(".order-items");
+
+            if (newSearchResults) {
+                document.querySelector(".order-items").innerHTML = newSearchResults.innerHTML;
+
+            }
+        }
     </script>
    <link rel="stylesheet" href="../styles/account.css">
 </body>
