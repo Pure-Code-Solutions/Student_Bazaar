@@ -15,6 +15,6 @@ accountRouter.use((req, res, next) => {
 accountRouter.get("/account", (req, res) => {
   res.redirect("/account/dashboard");
 });
-accountRouter.get("/account/dashboard", renderAccount);
-accountRouter.get("/account/orders", renderOrders);
-accountRouter.get("/account/selling", renderSelling);
+accountRouter.get("/dashboard", renderAccount);
+accountRouter.get("/orders", renderOrders);
+accountRouter.get("/selling", renderSelling);

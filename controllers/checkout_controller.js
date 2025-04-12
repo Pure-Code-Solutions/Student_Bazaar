@@ -41,32 +41,31 @@ export const submitOrder = async (req, res) => {
 
     await insertAllOrderItems(cart);
 
-    res.redirect("/");
 }
 
 export const updateItemFromCart = async (req, res) => {
-    const { itemID } = req.body;
+    const { itemID, incrementItem, decrementItem, removeItem } = req.body;
     const userID = 777; // Hardcoded for now
     const cartID = await getCartID(userID);
 
-    //console.log("Update Cart Request:", { itemID, cartID, body: req.body });
-
-    if (req.body.incrementItem) {
-
-        await incrementItemQuantity(itemID, cartID);
-    } else if (req.body.decrementItem) {
- 
-        if (await getItemQuantity(itemID, cartID) > 1) {
-            await decrementItemQuantity(itemID, cartID);
-        } else {
+    try {
+        if (incrementItem) {
+            await incrementItemQuantity(itemID, cartID);
+        } else if (decrementItem) {
+            if (await getItemQuantity(itemID, cartID) > 1) {
+                await decrementItemQuantity(itemID, cartID);
+            } else {
+                await removeItemFromCart(itemID, cartID);
+            }
+        } else if (removeItem) {
             await removeItemFromCart(itemID, cartID);
         }
-        res.json({ success: true });
-    } else if (req.body.removeItem) {
-        console.log("Removing item from cart");
-        await removeItemFromCart(itemID, cartID);
 
-    } 
+        res.json({ success: true });
+    } catch (error) {
+        console.error('Error updating cart:', error);
+        res.status(500).json({ success: false, error: 'Internal Server Error' });
+    }
 
 
 };

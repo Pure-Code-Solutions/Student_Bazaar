@@ -1,0 +1,41 @@
+<div class="orders-list">
+    <% if (locals.groupedOrders) {%>
+        <% locals.groupedOrders.forEach(order => { %> 
+    <div class="order-card">
+        <div class="order-header">
+            <div class="order-info">
+                <h3>Order #(X)</h3>
+                <span class="order-date"><%= order.purchase_date %></span>
+            </div>
+            <div class="order-status">
+                
+            </div>
+        </div>
+        
+        <div class="order-items">
+            <% order.orders.forEach(currentOrder => { %> 
+            <div class="order-item">
+                <!--img src="images/backpack.jpg" alt="Campus Backpack"-->
+                <div class="item-name"><%= currentOrder.item_name %></div>
+                <div class="item-price">$<%= currentOrder.price_at_purchase %></div>
+            </div>
+
+            <% }); %>
+        </div>
+
+        <div class="order-footer">
+            <div class="order-total">
+                <span>Total:</span>
+                <span class="total-amount">$(X)</span>
+            </div>
+            <div class="order-actions">
+                <a href="#" class="btn-outline">Track Order</a>
+                <a href="#" class="btn-link">View Details</a>
+            </div>
+        </div>
+    </div>
+    <% }); %>
+    <% }; %> 
+    
+  
+</div>

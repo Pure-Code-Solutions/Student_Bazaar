@@ -41,7 +41,7 @@ app.use((req, res, next) => {
 app.use("/", shopRouter);
 app.use("/", homeRouter);
 app.use("/", authenticationRouter);
-app.use("/", accountRouter);
+app.use("/account", accountRouter);
 app.use("/", checkoutRouter);
 app.use("/", sellingRouter);
 app.use('/api', S3router);

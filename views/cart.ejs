@@ -44,7 +44,6 @@
                     </div>
                 </div>
                 <% }); %>
-                
               
             </div>
             
@@ -102,100 +101,120 @@
     </main>
     
     <script>
-                    
-            async function updateCartContent(data) 
-            {
-                console.log("Updating cart content with data:", data);
+        document.addEventListener('DOMContentLoaded', () => {
+            attachCartEventListeners();
+        });
+        async function updateCartContent() {
+            try {
+                // Fetch the updated cart HTML
+                const response = await fetch('/cart', {
+                    method: 'GET',
+                    headers: { 'Content-Type': 'text/html' },
+                });
 
-                const tempDiv = document.createElement("div");
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const data = await response.text();
+
+                // Update the cart content dynamically
+                const tempDiv = document.createElement('div');
                 tempDiv.innerHTML = data;
-                const newCartContent = tempDiv.querySelector(".cart-items");
+                const newCartContent = tempDiv.querySelector('.cart-items');
 
                 if (newCartContent) {
-                    document.querySelector(".cart-items").innerHTML = newCartContent.innerHTML;
+                    const currentCartContent = document.querySelector('.cart-items');
+                    if (currentCartContent) {
+                        currentCartContent.innerHTML = newCartContent.innerHTML;
+                        // Reattach event listeners
+                       attachCartEventListeners();
+                    } else {
+                        console.error('Current cart content not found in the DOM');
+                    }
                 } else {
-                    console.error("Failed to find updated cart content in response");
+                    console.error('Failed to find updated cart content in response');
                 }
+            } catch (error) {
+                console.error('Error fetching updated cart content:', error);
             }
-        //Remove item from cart
-
-            const removeButtons = document.querySelectorAll(".btn-remove");
-            //Handles when removed clicked
-            removeButtons.forEach((btn) => {
-                btn.addEventListener('click', async function() {
+        }
+        function attachCartEventListeners() {
+            // Handle increment button
+            document.querySelectorAll('.qty-btn-plus').forEach((btn) => {
+                btn.addEventListener('click', async function () {
                     const itemID = btn.value;
-  
 
                     try {
-                        const response = await fetch("/cart", {
-                            method: "POST",
-                            headers: { "Content-Type": "application/json" },
-                            body: JSON.stringify({ itemID: parseInt(itemID), removeItem: true}),
+                        // Send POST request to increment item
+                        const response = await fetch('/cart', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ itemID: parseInt(itemID), incrementItem: true }),
                         });
 
-                        const result = await response.json();
-        
-                       
-                        const responseText = await response.body(); // Get the updated HTML
-                         await updateCartContent(responseText); // Update the cart content with the new HTML
-                        
-                    } catch (error) {
-                        console.error("Error:", error);
-                    }
-                });
-            });
-            
-            //Handles when quantity is increment
-            const plusButtons = document.querySelectorAll(".qty-btn-plus");
-            plusButtons.forEach((btn) => {
-                btn.addEventListener('click', async function() {
-                    const itemID = btn.value;
-       
+                        if (!response.ok) {
+                            throw new Error(`HTTP error! status: ${response.status}`);
+                        }
 
-                    try {
-                        const response = await fetch("/cart", {
-                            method: "POST",
-                            headers: { "Content-Type": "application/json" },
-                            body: JSON.stringify({ itemID: parseInt(itemID), incrementItem: true}),
-                        });
-                      
-                        console.log("Response HTML:", responseText);
-                        const result = await response.json();
-          
-                        const responseText = await response.body(); // Get the updated HTML
-                        await updateCartContent(responseText); // Update the cart content with the new HTML
-
-                        
+                        // Fetch updated cart content
+                        await updateCartContent();
                     } catch (error) {
-                        console.error("Error:", error);
+                        console.error('Error incrementing item:', error);
                     }
                 });
             });
 
-             //Handles when quantity is decrement
-           const minusButtons = document.querySelectorAll(".qty-btn-minus");
-            minusButtons.forEach((btn) => {
-                btn.addEventListener('click', async function() {
+            // Handle decrement button
+            document.querySelectorAll('.qty-btn-minus').forEach((btn) => {
+                btn.addEventListener('click', async function () {
                     const itemID = btn.value;
+
                     try {
-                        const response = await fetch("/cart", {
-                            method: "POST",
-                            headers: { "Content-Type": "application/json" },
-                            body: JSON.stringify({ itemID: parseInt(itemID), decrementItem: true}),
+                        // Send POST request to decrement item
+                        const response = await fetch('/cart', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ itemID: parseInt(itemID), decrementItem: true }),
                         });
 
-                        const responseText = await response.body();
-                        await updateCartContent(responseText); // Update the cart content with the new HTML
-                            
-                        
+                        if (!response.ok) {
+                            throw new Error(`HTTP error! status: ${response.status}`);
+                        }
+
+                        // Fetch updated cart content
+                        await updateCartContent();
                     } catch (error) {
-                        console.error("Error:", error);
+                        console.error('Error decrementing item:', error);
                     }
                 });
             });
 
+            // Handle remove button
+            document.querySelectorAll('.btn-remove').forEach((btn) => {
+                btn.addEventListener('click', async function () {
+                    const itemID = btn.value;
 
+                    try {
+                        // Send POST request to remove item
+                        const response = await fetch('/cart', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ itemID: parseInt(itemID), removeItem: true }),
+                        });
 
+                        if (!response.ok) {
+                            throw new Error(`HTTP error! status: ${response.status}`);
+                        }
+
+                        // Fetch updated cart content
+                        await updateCartContent();
+                    } catch (error) {
+                        console.error('Error removing item:', error);
+                    }
+                });
+    });
+};
 
 
     </script>

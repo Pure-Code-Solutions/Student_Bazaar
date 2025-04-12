@@ -126,55 +126,19 @@
                 <!-- Orders Section -->
                 <section class="account-section <%= activeSection === 'orders' ? 'active' : '' %>" id="orders">
                     <h2>My Orders</h2>
-                    
-                    <!--div class="orders-tabs">
-                        <button class="order-tab active" data-tab="all">All Orders</button>
+                    <div class="orders-tabs">
+                        <!--button class="order-tab active" data-tab="all">All Orders</button>
                         <button class="order-tab" data-tab="processing">Processing</button>
                         <button class="order-tab" data-tab="shipped">Shipped</button>
-                        <button class="order-tab" data-tab="delivered">Delivered</button>
-                    </div-->
-                    
-                    <div class="orders-list">
-                        <% if (locals.groupedOrders) {%>
-                            <% locals.groupedOrders.forEach(order => { %> 
-                        <div class="order-card">
-                            <div class="order-header">
-                                <div class="order-info">
-                                    <h3>Order #(X)</h3>
-                                    <span class="order-date"><%= order.purchase_date %></span>
-                                </div>
-                                <div class="order-status">
-                                    
-                                </div>
-                            </div>
-                            
-                            <div class="order-items">
-                                <% order.orders.forEach(currentOrder => { %> 
-                                <div class="order-item">
-                                    <!--img src="images/backpack.jpg" alt="Campus Backpack"-->
-                                    <div class="item-name"><%= currentOrder.item_name %></div>
-                                    <div class="item-price">$<%= currentOrder.price_at_purchase %></div>
-                                </div>
+                        <button class="order-tab" data-tab="delivered">Delivered</button-->
 
-                                <% }); %>
-                            </div>
-          
-                            <div class="order-footer">
-                                <div class="order-total">
-                                    <span>Total:</span>
-                                    <span class="total-amount">$(X)</span>
-                                </div>
-                                <div class="order-actions">
-                                    <a href="#" class="btn-outline">Track Order</a>
-                                    <a href="#" class="btn-link">View Details</a>
-                                </div>
-                            </div>
-                        </div>
-                        <% }); %>
-                        <% }; %> 
-                        
-                        
+                        <button class="order-tab" data-tab="all">All Orders</button>
+                        <button class="order-tab  active" data-tab="processing">Processing</button>
                     </div>
+                    
+                    <%- include('./partials/orders') %>
+                    
+                   
                 </section>
                 
                 <!-- Other sections would be similarly structured -->
@@ -213,73 +177,75 @@
         // Simple script to handle account section navigation
         document.querySelectorAll('.account-nav a, .card-link').forEach(link => {
             link.addEventListener('click', async function (e) {
-                const href = this.getAttribute('href');
-                const sectionId = this.getAttribute('data-section');
-                console.log('Href:', href);
-                console.log('Section ID:', sectionId);
+        const href = this.getAttribute('href');
+        const sectionId = this.getAttribute('data-section');
 
-                // If the link has a valid href and no data-section, allow navigation
-                if (href && !sectionId) {
-                    return; // Let the default behavior (navigation) occur
-                }
+        if (href && !sectionId) {
+            return; // Let the default behavior (navigation) occur
+        }
 
-                // Prevent default behavior for links with data-section
-                e.preventDefault();
+        e.preventDefault();
 
-                // Hide all sections
-                document.querySelectorAll('.account-section').forEach(section => {
-                    section.classList.remove('active');
-                });
-
-                // Show the selected section
-                if (sectionId) {
-                    document.getElementById(sectionId).classList.add('active');
-                            
-                    // Update the URL without reloading the page
-                    history.pushState(null, '', `/account/${sectionId}`);
-                }
-
-                // Update active nav link
-                document.querySelectorAll('.account-nav a').forEach(navLink => {
-                    if (navLink.getAttribute('data-section') === sectionId) {
-                        navLink.classList.add('active');
-                    } else {
-                        navLink.classList.remove('active');
-                    }
-                
-                });
-                try {
-                    const url = `/account/${sectionId}`;
-                    const response = await fetch(url, {  
-                        method: "GET",
-                        headers: { "Content-Type": "application/json" },
-                    });
-                    const data = await response.text(); // Assuming the server returns HTML
-                    await updateOrderContent(data);
-
-                    } catch (error) {
-                    console.error("Error fetching filtered products:", error);
-                    }
-        
-            });
+        // Hide all sections
+        document.querySelectorAll('.account-section').forEach(section => {
+            section.classList.remove('active');
         });
 
-        
-  
+        // Show the selected section
+        if (sectionId) {
+            document.getElementById(sectionId).classList.add('active');
+            history.pushState(null, '', `/account/${sectionId}`);
 
+            // Fetch data dynamically for the "Orders" section
+            if (sectionId === 'orders') {
+                try {
+                    const response = await fetch('/account/orders', {
+                        method: 'GET',
+                        headers: { 'Content-Type': 'text/html' },
+                    });
 
-        async function updateOrderContent(data) 
-        {
-            // ONLY Replaces the current search results with the new results and without changing the entire page
-            const tempDiv = document.createElement("div");
-            tempDiv.innerHTML = data;
-            const newSearchResults = tempDiv.querySelector(".order-items");
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
 
-            if (newSearchResults) {
-                document.querySelector(".order-items").innerHTML = newSearchResults.innerHTML;
-
+                    const data = await response.text();
+                    updateOrderContent(data);
+                } catch (error) {
+                    console.error('Error fetching orders:', error);
+                }
             }
         }
+
+        // Update active nav link
+        document.querySelectorAll('.account-nav a').forEach(navLink => {
+            if (navLink.getAttribute('data-section') === sectionId) {
+                navLink.classList.add('active');
+            } else {
+                navLink.classList.remove('active');
+            }
+        });
+    });
+});
+
+async function updateOrderContent(data) {
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = data;
+
+    // Find the new orders list in the fetched data
+    const newOrdersList = tempDiv.querySelector('.orders-list');
+
+    if (newOrdersList) {
+        // Replace the current orders list with the new one
+        const currentOrdersList = document.querySelector('.orders-list');
+        if (currentOrdersList) {
+            currentOrdersList.innerHTML = newOrdersList.innerHTML;
+        } else {
+            console.error('No .orders-list element found in the DOM.');
+        }
+    } else {
+        console.error('No .orders-list element found in the fetched data.');
+    }
+}
     </script>
    <link rel="stylesheet" href="../styles/account.css">
 </body>

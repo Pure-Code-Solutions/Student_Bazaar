@@ -9,7 +9,7 @@ export const renderOrders = async (req, res) => {
     const userID = 777; // Hardcoded for now
     const orders = await queryUserOrders(userID);
     const groupedOrders = await sortOrderByPurchaseDate(orders);
-    console.log(groupedOrders);
+    //console.log(groupedOrders);
     
     res.render("user-account-dashboard", { activeSection: "orders", groupedOrders });
 };
