@@ -231,7 +231,7 @@ async function queryLikeTitles(value, offset, limit)
     return records;
 }
 
-async function queryItemByID(itemID)
+export async function queryItemByID(itemID)
 {
     const [records] = await pool.query(`
         SELECT 

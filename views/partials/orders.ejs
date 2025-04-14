@@ -16,7 +16,7 @@
             <% order.orders.forEach(currentOrder => { %> 
             <div class="order-item">
                 <!--img src="images/backpack.jpg" alt="Campus Backpack"-->
-                <div class="item-name"><%= currentOrder.item_name %></div>
+                <div class="item-name"><%= currentOrder.item_name %> <a href=/feedback/<%= currentOrder.itemID %> class="btn-outline">TEMPORARY REVIEW BUTTON</a></div>
                 <div class="item-price">$<%= currentOrder.price_at_purchase %></div>
             </div>
 
