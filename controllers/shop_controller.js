@@ -89,7 +89,7 @@ export const renderShopByCategory = async (req, res) => {
 
 export const renderItemDetail = async (req, res) => 
 {
-
+    const  itemID  = req.params.item;
     const item = await queryItemByID(itemID);
     console.log(item);
     res.render("product-detail", {item});
