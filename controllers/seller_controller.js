@@ -3,10 +3,10 @@ export const renderSellerProfile = async (req, res) => {
   const sellerID = req.params.sellerID;
   const shop = await querySellerShop(sellerID);
   const overallRating = await getOverallRating(sellerID);
-  //console.log(shop);
-  console.log(overallRating);
+  console.log(shop);
+  //console.log(overallRating);
   res.send('SellerID: ' + sellerID);
-  //res.render('SELLERPAGE', (shop));
+  //res.render('SELLERPAGE', {shop});
 };
 
 async function querySellerShop(sellerID) {
@@ -14,7 +14,7 @@ async function querySellerShop(sellerID) {
       SELECT * FROM item 
       WHERE sellerID = ?;
     `, [sellerID]);
-    return records[0];
+    return records;
 }
 
 async function getRatingSum(sellerID) {
