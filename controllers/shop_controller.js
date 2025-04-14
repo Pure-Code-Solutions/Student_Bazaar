@@ -31,7 +31,7 @@ export const renderShop = async (req, res) => {
 
     //let products = await queryItems(offset, limit);
     
-    
+
     
 
     res.render("shop", { 
@@ -69,24 +69,13 @@ export const renderShopByCategory = async (req, res) => {
   
     // Append additional tags based on the category
    //tags.push(category);
-    
 
 
     const numberOfPages = Math.ceil(await getNumberOfPages(category,((tags)), minPrice, maxPrice)/limit);
     let products = await queryItemsByFilters(category, tags, minPrice, maxPrice, offset, limit);
 
 
-
-    //console.log(products);
-    /*const subcategories = [
-        { category: "Textbooks", subcategories: ["Science", "Mathematics", "Engineering", "Arts", "Business", "Law", "Government", "Biology", "Chemistry"] },
-        { category: "Electronics", subcategories: ["Laptops", "Tablets", "Smartphones", "Monitors", "Printers", "Headphones"] },
-        { category: "Stationery", subcategories: ["Notebooks", "Pens", "Highlighters", "Planners", "Study Supplies", "Art Supplies"] },
-        { category: "Campus-Gear", subcategories: ["Backpacks", "University Hoodies", "T-Shirts", "Water Bottles", "Keychains"] },
-        { category: "Tech-Accessories", subcategories: ["Headphones", "Chargers", "Laptop Sleeves", "USB Drives", "Screen Protectors"] },
-        { category: "Lab-Equipment", subcategories: ["Medical Tools", "Microscopes", "Multimeters", "Beakers", "Circuit Kits"] }
-    ];*/
-
+   //console.log(products);
     const tagData = {category: category, subcategories: await queryTags(category)};
    // console.log(tagData);
 
@@ -100,9 +89,9 @@ export const renderShopByCategory = async (req, res) => {
 
 export const renderItemDetail = async (req, res) => 
 {
-    const  itemID  = req.params.item;
-    const item = await queryItemByID(itemID);
 
+    const item = await queryItemByID(itemID);
+    console.log(item);
     res.render("product-detail", {item});
  }
 

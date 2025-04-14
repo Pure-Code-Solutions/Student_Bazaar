@@ -12,6 +12,8 @@ import { checkoutRouter } from "./routes/checkout_routes.js";
 import { sellingRouter } from "./routes/selling_router.js";
 import {S3router} from './routes/aws_router.js';
 import { openSearchRouter } from './routes/open_search_router.js';
+import { getCartItemCount } from './controllers/checkout_controller.js';
+import { sellerRouter } from './routes/seller_router.js';
 
 
 const upload = multer({ dest: 'uploads/' }).single('image');
@@ -28,14 +30,19 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 
-app.use((req, res, next) => {
-  res.locals.user = {
-    cartCount: 10,
-  };
+app.use(async (req, res, next) => {
+  const userID = 777; // Replace with logic to get the logged-in user's ID
+  try {
+    const cartCount = await getCartItemCount(userID);
+    res.locals.user = {
+      cartCount: cartCount || 0,
+    };
+  } catch (error) {
+    console.error('Error fetching cart count:', error);
+    res.locals.user = { cartCount: 0 };
+  }
   next();
 });
-
-
 
 //Mount routers //COMMENT THIS OUT
 app.use("/", shopRouter);
@@ -44,6 +51,7 @@ app.use("/", authenticationRouter);
 app.use("/account", accountRouter);
 app.use("/", checkoutRouter);
 app.use("/", sellingRouter);
+app.use("/seller", sellerRouter);
 app.use('/api', S3router);
 app.use("/api", openSearchRouter);
 

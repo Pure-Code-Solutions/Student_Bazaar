@@ -51,14 +51,17 @@ export const updateItemFromCart = async (req, res) => {
     try {
         if (incrementItem) {
             await incrementItemQuantity(itemID, cartID);
+            updateNumberOfItemsInCart(userID, res);
         } else if (decrementItem) {
             if (await getItemQuantity(itemID, cartID) > 1) {
                 await decrementItemQuantity(itemID, cartID);
             } else {
                 await removeItemFromCart(itemID, cartID);
             }
+            updateNumberOfItemsInCart(userID, res);
         } else if (removeItem) {
             await removeItemFromCart(itemID, cartID);
+            updateNumberOfItemsInCart(userID, res);
         }
 
         res.json({ success: true });
@@ -182,5 +185,28 @@ async function insertAllOrderItems (cart) {
 
         await insertOrder(userID, addressID, itemID, quantity, price_at_purchase);
         await removeItemFromCart(itemID, cartID);
+    }
+}
+
+
+export async function getCartItemCount(userID) {
+    const [records] = await pool.query(`
+        SELECT SUM(cart_item.quantity) AS totalQuantity
+        FROM cart_item
+        JOIN cart ON cart_item.cartID = cart.cartID
+        WHERE cart.userID = ?;
+    `, [userID]);
+    return records[0].totalQuantity || 0;
+}
+
+export async function updateNumberOfItemsInCart(userID, res) {
+    try {
+        const cartCount = await getCartItemCount(userID);
+        res.locals.user = {
+            cartCount: cartCount || 0,
+        };
+    } catch (error) {
+        console.error('Error fetching cart count:', error);
+        res.locals.user = { cartCount: 0 };
     }
 }

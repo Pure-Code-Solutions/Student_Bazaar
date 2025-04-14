@@ -119,10 +119,22 @@
                 const data = await response.text();
 
                 // Update the cart content dynamically
+
                 const tempDiv = document.createElement('div');
                 tempDiv.innerHTML = data;
                 const newCartContent = tempDiv.querySelector('.cart-items');
+                const pageHeader = tempDiv.querySelector('.page-header');
 
+                if (pageHeader) {
+                    const currentPageHeader = document.querySelector('.page-header');
+                    if (currentPageHeader) {
+                        currentPageHeader.innerHTML = pageHeader.innerHTML;
+                    } else {
+                        console.error('Current page header not found in the DOM');
+                    }
+                } else {
+                    console.error('Failed to find updated page header in response');
+                }
                 if (newCartContent) {
                     const currentCartContent = document.querySelector('.cart-items');
                     if (currentCartContent) {

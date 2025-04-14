@@ -20,6 +20,21 @@ export const renderSelling = async (req, res) => {
     res.render("user-account-dashboard", { activeSection: "selling" });
 };
 
+
+export const renderFeedback = async (req, res) => {
+    res.render("user-account-dashboard");
+};
+
+
+export const submitFeedback = async (req, res) => {
+    const { sellerID, itemID, feedback, number_rating} = req.body;
+    const userID = 777; // Hardcoded for now
+
+    await insertFeedback(userID, sellerID, itemID, number_rating, feedback);
+
+    res.json({ success: true, message: "Feedback submitted successfully" });
+}
+
 //Returns all order history from most recent to oldest
 export async function queryUserOrders(userID) {
     const [record] = await pool.query(`
@@ -62,4 +77,11 @@ async function sortOrderByPurchaseDate(orders)
       }));
 
     return groupedOrders;
+}
+
+async function insertFeedback(customerID, sellerID, itemID, number_rating, feedback) {
+    const [rows] = await pool.query(`
+        INSERT INTO feedback (customerID, sellerID, itemID, number_rating, feedback)
+        VALUES (?, ?, ?, ?, ?);
+    `, [customerID, sellerID, itemID, number_rating, feedback]);
 }

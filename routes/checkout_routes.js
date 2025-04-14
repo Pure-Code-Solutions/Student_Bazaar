@@ -3,12 +3,7 @@ import {updateItemFromCart, renderCart, renderCheckout, submitAddress, submitOrd
 import { check } from "express-validator";
 export const checkoutRouter = Router();
 
-checkoutRouter.use((req, res, next) => {
-    res.locals.user = {
-        cartCount: 10,
-      };
-      next();
-});
+
  
 checkoutRouter.get("/cart", renderCart);
 checkoutRouter.post("/cart", updateItemFromCart);
