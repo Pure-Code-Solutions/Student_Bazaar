@@ -316,3 +316,12 @@ export async function queryCategories() {
 
     return records.map(r => r.name);
 }
+
+export async function insertToWatchlist(userID, itemID)
+{
+    await pool.query(`
+        INSERT INTO watchlist
+        (userID, itemID)
+        VALUES (?, ?)
+        `, [userID, itemID]);
+}

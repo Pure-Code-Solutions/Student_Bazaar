@@ -20,10 +20,18 @@ export const renderSelling = async (req, res) => {
     res.render("user-account-dashboard", { activeSection: "selling" });
 };
 
+export const renderWatchlist = async (req, res) => {
+    const userID = 777; //HARDCODED FOR NOW :)
+    const watchlist = await queryWatchlist(userID);
+    
+    //console.log(watchlist);
+    res.render("user-account-dashboard", {activeSection:"watchlist", watchlist })
+}
 
 export const renderFeedback = async (req, res) => {
     res.render("user-account-dashboard");
 };
+
 
 
 export const submitFeedback = async (req, res) => {
@@ -84,4 +92,15 @@ async function insertFeedback(customerID, sellerID, itemID, number_rating, feedb
         INSERT INTO feedback (customerID, sellerID, itemID, number_rating, feedback)
         VALUES (?, ?, ?, ?, ?);
     `, [customerID, sellerID, itemID, number_rating, feedback]);
+}
+
+async function queryWatchlist(userID) {
+    const [records] = await pool.query(`
+        SELECT watchlist.watchlistID,item.name, item.price, item.itemID, item.sellerID
+        FROM watchlist
+        LEFT JOIN item ON watchlist.itemID = item.itemID
+        WHERE watchlist.userID = ?;
+        `, [userID]);
+
+    return records;
 }
