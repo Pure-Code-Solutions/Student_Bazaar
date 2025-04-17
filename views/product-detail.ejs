@@ -66,7 +66,8 @@
                 <!--button class="btn btn-primary">Buy It Now</button-->
                 <button class="add-to-cart-btn" value="<%= item.itemID %>">Add to cart</button>
                 <!--button class="btn btn-secondary">Make offer</button-->
-                <button class="btn btn-tertiary">❤ Add to Watchlist</button>
+   
+                <%- include('./partials/watchlist-buttons') %>
             </div>
             
             <!--div class="additional-services">
@@ -134,16 +135,17 @@
          button.addEventListener("click", async (event) => {
         const itemID = button.value;
         const userID = 777; // Hardcoded for now
-        console.log("Add to Cart clicked", itemID);
+
 
         const data = {
             userID: parseInt(userID),
             itemID: parseInt(itemID),
-            quantity: 1 // Default to 1
+            quantity: 1, // Default to 1
+            addToCart: true
         };
 
         try {
-            const response = await fetch(`/item`, {
+            const response = await fetch(`/item/${itemID}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -161,6 +163,46 @@
         }
     });
 });   
+    //Handles add to wishlist button
+    let watchlistBtn =  document.querySelector("#add-to-watchlist");
+
+    watchlistBtn.addEventListener("click", handleWatchlistClick);
+    
+    async function handleWatchlistClick(event) {
+        const watchlistBtn = event.currentTarget;
+        const itemID = watchlistBtn.value;
+        const userID = 777; // Still hardcoded
+        const inWatchlist = watchlistBtn.getAttribute("data-watchlist") == "true";
+
+        const itemData = {
+            userID: parseInt(userID),
+            itemID: parseInt(itemID),
+            inWatchlist: inWatchlist,
+            addToWatchlist: true
+        };
+
+        try {
+            const response = await fetch(`/item/${itemID}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(itemData)
+            });
+
+           
+            if (response.ok) {
+                // Immediately update button UI
+                const nowInWatchlist = !inWatchlist;
+                watchlistBtn.setAttribute("data-watchlist", nowInWatchlist.toString());
+                watchlistBtn.innerHTML = nowInWatchlist ? "❤ Add to Watchlist" : "Add to Watchlist";
+                
+            } else {
+                console.error("Failed to update watchlist.");
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    }
+   
     </script>
     
 </body>

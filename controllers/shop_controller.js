@@ -91,10 +91,44 @@ export const renderItemDetail = async (req, res) =>
 {
     const  itemID  = req.params.item;
     const item = await queryItemByID(itemID);
-    console.log(item);
-    res.render("product-detail", {item});
+    const userID = 777; //HARDCODED FOR NOW
+    const isWatchlisted = await isItemInWatchlist(userID, itemID);
+    //console.log(item);
+    //console.log("isWatchlisted: " + isWatchlisted);
+    res.render("product-detail", {item, isWatchlisted});
  }
+ 
 
+ export const postAddToCart = async (req, res) => {
+    //Post request made when add cart button is clicked
+    const { itemID } = req.body;
+    const userID = 777; // Hardcoded user ID for now
+
+
+    const cartID = await getCartID(userID);
+    await insertItemToCart(itemID, cartID);
+    //res.redirect("/cart");
+    
+}
+
+
+export const postItemDetail = async (req, res) => {
+    const body = req.body;
+    console.log(body);
+    //Instance when add to cart button pressed
+    if(body.addToCart != undefined) {
+        await insertItemToCart(body.itemID, body.cartID);
+    }
+
+    if(body.addToWatchlist!= undefined) {
+        if(body.inWatchlist) {
+            //Removes from wishlist when already in
+            await removeItemFromWatchlist(body.userID, body.itemID);
+        } else {
+            await insertToWatchlist(body.userID, body.itemID);
+        }
+    }
+}
 
 async function getNumberOfPages(category, tags, minPrice, maxPrice) {
  // Ensure tags is an array
@@ -141,16 +175,7 @@ if (tags.length > 0) {
 return count[0].total_rows;
 }
 
-export const postAddToCart = async (req, res) => {
-    //Post request made when add cart button is clicked
-    const { itemID } = req.body;
-    const userID = 777; // Hardcoded user ID for now
 
-
-    const cartID = await getCartID(userID);
-    await insertItemToCart(itemID, cartID);
-    //res.redirect("/cart");
-}
 
 async function queryItems(offset, limit)
 {
@@ -324,4 +349,28 @@ export async function insertToWatchlist(userID, itemID)
         (userID, itemID)
         VALUES (?, ?)
         `, [userID, itemID]);
+}
+
+export async function removeItemFromWatchlist(userID, itemID)
+{
+    await pool.query(`
+        DELETE FROM watchlist
+        WHERE userID = ? AND itemID = ?
+        `, [userID, itemID]);
+}
+
+export async function isItemInWatchlist(userID, itemID) 
+{
+    const [count] = await pool.query(`
+        SELECT COUNT(*) AS total
+        FROM watchlist
+        WHERE userID = ? AND itemID = ?;
+        `, [userID, itemID]);
+    console.log("Count:" + count[0].total);
+    if (count[0].total > 0) {
+        return true;
+    } 
+    
+    return false;
+    
 }

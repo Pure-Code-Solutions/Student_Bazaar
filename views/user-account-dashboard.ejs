@@ -246,13 +246,13 @@
     });
 });
 async function updateWatchlistContent(data) {
-    const tempDi2v = document.createElement('div');
-    tempDiv2.innerHTML = data;
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = data;
 
     // Find the new orders list in the fetched data
-    const newWatchlist = tempDiv2.querySelector('.watchlist-list');
+    const newWatchlist = tempDiv.querySelector('.watchlist-list');
 
-    if (newOrdersList) {
+    if (newWatchlist) {
         // Replace the current orders list with the new one
         const currentWatchlist = document.querySelector('.watchlist-list');
         if (currentWatchlist) {
