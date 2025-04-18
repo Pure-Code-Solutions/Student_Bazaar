@@ -108,7 +108,7 @@ const queryCartItems = async (userID) => {
 
 
 
-async function removeItemFromCart(itemID, cartID) {   
+export async function removeItemFromCart(itemID, cartID) {   
     await pool.query(`
         DELETE FROM cart_item
         WHERE itemID = ? AND cartID =  ?;

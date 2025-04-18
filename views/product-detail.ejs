@@ -64,10 +64,21 @@
             
             <div class="action-buttons">
                 <!--button class="btn btn-primary">Buy It Now</button-->
-                <button class="add-to-cart-btn" value="<%= item.itemID %>">Add to cart</button>
+                <button 
+                class="btn btn-tertiary" 
+                id="add-to-cart"
+                data-cart="<%= isInCart %>"
+                value="<%= item.itemID %>"
+                > <%= isInCart ? "- Remove from Cart" : "+ Add to Cart" %></button>
                 <!--button class="btn btn-secondary">Make offer</button-->
    
-                <%- include('./partials/watchlist-buttons') %>
+                <button 
+                class="btn btn-tertiary" 
+                id="add-to-watchlist" 
+                data-watchlist="<%= isWatchlisted %>" 
+                value="<%= item.itemID %>">
+                <%= isWatchlisted ? "- Remove from Watchlist" : "+ Add to Watchlist" %>
+                </button>
             </div>
             
             <!--div class="additional-services">
@@ -130,17 +141,24 @@
             changeImage(images[currentImageIndex]);
         }
 
+    let cartButton =  document.querySelector("#add-to-cart");
 
-        document.querySelectorAll(".add-to-cart-btn").forEach(button => {
-         button.addEventListener("click", async (event) => {
-        const itemID = button.value;
+    cartButton.addEventListener("click", handleCartClick);
+
+    async function handleCartClick(event) {
+        let cartBtn = event.currentTarget;
+       
+        const itemID = cartBtn.value;
         const userID = 777; // Hardcoded for now
+        
+        const inCart = cartBtn.getAttribute("data-cart") == "true";
 
 
         const data = {
             userID: parseInt(userID),
             itemID: parseInt(itemID),
             quantity: 1, // Default to 1
+            inCart: inCart,
             addToCart: true
         };
 
@@ -154,16 +172,19 @@
             });
 
             if (response.ok) {
-                alert('Item added to cart successfully!');
+                // Immediately update button UI
+                const nowInCart = !inCart;
+                cartBtn.setAttribute("data-cart", nowInCart.toString());
+                cartBtn.innerHTML = nowInCart ? "- Remove from Cart" : "+ Add to Cart";
             } else {
                 alert('Failed to add item to cart.');
             }
         } catch (error) {
             console.error('Error:', error);
-        }
-    });
-});   
-    //Handles add to wishlist button
+            }
+        
+    };   
+        //Handles add to wishlist button
     let watchlistButton =  document.querySelector("#add-to-watchlist");
 
     watchlistButton.addEventListener("click", handleWatchlistClick);

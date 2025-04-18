@@ -1,7 +1,7 @@
 //Handles the request and response of the shop page item page
 import { pool } from "../data/pool.js";
 import { LocalStorage } from "node-localstorage";
-
+import { removeItemFromCart } from "./checkout_controller.js";
 const localStorage = new LocalStorage('./scratch');
 
 
@@ -92,10 +92,12 @@ export const renderItemDetail = async (req, res) =>
     const  itemID  = req.params.item;
     const item = await queryItemByID(itemID);
     const userID = 777; //HARDCODED FOR NOW
+    const cartID = 1; //HARDCORED FOR NOW
     const isWatchlisted = await isItemInWatchlist(userID, itemID);
+    const isInCart = await isItemInCart(cartID, itemID);
     //console.log(item);
     //console.log("isWatchlisted: " + isWatchlisted);
-    res.render("product-detail", {item, isWatchlisted});
+    res.render("product-detail", {item, isWatchlisted, isInCart});
  }
  
 
@@ -119,7 +121,12 @@ export const postItemDetail = async (req, res) => {
     const cartID = 1; //HARDCODED FOR NOW
     //Instance when add to cart button pressed
     if(body.addToCart != undefined) {
-        await insertItemToCart(body.itemID, cartID);
+        if(body.inCart){
+            await removeItemFromCart(body.itemID, cartID);
+           
+        } else {
+            await insertItemToCart(body.itemID, cartID);
+        }
     }
 
     if(body.addToWatchlist!= undefined) {
@@ -369,6 +376,22 @@ export async function isItemInWatchlist(userID, itemID)
         FROM watchlist
         WHERE userID = ? AND itemID = ?;
         `, [userID, itemID]);
+    console.log("Count:" + count[0].total);
+    if (count[0].total > 0) {
+        return true;
+    } 
+    
+    return false;
+    
+}
+
+export async function isItemInCart(cartID, itemID)
+{
+    const [count] = await pool.query(`
+        SELECT COUNT(*) AS total
+        FROM cart_item
+        WHERE cartID = ? AND itemID = ?;
+        `, [cartID, itemID]);
     console.log("Count:" + count[0].total);
     if (count[0].total > 0) {
         return true;
