@@ -103,8 +103,9 @@ export const renderItemDetail = async (req, res) =>
     //Post request made when add cart button is clicked
     const { itemID } = req.body;
     const userID = 777; // Hardcoded user ID for now
+    
 
-
+    
     const cartID = await getCartID(userID);
     await insertItemToCart(itemID, cartID);
     //res.redirect("/cart");
@@ -115,9 +116,10 @@ export const renderItemDetail = async (req, res) =>
 export const postItemDetail = async (req, res) => {
     const body = req.body;
     console.log(body);
+    const cartID = 1; //HARDCODED FOR NOW
     //Instance when add to cart button pressed
     if(body.addToCart != undefined) {
-        await insertItemToCart(body.itemID, body.cartID);
+        await insertItemToCart(body.itemID, cartID);
     }
 
     if(body.addToWatchlist!= undefined) {
@@ -128,6 +130,7 @@ export const postItemDetail = async (req, res) => {
             await insertToWatchlist(body.userID, body.itemID);
         }
     }
+    res.sendStatus(200);
 }
 
 async function getNumberOfPages(category, tags, minPrice, maxPrice) {

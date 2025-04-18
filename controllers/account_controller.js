@@ -26,11 +26,13 @@ export const renderWatchlist = async (req, res) => {
     
     //console.log(watchlist);
     res.render("user-account-dashboard", {activeSection:"watchlist", watchlist })
-}
+};
 
 export const renderFeedback = async (req, res) => {
     res.render("user-account-dashboard");
 };
+
+
 
 
 

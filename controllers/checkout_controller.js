@@ -63,8 +63,8 @@ export const updateItemFromCart = async (req, res) => {
             await removeItemFromCart(itemID, cartID);
             updateNumberOfItemsInCart(userID, res);
         }
-
-        res.json({ success: true });
+        // Do something, then send a success response
+        res.sendStatus(200);
     } catch (error) {
         console.error('Error updating cart:', error);
         res.status(500).json({ success: false, error: 'Internal Server Error' });

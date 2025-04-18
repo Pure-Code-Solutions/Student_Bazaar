@@ -164,12 +164,13 @@
     });
 });   
     //Handles add to wishlist button
-    let watchlistBtn =  document.querySelector("#add-to-watchlist");
+    let watchlistButton =  document.querySelector("#add-to-watchlist");
 
-    watchlistBtn.addEventListener("click", handleWatchlistClick);
+    watchlistButton.addEventListener("click", handleWatchlistClick);
     
     async function handleWatchlistClick(event) {
-        const watchlistBtn = event.currentTarget;
+        let watchlistBtn = event.currentTarget;
+        
         const itemID = watchlistBtn.value;
         const userID = 777; // Still hardcoded
         const inWatchlist = watchlistBtn.getAttribute("data-watchlist") == "true";
@@ -193,8 +194,7 @@
                 // Immediately update button UI
                 const nowInWatchlist = !inWatchlist;
                 watchlistBtn.setAttribute("data-watchlist", nowInWatchlist.toString());
-                watchlistBtn.innerHTML = nowInWatchlist ? "❤ Add to Watchlist" : "Add to Watchlist";
-                
+                watchlistBtn.innerHTML = nowInWatchlist ? "- Remove from Watchlist" : "+ Add to Watchlist";
             } else {
                 console.error("Failed to update watchlist.");
             }

@@ -1,7 +1,9 @@
 import multer from 'multer';
 import express from "express";
+import session from 'express-session';
 import path from "node:path";
 import * as dotenv from 'dotenv';
+import passport from './data/auth.js';
 dotenv.config();
 import { fileURLToPath } from "node:url";
 import { shopRouter } from "./routes/shop_router.js";
@@ -44,6 +46,10 @@ app.use(async (req, res, next) => {
   }
   next();
 });
+app.use(session({ secret: 'cats', resave: false, saveUninitialized: true }));
+app.use(passport.initialize());
+app.use(passport.session());
+
 
 //Mount routers //COMMENT THIS OUT
 app.use("/", shopRouter);
