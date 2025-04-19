@@ -1,42 +1,109 @@
 
-<div class="orders-list">
-    <% if (locals.groupedOrders) {%>
-        <% locals.groupedOrders.forEach(order => { %> 
-    <div class="order-card">
-        <div class="order-header">
-            <div class="order-info">
-                <h3>Order #(X)</h3>
-                <span class="order-date"><%= order.purchase_date %></span>
-            </div>
-            <div class="order-status">
-                
-            </div>
-        </div>
-        
-        <div class="order-items">
-            <% order.orders.forEach(currentOrder => { %> 
-            <div class="order-item">
-                <!--img src="images/backpack.jpg" alt="Campus Backpack"-->
-                <div class="item-name"><%= currentOrder.item_name %> <a href=/feedback/<%= currentOrder.itemID %> class="btn-outline">TEMPORARY REVIEW BUTTON</a></div>
-                <div class="item-price">$<%= currentOrder.price_at_purchase %></div>
-            </div>
-
-            <% }); %>
-        </div>
-
-        <div class="order-footer">
-            <div class="order-total">
-                <span>Total:</span>
-                <span class="total-amount">$(X)</span>
-            </div>
-            <div class="order-actions">
-                <a href="#" class="btn-outline">Track Order</a>
-                <a href="#" class="btn-link">View Details</a>
-            </div>
-        </div>
-    </div>
-    <% }); %>
-    <% }; %> 
     
-  
-</div>
+    <div class="purchase-cards">
+        <!-- Example of a Purchase Card -->
+        <% if (locals.groupedOrders) {%>
+            <% locals.groupedOrders.forEach(order => { %> 
+                <% order.orders.forEach(currentOrder => { %> 
+        <div class="purchase-card">
+            <div class="purchase-details">
+                <h3>Order #(X)</h3>
+                <p><strong>Product:</strong> <%= currentOrder.item_name %> </p>
+                <p><strong>Buyer:</strong> <%= currentOrder.store_name %></p>
+                <p><strong>Order Date:</strong> <%= order.purchase_date %></p>
+                <p><strong>Total:</strong> <span class="purchase-total">$<%= currentOrder.price_at_purchase %></span></p>
+            </div>
+            <div class="actions">
+                <button class="feedback-button" 
+                value="<%= currentOrder.itemID %>"
+                data-name="<%= currentOrder.item_name %>"
+                data-price="<%= currentOrder.price_at_purchase %>"
+                data-seller="<%= currentOrder.store_name %>"
+                data-sellerid="<%= currentOrder.sellerID %>"
+                >Leave Feedback</button>
+                <!--a href="order-details.html">View Details</a-->
+            </div>
+        </div>
+        <% }); %>
+        <% }); %>
+    <% }; %> 
+
+    <dialog>
+
+
+    <div class="user-review-page">
+        <!-- Preview Section -->
+         <div>
+        <span class="close">&times;</span>
+         </div>
+        <div class="preview-section">
+          
+            <div class="item-image">
+                <img src="placeholder-item.jpg" alt="Item Preview">
+            </div>
+            <div class="item-info">
+                <h3 class="item-name">Sample Product Name</h3>
+                <p class="seller-info">Sold by: John Doe</p>
+                <!--p><strong>Order Date:</strong> April 15, 2025</p>
+                <p><strong>Order Total:</strong> $49.99</p-->
+            </div>
+        </div>
+
+        <!-- Review Form -->
+        <form class="user-review-form" method="POST">
+            <input type="hidden" name="itemID" class="itemID-hidden">
+            <input type="hidden" name="sellerID" class="sellerID-hidden">
+            <label for="rating">Rating</label>
+            <select id="rating" name="number_rating" required>
+                <option value="">Select Rating</option>
+                <option value="1">1 - Poor</option>
+                <option value="2">2 - Fair</option>
+                <option value="3">3 - Good</option>
+                <option value="4">4 - Very Good</option>
+                <option value="5">5 - Excellent</option>
+            </select>
+
+            <!--label for="review-title">Review Title</label>
+            <input type="text" id="review-title" name="review-title" placeholder="Enter a short title for your review" required-->
+
+            <label for="review-body">Your Feedback</label>
+            <textarea id="review-body" name="feedback" placeholder="Share your detailed feedback" required></textarea>
+
+            <button type="submit" class="btn-submit">Submit Review</button>
+        </form>
+    </div>
+
+    </dialog>
+    <link rel="stylesheet" href="../styles/orders.css">
+<script>
+    async function attachFeedbackButtons() {
+        document.querySelector(".user-review-form").reset();
+        const feedbackButtons = document.querySelectorAll(".feedback-button");
+        const closeButton = document.querySelector(".close");
+        const dialog = document.querySelector("dialog");
+
+        closeButton.addEventListener("click", () => {
+            //Clears form after closing
+            document.querySelector(".user-review-form").reset();
+            dialog.close();
+        });
+        feedbackButtons.forEach((button) => {
+        button.addEventListener("click", () => {
+            dialog.showModal();
+            //Saves the value of item  based on selected item
+            const itemID = button.value; 
+            const itemName = button.dataset.name;
+            const itemPrice = button.dataset.price;
+            const sellerName = button.dataset.seller;
+            const sellerID = button.dataset.sellerid;
+
+            document.querySelector(".item-name").textContent = itemName;
+            document.querySelector(".seller-info").textContent = `Sold by: ${sellerName}`;
+
+            //Saves the itemID and sellerID for database insert
+            document.querySelector(".itemID-hidden").value = itemID;
+            document.querySelector(".sellerID-hidden").value = sellerID;
+            console.log(itemName);
+        })});
+    }
+</script>

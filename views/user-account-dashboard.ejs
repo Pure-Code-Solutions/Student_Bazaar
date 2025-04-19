@@ -131,15 +131,16 @@
                         <!--button class="order-tab active" data-tab="all">All Orders</button>
                         <button class="order-tab" data-tab="processing">Processing</button>
                         <button class="order-tab" data-tab="shipped">Shipped</button>
-                        <button class="order-tab" data-tab="delivered">Delivered</button-->
+                        <button class="order-tab" data-tab="delivered">Delivered</button>
 
                         <button class="order-tab" data-tab="all">All Orders</button>
-                        <button class="order-tab  active" data-tab="processing">Processing</button>
+                        <button class="order-tab  active" data-tab="processing">Processing</button-->
                     </div>
                     
                     <%- include('./partials/orders') %>
                     
-                   
+                      
+               
                 </section>
                 
                 <!-- Other sections would be similarly structured -->
@@ -213,6 +214,7 @@
 
                     const data = await response.text();
                     updateOrderContent(data);
+                    attachFeedbackButtons();
                 } catch (error) {
                     console.error('Error fetching orders:', error);
                 }
@@ -229,6 +231,7 @@
 
                     const data = await response.text();
                     updateWatchlistContent(data);
+                   
                 } catch (error) {
                     console.error('Error fetching watchlist:', error);
                 }
@@ -245,6 +248,8 @@
         });
     });
 });
+
+attachFeedbackButtons();
 async function updateWatchlistContent(data) {
     const tempDiv = document.createElement('div');
     tempDiv.innerHTML = data;
@@ -257,6 +262,7 @@ async function updateWatchlistContent(data) {
         const currentWatchlist = document.querySelector('.watchlist-list');
         if (currentWatchlist) {
             currentWatchlist.innerHTML = newWatchlist.innerHTML;
+            
         } else {
             console.error('No .watchlist-list element found in the DOM.');
         }
@@ -270,18 +276,19 @@ async function updateOrderContent(data) {
     tempDiv.innerHTML = data;
 
     // Find the new orders list in the fetched data
-    const newOrdersList = tempDiv.querySelector('.orders-list');
+    const newOrdersList = tempDiv.querySelector('.purchase-cards');
 
     if (newOrdersList) {
         // Replace the current orders list with the new one
-        const currentOrdersList = document.querySelector('.orders-list');
+        const currentOrdersList = document.querySelector('.purchase-cards');
         if (currentOrdersList) {
             currentOrdersList.innerHTML = newOrdersList.innerHTML;
+          
         } else {
-            console.error('No .orders-list element found in the DOM.');
+            console.error('No .purchase-cards element found in the DOM.');
         }
     } else {
-        console.error('No .orders-list element found in the fetched data.');
+        console.error('No .purchase-cardselement found in the fetched data.');
     }
 }
     </script>

@@ -16,6 +16,8 @@ export const renderOrders = async (req, res) => {
 
 
 
+
+
 export const renderSelling = async (req, res) => {
     res.render("user-account-dashboard", { activeSection: "selling" });
 };
@@ -52,18 +54,21 @@ export async function queryUserOrders(userID) {
     o.orderID,
     o.purchase_date,
     i.itemID,
+    i.sellerID,
     i.name AS item_name,
+    sp.store_name,
     oi.itemID,
     oi.quantity,
     oi.price_at_purchase
     FROM \`order\` o
     JOIN order_item oi ON o.orderID = oi.orderID
     JOIN item i ON oi.itemID = i.itemID
+    JOIN seller_profile sp ON i.sellerID = sp.sellerID
     WHERE o.userID = ?
-    ORDER BY o.purchase_date DESC;;
+    ORDER BY o.purchase_date DESC;
 
     `, [userID]);
-
+    //console.log(record);
     return record;
 }
 
@@ -77,7 +82,9 @@ async function sortOrderByPurchaseDate(orders)
         orderID: row.orderID,
         itemID: row.itemID,
         item_name: row.item_name,
+        sellerID: row.sellerID,
         quantity: row.quantity,
+        store_name: row.store_name,
         price_at_purchase: row.price_at_purchase
     });
     });

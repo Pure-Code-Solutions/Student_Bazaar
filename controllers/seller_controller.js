@@ -2,8 +2,10 @@ import { pool } from "../data/pool.js";
 export const renderSellerProfile = async (req, res) => {
   const sellerID = req.params.sellerID;
   const shop = await querySellerShop(sellerID);
+  const feedback = await queryFeedback(sellerID);
   const overallRating = await getOverallRating(sellerID);
-  console.log(shop);
+
+  console.log(feedback);
   //console.log(overallRating);
   res.send('SellerID: ' + sellerID);
   //res.render('SELLERPAGE', {shop});
@@ -13,6 +15,14 @@ async function querySellerShop(sellerID) {
   const [records] = await pool.query(`
       SELECT * FROM item 
       WHERE sellerID = ?;
+    `, [sellerID]);
+    return records;
+}
+
+async function queryFeedback(sellerID) {
+  const [records] = await pool.query(`
+      SELECT * FROM feedback
+      WHERE sellerID = ?
     `, [sellerID]);
     return records;
 }
