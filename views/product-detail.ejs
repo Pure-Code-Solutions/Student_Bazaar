@@ -41,7 +41,7 @@
             <div class="seller-info">
                 <!--img src="images/user-avatar.png" class="seller-avatar" alt="Seller Avatar"-->
                 <div class="seller-details">
-                    <span class="seller-name">Sold by: <%= item.seller_name %></span>
+                    <span class="seller-name">Sold by: <a href=/seller/<%= item.sellerID %>> <%= item.seller_name %> </a></span>
                     <!--span class="seller-rating">
                         (<span class="positive-rating">90.6% positive</span>)
                     </span-->
@@ -64,9 +64,21 @@
             
             <div class="action-buttons">
                 <!--button class="btn btn-primary">Buy It Now</button-->
-                <button class="add-to-cart-btn" value="<%= item.itemID %>">Add to cart</button>
-                <!--button class="btn btn-secondary">Make offer</button>
-                <button class="btn btn-tertiary">❤ Add to Watchlist</button-->
+                <button 
+                class="btn btn-tertiary" 
+                id="add-to-cart"
+                data-cart="<%= isInCart %>"
+                value="<%= item.itemID %>"
+                > <%= isInCart ? "- Remove from Cart" : "+ Add to Cart" %></button>
+                <!--button class="btn btn-secondary">Make offer</button-->
+   
+                <button 
+                class="btn btn-tertiary" 
+                id="add-to-watchlist" 
+                data-watchlist="<%= isWatchlisted %>" 
+                value="<%= item.itemID %>">
+                <%= isWatchlisted ? "- Remove from Watchlist" : "+ Add to Watchlist" %>
+                </button>
             </div>
             
             <!--div class="additional-services">
@@ -129,21 +141,29 @@
             changeImage(images[currentImageIndex]);
         }
 
+    let cartButton =  document.querySelector("#add-to-cart");
 
-        document.querySelectorAll(".add-to-cart-btn").forEach(button => {
-         button.addEventListener("click", async (event) => {
-        const itemID = button.value;
+    cartButton.addEventListener("click", handleCartClick);
+
+    async function handleCartClick(event) {
+        let cartBtn = event.currentTarget;
+       
+        const itemID = cartBtn.value;
         const userID = 777; // Hardcoded for now
-        console.log("Add to Cart clicked", itemID);
+        
+        const inCart = cartBtn.getAttribute("data-cart") == "true";
+
 
         const data = {
             userID: parseInt(userID),
             itemID: parseInt(itemID),
-            quantity: 1 // Default to 1
+            quantity: 1, // Default to 1
+            inCart: inCart,
+            addToCart: true
         };
 
         try {
-            const response = await fetch(`/item`, {
+            const response = await fetch(`/item/${itemID}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -152,15 +172,58 @@
             });
 
             if (response.ok) {
-                alert('Item added to cart successfully!');
+                // Immediately update button UI
+                const nowInCart = !inCart;
+                cartBtn.setAttribute("data-cart", nowInCart.toString());
+                cartBtn.innerHTML = nowInCart ? "- Remove from Cart" : "+ Add to Cart";
             } else {
                 alert('Failed to add item to cart.');
             }
         } catch (error) {
             console.error('Error:', error);
+            }
+        
+    };   
+        //Handles add to wishlist button
+    let watchlistButton =  document.querySelector("#add-to-watchlist");
+
+    watchlistButton.addEventListener("click", handleWatchlistClick);
+    
+    async function handleWatchlistClick(event) {
+        let watchlistBtn = event.currentTarget;
+        
+        const itemID = watchlistBtn.value;
+        const userID = 777; // Still hardcoded
+        const inWatchlist = watchlistBtn.getAttribute("data-watchlist") == "true";
+
+        const itemData = {
+            userID: parseInt(userID),
+            itemID: parseInt(itemID),
+            inWatchlist: inWatchlist,
+            addToWatchlist: true
+        };
+
+        try {
+            const response = await fetch(`/item/${itemID}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(itemData)
+            });
+
+           
+            if (response.ok) {
+                // Immediately update button UI
+                const nowInWatchlist = !inWatchlist;
+                watchlistBtn.setAttribute("data-watchlist", nowInWatchlist.toString());
+                watchlistBtn.innerHTML = nowInWatchlist ? "- Remove from Watchlist" : "+ Add to Watchlist";
+            } else {
+                console.error("Failed to update watchlist.");
+            }
+        } catch (error) {
+            console.error('Error:', error);
         }
-    });
-});   
+    }
+   
     </script>
     
 </body>

@@ -34,6 +34,7 @@
                 <nav class="account-nav">
                     <a href="/account/dashboard" class="<%= activeSection === 'dashboard' ? 'active' : '' %>" data-section="dashboard">Dashboard</a>
                     <a href="/account/orders" class="<%= activeSection === 'orders' ? 'active' : '' %>" data-section="orders">My Orders</a>
+                    <a href="/account/watchlist" class="<%= activeSection === 'watchlist' ? 'active' : '' %>" data-section="watchlist">Watchlist</a>
                     <a href="/account/selling" class="<%= activeSection === 'selling' ? 'active' : '' %>" data-section="selling">Selling</a>
                 </nav>
                 
@@ -51,7 +52,7 @@
             <div class="account-content">
                 <!-- Dashboard Section -->
                 <section class="account-section <%= activeSection === 'dashboard' ? 'active' : '' %>" id="dashboard">
-                    <div class="dashboard-cards">
+                    <!--div class="dashboard-cards">
                         <div class="dashboard-card">
                             <div class="card-icon">
                                 <img src="images/box-icon.svg" alt="Orders">
@@ -120,94 +121,34 @@
                                 <a href="#" class="activity-action">View</a>
                             </div>
                         </div>
-                    </div>
+                    </div-->
                 </section>
                 
                 <!-- Orders Section -->
                 <section class="account-section <%= activeSection === 'orders' ? 'active' : '' %>" id="orders">
                     <h2>My Orders</h2>
-                    
                     <div class="orders-tabs">
-                        <button class="order-tab active" data-tab="all">All Orders</button>
+                        <!--button class="order-tab active" data-tab="all">All Orders</button>
                         <button class="order-tab" data-tab="processing">Processing</button>
                         <button class="order-tab" data-tab="shipped">Shipped</button>
                         <button class="order-tab" data-tab="delivered">Delivered</button>
+
+                        <button class="order-tab" data-tab="all">All Orders</button>
+                        <button class="order-tab  active" data-tab="processing">Processing</button-->
                     </div>
                     
-                    <div class="orders-list">
-                        <div class="order-card">
-                            <div class="order-header">
-                                <div class="order-info">
-                                    <h3>Order #12345</h3>
-                                    <span class="order-date">March 1, 2025</span>
-                                </div>
-                                <div class="order-status">
-                                    <span class="status-shipped">Shipped</span>
-                                </div>
-                            </div>
-                            
-                            <div class="order-items">
-                                <div class="order-item">
-                                    <img src="images/backpack.jpg" alt="Campus Backpack">
-                                    <div class="item-name">Campus Backpack</div>
-                                    <div class="item-price">$42.50</div>
-                                </div>
-                                <div class="order-item">
-                                    <img src="images/notebook.jpg" alt="5-Subject Spiral Notebook">
-                                    <div class="item-name">5-Subject Spiral Notebook</div>
-                                    <div class="item-price">$12.99</div>
-                                </div>
-                            </div>
-                            
-                            <div class="order-footer">
-                                <div class="order-total">
-                                    <span>Total:</span>
-                                    <span class="total-amount">$55.49</span>
-                                </div>
-                                <div class="order-actions">
-                                    <a href="#" class="btn-outline">Track Order</a>
-                                    <a href="#" class="btn-link">View Details</a>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="order-card">
-                            <div class="order-header">
-                                <div class="order-info">
-                                    <h3>Order #12339</h3>
-                                    <span class="order-date">February 20, 2025</span>
-                                </div>
-                                <div class="order-status">
-                                    <span class="status-delivered">Delivered</span>
-                                </div>
-                            </div>
-                            
-                            <div class="order-items">
-                                <div class="order-item">
-                                    <img src="images/calculator.jpg" alt="Scientific Calculator">
-                                    <div class="item-name">Scientific Calculator</div>
-                                    <div class="item-price">$19.99</div>
-                                </div>
-                            </div>
-                            
-                            <div class="order-footer">
-                                <div class="order-total">
-                                    <span>Total:</span>
-                                    <span class="total-amount">$19.99</span>
-                                </div>
-                                <div class="order-actions">
-                                    <a href="#" class="btn-outline">Buy Again</a>
-                                    <a href="#" class="btn-link">View Details</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    <%- include('./partials/orders') %>
+                    
+                      
+               
                 </section>
                 
                 <!-- Other sections would be similarly structured -->
-                <section class="account-section" id="wishlist">
-                    <h2>My Wishlist</h2>
+                <section class="account-section <%= activeSection === 'watchlist' ? 'active' : '' %>"  id="watchlist">
+                    <h2>Watchlist</h2>
                     <!-- Wishlist content -->
+                   
+                    <%- include('./partials/watchlist') %>
                 </section>
                 
                 <section class="account-section" id="addresses">
@@ -232,51 +173,124 @@
             </div>
         </div>
     </main>
-    
-    <footer>
+  
         <!-- Same footer as other pages -->
-    </footer>
+ 
     
     <script>
         // Simple script to handle account section navigation
         document.querySelectorAll('.account-nav a, .card-link').forEach(link => {
-            link.addEventListener('click', function (e) {
-                const href = this.getAttribute('href');
-                const sectionId = this.getAttribute('data-section');
-                console.log('Href:', href);
-                console.log('Section ID:', sectionId);
+            link.addEventListener('click', async function (e) {
+        const href = this.getAttribute('href');
+        const sectionId = this.getAttribute('data-section');
 
-                // If the link has a valid href and no data-section, allow navigation
-                if (href && !sectionId) {
-                    return; // Let the default behavior (navigation) occur
-                }
+        if (href && !sectionId) {
+            return; // Let the default behavior (navigation) occur
+        }
 
-                // Prevent default behavior for links with data-section
-                e.preventDefault();
+        e.preventDefault();
 
-                // Hide all sections
-                document.querySelectorAll('.account-section').forEach(section => {
-                    section.classList.remove('active');
-                });
-
-                // Show the selected section
-                if (sectionId) {
-                    document.getElementById(sectionId).classList.add('active');
-                            
-                    // Update the URL without reloading the page
-                    history.pushState(null, '', `/account/${sectionId}`);
-                }
-
-                // Update active nav link
-                document.querySelectorAll('.account-nav a').forEach(navLink => {
-                    if (navLink.getAttribute('data-section') === sectionId) {
-                        navLink.classList.add('active');
-                    } else {
-                        navLink.classList.remove('active');
-                    }
-                });
-            });
+        // Hide all sections
+        document.querySelectorAll('.account-section').forEach(section => {
+            section.classList.remove('active');
         });
+
+        // Show the selected section
+        if (sectionId) {
+            document.getElementById(sectionId).classList.add('active');
+            history.pushState(null, '', `/account/${sectionId}`);
+
+            // Fetch data dynamically for the "Orders" section
+            if (sectionId === 'orders') {
+                try {
+                    const response = await fetch('/account/orders', {
+                        method: 'GET',
+                        headers: { 'Content-Type': 'text/html' },
+                    });
+
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+
+                    const data = await response.text();
+                    updateOrderContent(data);
+                    attachFeedbackButtons();
+                } catch (error) {
+                    console.error('Error fetching orders:', error);
+                }
+            }else if(sectionId == "watchlist"){
+                try {
+                    const response = await fetch('/account/watchlist', {
+                        method: 'GET',
+                        headers: { 'Content-Type': 'text/html' },
+                    });
+
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+
+                    const data = await response.text();
+                    updateWatchlistContent(data);
+                   
+                } catch (error) {
+                    console.error('Error fetching watchlist:', error);
+                }
+            }
+        }
+
+        // Update active nav link
+        document.querySelectorAll('.account-nav a').forEach(navLink => {
+            if (navLink.getAttribute('data-section') === sectionId) {
+                navLink.classList.add('active');
+            } else {
+                navLink.classList.remove('active');
+            }
+        });
+    });
+});
+
+attachFeedbackButtons();
+async function updateWatchlistContent(data) {
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = data;
+
+    // Find the new orders list in the fetched data
+    const newWatchlist = tempDiv.querySelector('.watchlist-list');
+
+    if (newWatchlist) {
+        // Replace the current orders list with the new one
+        const currentWatchlist = document.querySelector('.watchlist-list');
+        if (currentWatchlist) {
+            currentWatchlist.innerHTML = newWatchlist.innerHTML;
+            
+        } else {
+            console.error('No .watchlist-list element found in the DOM.');
+        }
+    } else {
+        console.error('No .watchlist-list element found in the fetched data.');
+    }
+}
+
+async function updateOrderContent(data) {
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = data;
+
+    // Find the new orders list in the fetched data
+    const newOrdersList = tempDiv.querySelector('.purchase-cards');
+
+    if (newOrdersList) {
+        // Replace the current orders list with the new one
+        const currentOrdersList = document.querySelector('.purchase-cards');
+        if (currentOrdersList) {
+            currentOrdersList.innerHTML = newOrdersList.innerHTML;
+          
+        } else {
+            console.error('No .purchase-cards element found in the DOM.');
+        }
+    } else {
+        console.error('No .purchase-cardselement found in the fetched data.');
+    }
+}
     </script>
    <link rel="stylesheet" href="../styles/account.css">
 </body>

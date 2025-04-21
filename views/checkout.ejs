@@ -234,8 +234,9 @@
                                 <input type="checkbox" id="terms-agree" required>
                                 <label for="terms-agree">I agree to the <a href="terms.html">Terms and Conditions</a> and <a href="privacy.html">Privacy Policy</a></label>
                             </p>
-                            
-                            <button class="btn-primary btn-place-order">Place Order</button>
+                        <form class="order-form" method="POST" action="/checkout/submit-order">
+                            <button class="btn-primary btn-place-order" type="button" onclick="submitOrder()">Place Order</button>
+                        </form>
                             <p class="order-disclaimer">You will not be charged until you place your order.</p>
                         </div>
                     </div>
@@ -434,12 +435,7 @@
 
                         addressForm.submit(); // Submit the form if needed
                         
-                         // Reload the page to reflect changes
-                        /*setTimeout(function(){
-                            window.location.reload();
-                            });*/
 
-                        //await updateAddressContent(data);
 
                     } else {
                         // If the form is invalid, trigger the browser's validation UI
@@ -463,6 +459,27 @@
                 if (newAddress) {
                     document.querySelector(".address-card-body").innerHTML = newAddress.innerHTML;
 
+                }
+            }
+
+
+            async function submitOrder() {
+                try {
+                    const formData = new FormData(document.querySelector('.order-form'));
+                    const response = await fetch('/checkout/review-section', {
+                        method: 'POST',
+                        body: formData,
+                    });
+            
+                    if (response.ok) {
+                        alert('Order placed successfully!');
+                        window.location.href = '/confirmation'; // Redirect to confirmation page
+                    } else {
+                        const errorData = await response.json();
+                        alert(`Error placing order: ${errorData.message || 'Please try again.'}`);
+                    }
+                } catch (error) {
+                    alert('An unexpected error occurred. Please try again.');
                 }
             }
         

@@ -22,7 +22,7 @@ export const postListing = async (req, res) => {
     }
 
     await createListing(1, title, category, tags, price);
-    res.send('Listing created successfully!');
+    
 }
 
 async function createListing(sellerID, name, categoryName, tags, price) {

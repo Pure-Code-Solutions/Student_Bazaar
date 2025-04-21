@@ -1,36 +1,39 @@
-<form action="/" method="POST">
+<form action="/api/upload" method="POST" enctype="multipart/form-data" onsubmit="handleImageUpload(event)">
     <label for="avatar">Choose a profile picture:</label>
-
-    <input type="file" id="avatar" name="avatar" accept="image/png, image/jpeg" />
+    <input type="file" id="avatar" name="image" accept="image/png, image/jpeg" />
     <input type="submit" value="Submit">
-
-    <script>
-        function handleImageUpload(e) {
-        e.preventDefault()
-
-        if (e.target) {
-            const formData = new FormData(e.target)
-
-            async function upload_img_to_database() {
-            await fetch( URL + '/process-img', {
-                method: 'POST',
-                body: formData
-            })
-            .then (res => {
-                if (res.ok) {
-                res.json().then(data => console.log(data))
-                } else {
-                console.log(res)
-                alert('Error processing image.')
-                }
-            })
-            .catch (error => {
-                console.error('Error:', error)
-                alert('An error ocurred while processing the image')
-            })
-            }
-            upload_image_to_database()
-        }
-        }
-    </script>
 </form>
+
+<script>
+    const URL = '/api/upload';
+
+    function handleImageUpload(e) {
+        e.preventDefault();
+
+        const form = e.target;
+        const formData = new FormData(form);
+
+        async function uploadImageToS3() {
+            try {
+                const res = await fetch(URL, {
+                    method: 'POST',
+                    body: formData,
+                });
+
+                if (res.ok) {
+                    const data = await res.json();
+                    console.log(data);
+                    alert('Image uploaded successfully! Image URL: ' + data.imageUrl);
+                } else {
+                    console.log(res);
+                    alert('Error uploading image.');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('An error occurred while uploading the image.');
+            }
+        }
+
+        uploadImageToS3();
+    }
+</script>

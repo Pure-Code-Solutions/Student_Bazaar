@@ -1,7 +1,7 @@
 //Handles the request and response of the shop page item page
 import { pool } from "../data/pool.js";
 import { LocalStorage } from "node-localstorage";
-
+import { removeItemFromCart } from "./checkout_controller.js";
 const localStorage = new LocalStorage('./scratch');
 
 
@@ -31,7 +31,7 @@ export const renderShop = async (req, res) => {
 
     //let products = await queryItems(offset, limit);
     
-    
+
     
 
     res.render("shop", { 
@@ -69,24 +69,13 @@ export const renderShopByCategory = async (req, res) => {
   
     // Append additional tags based on the category
    //tags.push(category);
-    
 
 
     const numberOfPages = Math.ceil(await getNumberOfPages(category,((tags)), minPrice, maxPrice)/limit);
     let products = await queryItemsByFilters(category, tags, minPrice, maxPrice, offset, limit);
 
 
-
-    //console.log(products);
-    /*const subcategories = [
-        { category: "Textbooks", subcategories: ["Science", "Mathematics", "Engineering", "Arts", "Business", "Law", "Government", "Biology", "Chemistry"] },
-        { category: "Electronics", subcategories: ["Laptops", "Tablets", "Smartphones", "Monitors", "Printers", "Headphones"] },
-        { category: "Stationery", subcategories: ["Notebooks", "Pens", "Highlighters", "Planners", "Study Supplies", "Art Supplies"] },
-        { category: "Campus-Gear", subcategories: ["Backpacks", "University Hoodies", "T-Shirts", "Water Bottles", "Keychains"] },
-        { category: "Tech-Accessories", subcategories: ["Headphones", "Chargers", "Laptop Sleeves", "USB Drives", "Screen Protectors"] },
-        { category: "Lab-Equipment", subcategories: ["Medical Tools", "Microscopes", "Multimeters", "Beakers", "Circuit Kits"] }
-    ];*/
-
+   //console.log(products);
     const tagData = {category: category, subcategories: await queryTags(category)};
    // console.log(tagData);
 
@@ -102,10 +91,54 @@ export const renderItemDetail = async (req, res) =>
 {
     const  itemID  = req.params.item;
     const item = await queryItemByID(itemID);
-
-    res.render("product-detail", {item});
+    const userID = 777; //HARDCODED FOR NOW
+    const cartID = 1; //HARDCORED FOR NOW
+    const isWatchlisted = await isItemInWatchlist(userID, itemID);
+    const isInCart = await isItemInCart(cartID, itemID);
+    //console.log(item);
+    //console.log("isWatchlisted: " + isWatchlisted);
+    res.render("product-detail", {item, isWatchlisted, isInCart});
  }
+ 
 
+ export const postAddToCart = async (req, res) => {
+    //Post request made when add cart button is clicked
+    const { itemID } = req.body;
+    const userID = 777; // Hardcoded user ID for now
+    
+
+    
+    const cartID = await getCartID(userID);
+    await insertItemToCart(itemID, cartID);
+    //res.redirect("/cart");
+    
+}
+
+
+export const postItemDetail = async (req, res) => {
+    const body = req.body;
+    console.log(body);
+    const cartID = 1; //HARDCODED FOR NOW
+    //Instance when add to cart button pressed
+    if(body.addToCart != undefined) {
+        if(body.inCart){
+            await removeItemFromCart(body.itemID, cartID);
+           
+        } else {
+            await insertItemToCart(body.itemID, cartID);
+        }
+    }
+
+    if(body.addToWatchlist!= undefined) {
+        if(body.inWatchlist) {
+            //Removes from wishlist when already in
+            await removeItemFromWatchlist(body.userID, body.itemID);
+        } else {
+            await insertToWatchlist(body.userID, body.itemID);
+        }
+    }
+    res.sendStatus(200);
+}
 
 async function getNumberOfPages(category, tags, minPrice, maxPrice) {
  // Ensure tags is an array
@@ -152,16 +185,7 @@ if (tags.length > 0) {
 return count[0].total_rows;
 }
 
-export const postAddToCart = async (req, res) => {
-    //Post request made when add cart button is clicked
-    const { itemID } = req.body;
-    const userID = 777; // Hardcoded user ID for now
 
-
-    const cartID = await getCartID(userID);
-    await insertItemToCart(itemID, cartID);
-    //res.redirect("/cart");
-}
 
 async function queryItems(offset, limit)
 {
@@ -242,7 +266,7 @@ async function queryLikeTitles(value, offset, limit)
     return records;
 }
 
-async function queryItemByID(itemID)
+export async function queryItemByID(itemID)
 {
     const [records] = await pool.query(`
         SELECT 
@@ -326,4 +350,53 @@ export async function queryCategories() {
     `);
 
     return records.map(r => r.name);
+}
+
+export async function insertToWatchlist(userID, itemID)
+{
+    await pool.query(`
+        INSERT INTO watchlist
+        (userID, itemID)
+        VALUES (?, ?)
+        `, [userID, itemID]);
+}
+
+export async function removeItemFromWatchlist(userID, itemID)
+{
+    await pool.query(`
+        DELETE FROM watchlist
+        WHERE userID = ? AND itemID = ?
+        `, [userID, itemID]);
+}
+
+export async function isItemInWatchlist(userID, itemID) 
+{
+    const [count] = await pool.query(`
+        SELECT COUNT(*) AS total
+        FROM watchlist
+        WHERE userID = ? AND itemID = ?;
+        `, [userID, itemID]);
+    console.log("Count:" + count[0].total);
+    if (count[0].total > 0) {
+        return true;
+    } 
+    
+    return false;
+    
+}
+
+export async function isItemInCart(cartID, itemID)
+{
+    const [count] = await pool.query(`
+        SELECT COUNT(*) AS total
+        FROM cart_item
+        WHERE cartID = ? AND itemID = ?;
+        `, [cartID, itemID]);
+    console.log("Count:" + count[0].total);
+    if (count[0].total > 0) {
+        return true;
+    } 
+    
+    return false;
+    
 }

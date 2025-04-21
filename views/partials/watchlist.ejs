@@ -1,0 +1,19 @@
+
+<div class="watchlist-list">
+    <!--PUT WATCHLIST CARDS HERE-->
+    <% if (locals.watchlist) {%>
+        <% locals.watchlist.forEach(item => { %> 
+    <div class="watchlist-card">
+        <div class="watchlist-header">
+            <div class="watchlist-info">
+                <h3><%= item.name %></h3>
+            </div>
+
+                
+            </div>
+        </div>
+        
+    <% }); %> 
+    <% }; %> 
+  <!--END OF WATCHLIST CARDS-->
+</div>
