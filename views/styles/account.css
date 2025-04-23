@@ -243,7 +243,9 @@
             border: 1px solid #ddd;
         }
         
-
+        .btn-tertiary:hover {
+            background-color: #f0f0f0;
+        }
         footer {
             background: #333;
             color: #fff;

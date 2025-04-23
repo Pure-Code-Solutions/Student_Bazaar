@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Messaging System | Student Store</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+</head>
+<link rel="stylesheet" href="../styles/inbox.css">
+<body>
+    <%- include('./partials/navbar') %>
+
+    <div class="container flex-grow-1 d-flex flex-column">
+        <div class="message-container">
+            <!-- Sidebar -->
+            <div class="sidebar">
+                <h3 class="sidebar-title">Messages</h3>
+                <ul class="sidebar-menu">
+                    <li><a href="#" class="active">Inbox</a></li>
+                    <li><a href="#">From members</a></li>
+                </ul>
+                
+                
+            </div>
+            
+            <!-- Main Message Area -->
+            <div class="message-area">
+                
+    <div class="container flex-grow-1 d-flex flex-column">
+    
+        <div id="messageBox" class="message-box">
+        
+        </div>
+        <form id="messageForm" class="message-form">
+            <input type="text" id="messageInput" class="form-control message-input" placeholder="Type your message" required>
+            <button type="submit" class="btn btn-primary">Send</button>
+        </form>
+    </div>
+                <!-- Message Cards Section -->
+                <!--div class="message-cards">
+                    <div class="message-cards-header">
+                        <h4 class="message-cards-title">My Conversations</h4>
+                        <div class="message-cards-actions">
+                            <button type="button">New Message</button>
+                            <button type="button">Filter</button>
+                        </div>
+                    </div>
+                    
+                    <div class="search-bar">
+                        <input type="text" class="form-control" placeholder="Search messages...">
+                    </div>
+                    
+                    <div id="initiatedMessages">
+
+                    </div-->
+                    
+                    <!--nav aria-label="Page navigation">
+                        <ul class="pagination">
+                            <li class="page-item disabled">
+                                <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
+                            </li>
+                            <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                            <li class="page-item"><a class="page-link" href="#">2</a></li>
+                            <li class="page-item"><a class="page-link" href="#">3</a></li>
+                            <li class="page-item">
+                                <a class="page-link" href="#">Next</a>
+                            </li>
+                        </ul>
+                    </nav-->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="text-center">
+        <div class="container">
+            <p>&copy; 2024 Student Store. All rights reserved.</p>
+        </div>
+    </footer>
+    <script src="https://cdn.socket.io/4.8.1/socket.io.min.js"></script>
+<script>
+    //Handles message box 
+  const socket = io();
+
+  const form = document.getElementById('messageForm');
+  const input = document.getElementById('messageInput');
+  const messages = document.getElementById('messageBox');
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    if (input.value) {
+        socket.emit('chat message', input.value);
+        input.value = '';
+    }
+  });
+
+  socket.on('chat message', (msg) => {
+    console.log('Message received:', msg);
+    const messages = document.getElementById('messageBox');
+    const item = document.createElement('div');
+    item.classList.add('message-content');
+    item.textContent = msg;
+
+    // Append the new message to the message box
+    messages.appendChild(item);
+
+    // Scroll to the bottom of the message box
+    messages.scrollTop = messages.scrollHeight;
+  });
+</script>
+    <script>
+        const initiatedMessages = document.getElementById('initiatedMessages');
+
+        // Sample data for initiated conversations
+        const initiatedConversations = [
+            {
+                id: 1,
+                recipient: "Emma Johnson",
+                avatar: "https://via.placeholder.com/50",
+                lastMessage: "Hi Emma, I was wondering if you're selling your Calculus textbook? I need it for next semester and heard you might be done with it.",
+                date: "Apr 18",
+                tag: "Book Exchange"
+            },
+            
+        ];
+
+        // Function to create message cards for initiated conversations
+        function populateInitiatedMessages() {
+            initiatedMessages.innerHTML = ''; // Clear existing cards
+            
+            if (initiatedConversations.length === 0) {
+                // Show empty state if no conversations
+                const emptyState = document.createElement('div');
+                emptyState.classList.add('empty-state');
+                emptyState.innerHTML = `
+                    <h5>No conversations yet</h5>
+                    <p>Start a new conversation by clicking the "New Message" button above.</p>
+                `;
+                initiatedMessages.appendChild(emptyState);
+                return;
+            }
+            
+            initiatedConversations.forEach((conv, index) => {
+                const card = document.createElement('div');
+                card.classList.add('message-card');
+                if (index === 0) card.classList.add('active');
+                card.dataset.conversationId = conv.id;
+                
+                const avatar = document.createElement('img');
+                avatar.src = conv.avatar;
+                avatar.alt = conv.recipient;
+                avatar.classList.add('message-card-avatar');
+                
+                const content = document.createElement('div');
+                content.classList.add('message-card-content');
+                
+                const header = document.createElement('div');
+                header.classList.add('message-card-header');
+                
+                const sender = document.createElement('div');
+                sender.classList.add('message-card-sender');
+                sender.textContent = conv.recipient;
+                
+                const date = document.createElement('div');
+                date.classList.add('message-card-date');
+                date.textContent = conv.date;
+                
+                header.appendChild(sender);
+                header.appendChild(date);
+                
+                const preview = document.createElement('div');
+                preview.classList.add('message-card-preview');
+                preview.textContent = conv.lastMessage;
+                
+                const footer = document.createElement('div');
+                footer.classList.add('message-card-footer');
+                
+                const tag = document.createElement('span');
+                tag.classList.add('message-card-tag', 'initiated');
+                tag.textContent = conv.tag;
+                
+                const actions = document.createElement('div');
+                actions.classList.add('message-card-actions');
+                
+                const replyAction = document.createElement('span');
+                replyAction.classList.add('message-card-action');
+                replyAction.textContent = 'Reply';
+                
+                const archiveAction = document.createElement('span');
+                archiveAction.classList.add('message-card-action');
+                archiveAction.textContent = 'Archive';
+                
+                actions.appendChild(replyAction);
+                actions.appendChild(archiveAction);
+                
+                footer.appendChild(tag);
+                footer.appendChild(actions);
+                
+                content.appendChild(header);
+                content.appendChild(preview);
+                content.appendChild(footer);
+                
+                card.appendChild(avatar);
+                card.appendChild(content);
+                
+                // Add click event to select conversation
+                card.addEventListener('click', function(event) {
+                    // Don't select if clicking on an action button
+                    if (event.target.classList.contains('message-card-action')) {
+                        return;
+                    }
+                    
+                    // Remove active class from all cards
+                    document.querySelectorAll('.message-card').forEach(c => {
+                        c.classList.remove('active');
+                    });
+                    // Add active class to clicked card
+                    this.classList.add('active');
+                    // In full card view, we could redirect to a detailed conversation page
+                    // window.location.href = `/messages/conversation/${conv.id}`;
+                });
+                
+                initiatedMessages.appendChild(card);
+            });
+        }
+
+    </script>
+</body>
+</html>
