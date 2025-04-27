@@ -2,10 +2,25 @@
 import { pool } from "../data/pool.js";
 
 export const renderInbox = async (req, res) => {
-    res.render("conversation");
+    const userID = 777; //HARDCORDE FOR NOW DKPOWF{I;w}
+    const messages =[];
+    const conversations = await getAllConversations(userID);
+
+    console.log(conversations);
+    res.render("inbox", {userID, messages: messages, conversations: conversations});
 
     
 };
+
+export const renderConversation = async (req, res) => {
+    const userID = 777; //HARDCORDE FOR NOW DKPOWF{I;w}
+    const conversationID = req.params.conversationID;
+    const messages = await getMessagesWithParticipant(conversationID, userID);
+    const conversations = await getAllConversations(userID);
+
+    console.log(messages);
+    res.render("inbox", {userID, messages: messages, conversations: conversations});
+}
 
 
 async function sendMessage(conversationID, userID, message) {
@@ -55,12 +70,13 @@ async function getMessagesWithParticipant(conversationID, recipientID)
 {
     //Get all the messages within the same conversation
     const [records] = await pool.query(`
-        SELECT DISTINCT  u.userID, sp.store_name, m.message, m.sender_userID
+        SELECT DISTINCT  u.userID, sp.store_name, m.message, m.sender_userID, m.created_at
         FROM conversation_recipient cr
         JOIN \`user\` u ON cr.recipient_userID = u.userID
         JOIN seller_profile sp ON sp.sellerID = u.userID
         JOIN message m ON m.conversationID = ${conversationID}
-        WHERE cr.conversationID = ${conversationID};
+        WHERE cr.conversationID = ${conversationID}
+        ORDER BY m.created_at ASC;
         `);
     return records;
 }
