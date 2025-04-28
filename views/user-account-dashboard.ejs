@@ -8,7 +8,7 @@
 </head>
 <%- include('./partials/navbar') %>
 <body>
-
+    <link rel="stylesheet" href="../styles/account.css">
         <!-- Navigation (same as other pages) -->
 
 
@@ -231,7 +231,7 @@
 
                     const data = await response.text();
                     updateWatchlistContent(data);
-                   
+                    attachRemoveFromWLButtons();
                 } catch (error) {
                     console.error('Error fetching watchlist:', error);
                 }
@@ -249,17 +249,19 @@
     });
 });
 
+//Attach event listeners to the buttons in theon start
+attachRemoveFromWLButtons();
 attachFeedbackButtons();
 async function updateWatchlistContent(data) {
     const tempDiv = document.createElement('div');
     tempDiv.innerHTML = data;
 
     // Find the new orders list in the fetched data
-    const newWatchlist = tempDiv.querySelector('.watchlist-list');
+    const newWatchlist = tempDiv.querySelector('.watchlist-cards');
 
     if (newWatchlist) {
         // Replace the current orders list with the new one
-        const currentWatchlist = document.querySelector('.watchlist-list');
+        const currentWatchlist = document.querySelector('.watchlist-cards');
         if (currentWatchlist) {
             currentWatchlist.innerHTML = newWatchlist.innerHTML;
             
@@ -292,6 +294,6 @@ async function updateOrderContent(data) {
     }
 }
     </script>
-   <link rel="stylesheet" href="../styles/account.css">
+
 </body>
 </html>

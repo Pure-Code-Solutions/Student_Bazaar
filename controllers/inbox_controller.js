@@ -3,9 +3,11 @@ import { pool } from "../data/pool.js";
 
 export const renderInbox = async (req, res) => {
     const userID = 777; //HARDCORDE FOR NOW DKPOWF{I;w}
-    const messages =[];
+    
+    const conversationID =  1; //HARDCORDE FOR NOW DKPOWF{I;w}
+    const messages = await getMessagesWithParticipant(conversationID, userID);;
     const conversations = await getAllConversations(userID);
-
+    console.log(messages);
     console.log(conversations);
     res.render("inbox", {userID, messages: messages, conversations: conversations});
 

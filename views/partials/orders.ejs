@@ -9,7 +9,7 @@
             <div class="purchase-details">
                 <h3>Order #(X)</h3>
                 <p><strong>Product:</strong> <%= currentOrder.item_name %> </p>
-                <p><strong>Buyer:</strong> <%= currentOrder.store_name %></p>
+                <p><strong>Seller:</strong> <%= currentOrder.store_name %></p>
                 <p><strong>Order Date:</strong> <%= order.purchase_date %></p>
                 <p><strong>Total:</strong> <span class="purchase-total">$<%= currentOrder.price_at_purchase %></span></p>
             </div>
@@ -30,12 +30,10 @@
 
     <dialog>
 
-
+      
     <div class="user-review-page">
         <!-- Preview Section -->
-         <div>
-        <span class="close">&times;</span>
-         </div>
+        
         <div class="preview-section">
           
             <div class="item-image">
