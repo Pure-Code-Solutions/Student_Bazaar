@@ -292,3 +292,12 @@ footer p {
 .search-bar {
     margin-bottom: 15px;
 }
+
+/* Styles for the inbox section */
+.inbox-section {
+    display: none;
+}
+
+.inbox-section.active {
+    display: block;
+}

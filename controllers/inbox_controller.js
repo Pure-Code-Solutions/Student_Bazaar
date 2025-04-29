@@ -9,19 +9,20 @@ export const renderInbox = async (req, res) => {
     const conversations = await getAllConversations(userID);
     console.log(messages);
     console.log(conversations);
-    res.render("inbox", {userID, messages: messages, conversations: conversations});
+    res.render("inbox", {userID, messages: messages, conversations: conversations, activeSection: 'messages'});
 
     
 };
 
 export const renderConversation = async (req, res) => {
     const userID = 777; //HARDCORDE FOR NOW DKPOWF{I;w}
-    const conversationID = req.params.conversationID;
+    const conversations = [];
+    const conversationID = 1;
     const messages = await getMessagesWithParticipant(conversationID, userID);
-    const conversations = await getAllConversations(userID);
+
 
     console.log(messages);
-    res.render("inbox", {userID, messages: messages, conversations: conversations});
+    res.render("inbox", {userID, messages: messages,   conversations: conversations,  activeSection: 'api'});
 }
 
 

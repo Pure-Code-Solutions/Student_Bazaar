@@ -3,5 +3,5 @@ import { renderInbox, renderConversation } from "../controllers/inbox_controller
 export const inboxRouter = Router();
 
 
-inboxRouter.get("/", renderInbox);
-inboxRouter.get ("/conversaton", renderConversation);
+inboxRouter.get("/messages/", renderInbox);
+inboxRouter.get ("/api", renderConversation);
