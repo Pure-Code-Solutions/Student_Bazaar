@@ -1,5 +1,5 @@
 import Router from "express";
-import { postWatchlist, renderAccount, renderOrders, renderSelling, renderWatchlist, submitFeedback } from "../controllers/account_controller.js";
+import { postWatchlist, renderAccount, renderOrders, renderListing, renderWatchlist, submitFeedback } from "../controllers/account_controller.js";
 
 import { render } from "ejs";
 import { pool } from "../data/pool.js";
@@ -13,7 +13,7 @@ accountRouter.get("/account", (req, res) => {
 accountRouter.get("/dashboard", renderAccount);
 accountRouter.get("/orders", renderOrders);
 accountRouter.post("/orders", submitFeedback);
-accountRouter.get("/selling", renderSelling);
+accountRouter.get("/listing", renderListing);
 accountRouter.get("/watchlist", renderWatchlist);
 accountRouter.post("/watchlist", postWatchlist);
 

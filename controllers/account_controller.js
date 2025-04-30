@@ -17,8 +17,9 @@ export const renderOrders = async (req, res) => {
 
 
 
-export const renderSelling = async (req, res) => {
-    res.render("user-account-dashboard", { activeSection: "selling" });
+export const renderListing = async (req, res) => {
+    const listings = await queryListings(777); // Hardcoded for now
+    res.render("user-account-dashboard", { activeSection: "listing", listings });
 };
 
 export const renderWatchlist = async (req, res) => {
@@ -122,4 +123,15 @@ async function queryWatchlist(userID) {
     return records;
 }
 
+
+async function queryListings(userID) {
+    const [records] = await pool.query(`
+        SELECT item.name, item.price, item.itemID, item.sellerID, sp.store_name
+        FROM item
+        LEFT JOIN seller_profile sp ON  sp.sellerID= item.sellerID
+        WHERE sp.sellerID = ?;
+        `, [userID]);
+
+    return records;
+}
 

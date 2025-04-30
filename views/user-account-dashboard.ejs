@@ -35,6 +35,7 @@
                     <a href="/account/dashboard" class="<%= activeSection === 'dashboard' ? 'active' : '' %>" data-section="dashboard">Dashboard</a>
                     <a href="/account/orders" class="<%= activeSection === 'orders' ? 'active' : '' %>" data-section="orders">My Orders</a>
                     <a href="/account/watchlist" class="<%= activeSection === 'watchlist' ? 'active' : '' %>" data-section="watchlist">Watchlist</a>
+                    <a href="/account/watchlist" class="<%= activeSection === 'listing' ? 'active' : '' %>" data-section="listing">My Listings</a>
                     <a href="/list"><button class="btn btn-tertiary" >+ Create a new listing</button></a>
                 </nav>
                 
@@ -127,16 +128,7 @@
                 <!-- Orders Section -->
                 <section class="account-section <%= activeSection === 'orders' ? 'active' : '' %>" id="orders">
                     <h2>My Orders</h2>
-                    <div class="orders-tabs">
-                        <!--button class="order-tab active" data-tab="all">All Orders</button>
-                        <button class="order-tab" data-tab="processing">Processing</button>
-                        <button class="order-tab" data-tab="shipped">Shipped</button>
-                        <button class="order-tab" data-tab="delivered">Delivered</button>
-
-                        <button class="order-tab" data-tab="all">All Orders</button>
-                        <button class="order-tab  active" data-tab="processing">Processing</button-->
-                    </div>
-                    
+              
                     <%- include('./partials/orders') %>
                     
                       
@@ -151,24 +143,8 @@
                     <%- include('./partials/watchlist') %>
                 </section>
                 
-                <section class="account-section" id="addresses">
-                    <h2>My Addresses</h2>
-                    <!-- Addresses content -->
-                </section>
-                
-                <section class="account-section" id="payment-methods">
-                    <h2>Payment Methods</h2>
-                    <!-- Payment methods content -->
-                </section>
-                
-                <section class="account-section" id="student-verification">
-                    <h2>Student Verification</h2>
-                    <!-- Student verification content -->
-                </section>
-                
-                <section class="account-section" id="account-settings">
-                    <h2>Account Settings</h2>
-                    <!-- Account settings content -->
+                <section class="account-section <%= activeSection === 'listing' ? 'active' : '' %>" id="listing">
+                    <%- include('./partials/my_listings') %>
                 </section>
             </div>
         </div>

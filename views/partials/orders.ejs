@@ -26,8 +26,12 @@
         </div>
         <% }); %>
         <% }); %>
-    <% }; %> 
-
+    <% } else{; %> 
+    
+        <div class="empty-purchase-history">
+            <p>Your purchase history is empty.</p>
+        </div>
+    <% }; %>
     <dialog>
 
       
@@ -35,7 +39,9 @@
         <!-- Preview Section -->
         
         <div class="preview-section">
-          
+            <div>
+                <span class="close">&times;</span>
+            </div>
             <div class="item-image">
                 <img src="placeholder-item.jpg" alt="Item Preview">
             </div>

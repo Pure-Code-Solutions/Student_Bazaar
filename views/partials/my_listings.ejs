@@ -1,0 +1,14 @@
+<h2>My Listings</h2>
+<!-- Listings content -->
+<% if (locals.listings) {%>
+    <% locals.listings.forEach(item => { %> 
+<div class="listing-cards">
+    <div class="listing-card">
+        <h3><%= item.name %></h3>
+        <p>Price: $XX.XX</p>
+        <a href="#" class="btn-tertiary">Edit Listing</a>
+    </div>
+<% }); %>
+<% } %>
+    <!-- More listing cards can be added here -->
+</div>
