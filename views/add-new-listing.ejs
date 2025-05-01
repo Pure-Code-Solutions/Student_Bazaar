@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Listing</title>
+    <link rel="stylesheet" href="../styles/main.css">
+    <link rel="stylesheet" href="../styles/listing.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <a href="/" class="logo">YourLogo</a>
+            <div class="nav-links">
+                <a href="/">Home</a>
+            </div>
+        </nav>
+    </header>
+    
+    <div class="listing-container">
+        <form id="ebay-listing-form" method="POST" >
+            <!-- Title Section -->
+            <section class="listing-section title-section">
+                <h2>Title</h2>
+                <input 
+                    type="text" 
+                    class="title-input" 
+                    name="title"
+                    placeholder="Enter your listing title"
+                    maxlength="80"
+                    required
+                >
+                <!--small>Include details such as Tag, color, size, specs, condition, etc.</small-->
+            </section>
+
+            <!-- Item Specifics Section -->
+            <section class="listing-section item-specifics-section">
+                <h2>Item Description</h2>
+                <div class="item-specifics-grid">
+                    <!--div class="specific-input">
+                        <label>Condition</label>
+                        <select name="condition" required>
+                            <option value="">Select Condition</option>
+                            <option value="new">New</option>
+                            <option value="used">Used</option>
+       
+                        </select>
+                    </div-->
+                    <div class="specific-input">
+                        <label>Category</label>
+                        <select id="category-select" name="category" required>
+                            <option value="" selected="selected">Select a Category</option>
+                            <% if (categories) { %>
+                                <% categories.forEach(category => { %>
+                                    <option value="<%= category.category %>"><%= category.category %></option>
+                                <% }); %>
+                            <% } %>
+                        </select>
+                    </div>
+                    
+                    <div class="specific-input Tag-selection">
+                        <label>Tag</label>
+                        <div class="checkbox-dropdown">
+                            <button type="button" class="dropdown-toggle">Select Tags</button>
+                            <div class="checkbox-options" id="tag-options">
+                                <!-- Tags will be dynamically populated here -->
+                            </div>
+                        </div>
+                        </div>
+            </section>
+
+            <!-- Photos & Video Section -->
+            <section class="listing-section photos-section">
+                <h2>Photos & Video</h2>
+                <div class="photo-upload-area">
+                    <!--p>You can add up to 24 photos and a 1-minute video. Buyers want to see all details and angles.</p-->
+                    <div class="upload-buttons">
+                        <button type="button" class="upload-btn">Upload an image</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Description Section -->
+            <section class="listing-section description-section">
+                <h2>Description</h2>
+                <textarea 
+                    name="description"
+                    class="description-textarea" 
+                    placeholder="Write a detailed description of your item"
+                ></textarea>
+            </section>
+
+            <!-- Pricing Section -->
+            <section class="listing-section pricing-section">
+                <h2>Pricing</h2>
+                <div class="price-input">
+                    <label>Price</label>
+                    <input 
+                        name="price"
+                        type="number" 
+                        step="0.01" 
+                        min="0" 
+                        placeholder="Enter your price"
+                        required
+                    >
+                </div>
+                <div class="pricing-options">
+                    <!--label>
+                        <input type="checkbox"> Best Offer
+                    </label-->
+                </div>
+            </section>
+
+            <!-- Shipping Section -->
+            <section class="listing-section shipping-section">
+                <h2>Shipping</h2>
+                <div class="shipping-option">
+                    <label>Shipping Method</label>
+                    <select name="shippingMethod" required>
+                        <option value="">Select Shipping Method</option>
+                        <option value="usps-ground">USPS Ground Advantage</option>
+                        <option value="ups-ground">UPS Ground</option>
+                        <option value="fedex-ground">FedEx Ground</option>
+                    </select>
+                </div>
+                <div class="shipping-details">
+                    <p>Shipping cost will be calculated based on buyer's location and package weight.</p>
+                </div>
+            </section>
+
+            <!-- Submit Button -->
+            <div class="submit-section">
+                <button type="submit" class="btn-primary">Create Listing</button>
+            </div>
+        </form>
+    </div>
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const categoriesWithTags = <%- JSON.stringify(categories) %>; // Pass the data from the backend
+        console.log('Categories with Tags:', categoriesWithTags); // Debugging
+
+        const categorySelect = document.getElementById('category-select');
+        const tagOptions = document.getElementById('tag-options');
+        const dropdownToggle = document.querySelector('.dropdown-toggle');
+
+        // Listen for category selection changes
+        categorySelect.addEventListener('change', () => {
+            const selectedCategory = categorySelect.value;
+            console.log('Selected Category:', selectedCategory); // Debugging
+
+            // Find the tags for the selected category
+            const categoryData = categoriesWithTags.find(cat => cat.category === selectedCategory);
+            console.log('Category Data:', categoryData); // Debugging
+
+            // Clear existing tags
+            tagOptions.innerHTML = '';
+
+            if (categoryData && categoryData.tags) {
+                // Populate the tags for the selected category
+                categoryData.tags.forEach(tag => {
+                    const label = document.createElement('label');
+                    const checkbox = document.createElement('input');
+                    checkbox.type = 'checkbox';
+                    checkbox.name = 'tags[]'; // Add a name attribute for form submission
+                    checkbox.value = tag;
+
+                    label.appendChild(checkbox);
+                    label.appendChild(document.createTextNode(tag));
+                    tagOptions.appendChild(label);
+                });
+            }
+
+            // Reset the dropdown text
+            dropdownToggle.textContent = 'Select Tags';
+        });
+
+        // Update dropdown text when checkboxes are selected
+        tagOptions.addEventListener('change', () => {
+            const selectedTags = Array.from(tagOptions.querySelectorAll('input[type="checkbox"]:checked'))
+                .map(cb => cb.value);
+            console.log(selectedTags);
+            dropdownToggle.textContent = selectedTags.length > 0
+                ? selectedTags.join(', ')
+                : 'Select Tags';
+        });
+
+
+
+});
+    </script>
+</body>
+</html>

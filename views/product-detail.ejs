@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
-<link rel="stylesheet" href="/styles/product-details.css">
+<link rel="stylesheet" href="../styles/product-details.css">
+<link rel="stylesheet" href="../styles/main.css">
 <%- include('./partials/navbar') %>
 <head>
     <meta charset="UTF-8">
@@ -38,15 +39,14 @@
             <h1 class="product-title"><%= item.name %></h1>
             
             <div class="seller-info">
-                <img src="images/user-avatar.png" class="seller-avatar" alt="Seller Avatar">
+                <!--img src="images/user-avatar.png" class="seller-avatar" alt="Seller Avatar"-->
                 <div class="seller-details">
-                    <span class="seller-name"><%= item.seller %></span>
-                    <span class="seller-rating">
+                    <span class="seller-name">Sold by: <a href=/seller/<%= item.sellerID %>> <%= item.seller_name %> </a></span>
+                    <!--span class="seller-rating">
                         (<span class="positive-rating">90.6% positive</span>)
-                    </span>
+                    </span-->
                     <div class="seller-links">
-                        <a href="#">Seller's other items</a>
-                        <a href="#">Contact seller</a>
+
                     </div>
                 </div>
             </div>
@@ -54,48 +54,55 @@
             <div class="price-container">
                 <span class="price-label">US</span>
                 <span class="current-price">$<%= item.price %></span>
-                <span class="or-best-offer">or Best Offer</span>
+                <!--span class="or-best-offer">or Best Offer</span-->
             </div>
             
             <div class="condition">
                 <span class="condition-label">Condition:</span>
-                <span class="condition-value">Used</span>
+                <span class="condition-value"></span>
             </div>
             
             <div class="action-buttons">
-                <button class="btn btn-primary">Buy It Now</button>
-                <button class="btn btn-secondary">Add to cart</button>
-                <button class="btn btn-secondary">Make offer</button>
-                <button class="btn btn-tertiary">❤ Add to Watchlist</button>
+                <!--button class="btn btn-primary">Buy It Now</button-->
+                <button 
+                class="btn btn-tertiary" 
+                id="add-to-cart"
+                data-cart="<%= isInCart %>"
+                value="<%= item.itemID %>"
+                > <%= isInCart ? "- Remove from Cart" : "+ Add to Cart" %></button>
+                <!--button class="btn btn-secondary">Make offer</button-->
+   
+                <button 
+                class="btn btn-tertiary" 
+                id="add-to-watchlist" 
+                data-watchlist="<%= isWatchlisted %>" 
+                value="<%= item.itemID %>">
+                <%= isWatchlisted ? "- Remove from Watchlist" : "+ Add to Watchlist" %>
+                </button>
             </div>
             
-            <div class="additional-services">
+            <!--div class="additional-services">
                 <h3>Additional service available</h3>
                 <div class="service-option">
-                    <input type="checkbox" id="protection-plan">
-                    <label for="protection-plan">1-year protection plan from Allstate - $10.99</label>
+                    
                 </div>
-            </div>
+            </div-->
             
-            <div class="people-watching">
-                <img src="images/lightning.png" class="lightning-icon" alt="Lightning Icon">
-                <span>People want this. 16 people are watching this.</span>
-            </div>
+
             
             <div class="shipping-info">
                 <div class="shipping-detail">
                     <span class="shipping-label">Shipping:</span>
-                    <span class="shipping-price">US $5.91 USPS Ground Advantage®. <a href="#">See details</a></span>
+                    <!--span class="shipping-price">US $5.91 USPS Ground Advantage®. <a href="#">See details</a></span-->
                 </div>
                 <div class="shipping-location">
-                    Located in: San Ysidro, California, United States
+                    Located in: 
                 </div>
             </div>
         </div>
     </div>
     
-    <!-- Include your footer here -->
-    <%- include('./partials/footer') %>
+
     
     <script>
         // Image gallery functionality
@@ -133,6 +140,90 @@
             currentImageIndex = (currentImageIndex - 1 + images.length) % images.length;
             changeImage(images[currentImageIndex]);
         }
+
+    let cartButton =  document.querySelector("#add-to-cart");
+
+    cartButton.addEventListener("click", handleCartClick);
+
+    async function handleCartClick(event) {
+        let cartBtn = event.currentTarget;
+       
+        const itemID = cartBtn.value;
+        const userID = 777; // Hardcoded for now
+        
+        const inCart = cartBtn.getAttribute("data-cart") == "true";
+
+
+        const data = {
+            userID: parseInt(userID),
+            itemID: parseInt(itemID),
+            quantity: 1, // Default to 1
+            inCart: inCart,
+            addToCart: true
+        };
+
+        try {
+            const response = await fetch(`/item/${itemID}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            });
+
+            if (response.ok) {
+                // Immediately update button UI
+                const nowInCart = !inCart;
+                cartBtn.setAttribute("data-cart", nowInCart.toString());
+                cartBtn.innerHTML = nowInCart ? "- Remove from Cart" : "+ Add to Cart";
+            } else {
+                alert('Failed to add item to cart.');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            }
+        
+    };   
+        //Handles add to wishlist button
+    let watchlistButton =  document.querySelector("#add-to-watchlist");
+
+    watchlistButton.addEventListener("click", handleWatchlistClick);
+    
+    async function handleWatchlistClick(event) {
+        let watchlistBtn = event.currentTarget;
+        
+        const itemID = watchlistBtn.value;
+        const userID = 777; // Still hardcoded
+        const inWatchlist = watchlistBtn.getAttribute("data-watchlist") == "true";
+
+        const itemData = {
+            userID: parseInt(userID),
+            itemID: parseInt(itemID),
+            inWatchlist: inWatchlist,
+            addToWatchlist: true
+        };
+
+        try {
+            const response = await fetch(`/item/${itemID}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(itemData)
+            });
+
+           
+            if (response.ok) {
+                // Immediately update button UI
+                const nowInWatchlist = !inWatchlist;
+                watchlistBtn.setAttribute("data-watchlist", nowInWatchlist.toString());
+                watchlistBtn.innerHTML = nowInWatchlist ? "- Remove from Watchlist" : "+ Add to Watchlist";
+            } else {
+                console.error("Failed to update watchlist.");
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    }
+   
     </script>
     
 </body>

@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Shop | StudentStore</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
 </head>
 <%- include('./partials/navbar') %>
 <body>
@@ -31,10 +32,11 @@
                 <div class="search-filter-container">
                     <div class="search-filters">
                         <div class="filter-group">
+                        <!--Only appears when specific category chosen-->
+                        <% if (subcategories) {%>
                             <h3>Category</h3>
                             <ul>
-                                <!--If subcategories are defined-->
-                                <% if (subcategories) {%>
+                    
                                 <% subcategories.subcategories.forEach(sub => { %>
                                     <li>
                                         <input type="checkbox"
@@ -49,24 +51,37 @@
                             </ul>
                         </div>
                         <div class="filter-group">
+                            <!--Only appears when specific category chosen-->
+                            <% if (subcategories) {%>
                             <h3>Price Range</h3>
-                            <ul>
-                                <% prices.forEach(price => { %>
-                                    <li>
-                                        <input type="checkbox"
-                                        name="price"
-                                        class="price-checkbox" 
-                                        value="<%= price.range %>">
-                                        <label for="<%= price.range %>"><%= price.range %></label>
-                                    </li>
-                            <% }) %>
-                            </ul>
+                            <div class="price-range-control">
+                                <input 
+                                    type="range" 
+                                    id="price-slider" 
+                                    class="price-slider" 
+                                    min="0" 
+                                    max="1000" 
+                                    step="10"
+                                    value="1000">
+                                <div class="price-inputs">
+                                    <div class="price-input-group">
+                                        <span>$</span>
+                                        <input type="number" id="min-price" class="price-input" value="0" min="0">
+                                    </div>
+                                    <span class="price-dash">to</span>
+                                    <div class="price-input-group">
+                                        <span>$</span>
+                                        <input type="number" id="max-price" class="price-input" value="1000" min="0">
+                                    </div>
+                                </div>
+                            </div>
+                            <% }; %>
                         </div>
 
                     </div>
 
                     <div class="search-results-content">
-                        <div class="search-results-sorting">
+                        <!--div class="search-results-sorting">
                             <label for="sort-by">Sort by:</label>
                             <select id="sort-by">
                                 <option value="relevance" selected>Relevance</option>
@@ -79,22 +94,22 @@
                                 <button class="view-grid active"><i class="fas fa-th"></i></button>
                                 <button class="view-list"><i class="fas fa-list"></i></button>
                             </div>
-                        </div>
+                        </div-->
 
                         <div class="search-results-grid">
                             <!-- Product Card 1 -->
                              <% if (products) {%>
                             <% products.forEach(product => { %> 
                                 <div class="product-card">
-                                    <div class="product-badge bestseller">Bestseller</div>
+                                    <!--div class="product-badge bestseller">Bestseller</div-->
                                     <div class="product-image">
                                         <a href="product-detail.html?id=123">
-                                            <img src="/api/placeholder/200/250" alt=<%= product.name %>>
+           
                                         </a>
-                                        <a class="quick-view-btn" value=<%= product.id%>  href="/item/<%= product.id %>" >Quick View</a>
+                                        <a class="quick-view-btn" value=<%= product.itemID%>  href="/item/<%= product.itemID %>" ><button type="button">View More</button></a>
                                     </div>
                                     <div class="product-info">
-                                        <h3><a href="/item/<%= product.id %>"><%= product.name%></a></h3>
+                                        <h3><a href="/item/<%= product.itemID %>"><%= product.name%></a></h3>
                                         <div class="product-rating">
                                         <% for(var i= 1; i <= product.number_stars; i++) { %> 
                                             <i class="fas fa-star"></i>
@@ -106,8 +121,8 @@
                                             <span class="current-price">$<%= product.price %></span>
                                         </div>
                                         <div class="product-actions">
-                                            <button class="add-to-cart-btn">Add to Cart</button>
-                                            <button class="add-to-wishlist-btn"><i class="far fa-heart"></i></button>
+                                            <button class="add-to-cart-btn" href="/cart" value="<%= product.itemID %>">Add to Cart</button>
+                                            <!--button class="add-to-wishlist-btn"><i class="far fa-heart"></i></button-->
                                         </div>
                                     </div>
                                 </div>
@@ -148,20 +163,72 @@
     </main>
     <script>
     document.addEventListener("DOMContentLoaded", function () {
+        // Get search box element if it exists
+        const searchBox = document.querySelector('input[type="search"]') || { value: '' };
         
+        // Make filter groups expandable
+        const filterGroups = document.querySelectorAll('.filter-group');
+      
+        // Set all filter groups as expanded by default
+        filterGroups.forEach(group => {
+            group.classList.add('expanded');
+        });
+        
+        // Add click event listeners to all filter group headers
+        filterGroups.forEach(group => {
+            const header = group.querySelector('h3');
+            header.addEventListener('click', () => {
+                group.classList.toggle('expanded');
+            });
+        });
+           // Scroll to the bottom of the filter box
+           filterGroups.scrollTop = filterGroups.scrollHeight;
+        // Price Range Slider Logic
+        const priceSlider = document.getElementById('price-slider');
+        const minPriceInput = document.getElementById('min-price');
+        const maxPriceInput = document.getElementById('max-price');
+        
+        // Update max price input when slider changes
+        priceSlider.addEventListener('input', function() {
+            maxPriceInput.value = this.value;
+            updateProductsWithPriceRange();
+        });
+        
+        // Update slider when max price input changes
+        maxPriceInput.addEventListener('change', function() {
+            priceSlider.value = this.value;
+            updateProductsWithPriceRange();
+        });
+        
+        // Update products when min price changes
+        minPriceInput.addEventListener('change', function() {
+            if (parseInt(this.value) > parseInt(maxPriceInput.value)) {
+                this.value = maxPriceInput.value;
+            }
+            updateProductsWithPriceRange();
+        });
+        
+        // Function to update products based on price range
+        function updateProductsWithPriceRange() {
+            const minPrice = minPriceInput.value;
+            const maxPrice = maxPriceInput.value;
+            fetchFilteredProducts(null, 1, minPrice, maxPrice);
+        }
 
-
-        async function fetchFilteredProducts(event, page = 1) {
+        async function fetchFilteredProducts(event, page = 1, minPrice = null, maxPrice = null) {
+ 
+            const defaultMinPrice = 0;
+            const defaultMaxPrice =  1000;
             event?.preventDefault(); // Prevent default link behavior if event exists
-
-                
+            
             let currentPage = parseInt(page) || 1;
 
             let subcategories = Array.from(document.querySelectorAll(".subcategory-checkbox:checked"))
-                .map(cb => cb.value); // Get selected subcategories
+            .map(cb => cb.value); // Get selected subcategories
 
-            let prices = Array.from(document.querySelectorAll(".price-checkbox:checked"))
-                .map(cb => cb.value); // Get selected price ranges
+            // Use provided price range or get from inputs
+            const min = minPrice !== null ? minPrice : document.getElementById('min-price').value;
+            const max = maxPrice !== null ? maxPrice : document.getElementById('max-price').value;
             
             let query = searchBox.value.trim();
 
@@ -170,16 +237,14 @@
 
             let url = category ? `/shop/${category}` : `/shop`; // Base URL
 
-            // Convert selected filters to comma-separated strings
-            let selectedTags = subcategories.join("|");
-            let selectedPrices = prices.join("|");
-
             // Construct query parameters
             let queryParams = new URLSearchParams();
             if (query) queryParams.set("query", query);
-            if (selectedTags) queryParams.set("tags", selectedTags);
-            if (selectedPrices) queryParams.set("prices", selectedPrices);
-
+            if (subcategories.length > 0) queryParams.set("tags", subcategories.join("|"));
+            if (!(min == defaultMinPrice && max == defaultMaxPrice)) { // Only set if not both default
+                queryParams.set("minPrice", min);
+                queryParams.set("maxPrice", max);
+            }
             queryParams.set("page", currentPage);
 
             // Append query parameters
@@ -191,74 +256,105 @@
             console.log("Fetching:", url); // Debugging
 
             try {
-                const response = await fetch(url, {  
-                    method: "GET",
-                    headers: { "Content-Type": "application/json" },
-                });
-                const data = await response.text(); // Assuming the server returns HTML
-                await updateSearchContent(data);
+            const response = await fetch(url, {  
+                method: "GET",
+                headers: { "Content-Type": "application/json" },
+            });
+            const data = await response.text(); // Assuming the server returns HTML
+            await updateSearchContent(data);
 
-            }catch (error) {
+            } catch (error) {
                console.error("Error fetching filtered products:", error);
             }
-
-
         }
 
 
         async function updateSearchContent(data) 
         {
-        
-               // ONLY Replaces the current search results with the new results and  without changing the entire page
-               const tempDiv = document.createElement("div");
-                tempDiv.innerHTML = data;
-                const newSearchResults =  tempDiv.querySelector(".search-results-content");
+            // ONLY Replaces the current search results with the new results and without changing the entire page
+            const tempDiv = document.createElement("div");
+            tempDiv.innerHTML = data;
+            const newSearchResults = tempDiv.querySelector(".search-results-content");
 
-                if (newSearchResults) {
-                     document.querySelector(".search-results-content").innerHTML = newSearchResults.innerHTML;
-                     attachPaginationListeners(); 
-                }
-                
-           
-        }
-         // Handle Pagination Clicks
-         function attachPaginationListeners() {
-                document.querySelectorAll(".pagination a").forEach(link => {
-                    link.addEventListener("click", function (event) {
-                        event.preventDefault();
-                        const page = this.getAttribute("data-page");
-                        fetchFilteredProducts(event, page);
-                    });
-                });
+            if (newSearchResults) {
+                document.querySelector(".search-results-content").innerHTML = newSearchResults.innerHTML;
+                attachPaginationListeners(); 
             }
-            // Attach event listeners to checkboxes
-            document.querySelectorAll(".subcategory-checkbox").forEach(checkbox => {
-                checkbox.addEventListener("change", () => fetchFilteredProducts(null, 1)); // Reset to page 1 when filter changes
+        }
+        
+        // Handle Pagination Clicks
+        function attachPaginationListeners() {
+            document.querySelectorAll(".pagination a").forEach(link => {
+                link.addEventListener("click", function (event) {
+                    event.preventDefault();
+                    const page = this.getAttribute("data-page");
+                    fetchFilteredProducts(event, page);
+                });
             });
-
-            document.querySelectorAll(".price-checkbox").forEach(checkbox => {
-                checkbox.addEventListener("change", () => fetchFilteredProducts(null, 1)); // Reset to page 1 when filter changes
-            });
-
-
-            attachPaginationListeners(); // Initial binding on page load
-
-           
-            // Preserve checkboxes state from URL on page load
-            const params = new URLSearchParams(window.location.search);
-            const selectedTags = params.get("tags") ? params.get("tags").split(",") : [];
-            const selectedPrices = params.get("prices") ? params.get("prices").split(",") : [];
-            document.querySelectorAll(".subcategory-checkbox").forEach(cb => {
-                cb.checked = selectedTags.includes(cb.value);
-            });
-            document.querySelectorAll(".price-checkbox").forEach(cb => {
-                cb.checked = selectedPrices.includes(cb.value);
-            });
+        }
+        
+        // Attach event listeners to checkboxes
+        document.querySelectorAll(".subcategory-checkbox").forEach(checkbox => {
+            checkbox.addEventListener("change", () => fetchFilteredProducts(null, 1)); // Reset to page 1 when filter changes
         });
 
-       
+        attachPaginationListeners(); // Initial binding on page load
+           
+        // Preserve filters state from URL on page load
+        const params = new URLSearchParams(window.location.search);
+        const selectedTags = params.get("tags") ? params.get("tags").split("|") : [];
+        const minPriceParam = params.get("minPrice");
+        const maxPriceParam = params.get("maxPrice");
+        
+        // Set price range inputs from URL if available
+        if (minPriceParam) minPriceInput.value = minPriceParam;
+        if (maxPriceParam) {
+            maxPriceInput.value = maxPriceParam;
+            priceSlider.value = maxPriceParam;
+        }
+        
+        // Set subcategory checkboxes from URL
+        document.querySelectorAll(".subcategory-checkbox").forEach(cb => {
+            cb.checked = selectedTags.includes(cb.value);
+        });
+        document.querySelectorAll(".add-to-cart-btn").forEach(button => {
+         button.addEventListener("click", async (event) => {
+        const itemID = button.value;
+        const userID = 777; // Hardcoded for now
+        console.log("Add to Cart clicked", itemID);
+
+        const data = {
+            userID: parseInt(userID),
+            itemID: parseInt(itemID),
+            quantity: 1 // Default to 1
+        };
+
+        try {
+            const response = await fetch(`/shop`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            });
+
+            if (response.ok) {
+                alert('Item added to cart successfully!');
+            } else {
+                alert('Failed to add item to cart.');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    });
+});
+
+    
+        
+    });
+
+  
     </script>
     
-
 </body>
 </html>

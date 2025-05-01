@@ -1,0 +1,99 @@
+<div class="watchlist-cards">
+    <!-- Example of a Watchlist Card -->
+    <% if (locals.watchlist) {%>
+        <% locals.watchlist.forEach(item => { %> 
+        <div class="watchlist-card">
+            <div class="card-content">
+                <div class="watchlist-details">
+                    <h3><%= item.item_name %></h3>
+                    <p><strong>Item:</strong> <%= item.name %></p>
+                    <p><strong>Seller:</strong> <%= item.store_name %></p>
+                    <p><strong>Price:</strong> <span class="watchlist-price">$<%= item.price %></span></p>
+                </div>
+                <div class="actions">
+                    <a href="/item/<%= item.itemID %>" class="btn-tertiary">View Product</a>
+                    <button class="btn-tertiary" 
+                        id="remove-button",
+                        data-itemid="<%= item.itemID %>"
+                        data-name="<%= item.item_name %>">
+                        Remove
+                    </button>
+                </div>
+            </div>
+        </div>
+        <% }); %>
+    <% } else { %>
+        <div class="empty-watchlist">
+            <p>Your watchlist is empty.</p>
+        </div>
+    <% } %>
+</div>
+
+<dialog id="confirm-dialog">
+    <div class="confirm-container">
+        <div>
+            <span class="close">&times;</span>
+        </div>
+        <h3>Remove from Watchlist</h3>
+        <p>Are you sure you want to remove <span id="item-to-remove"></span> from your watchlist?</p>
+        <div class="dialog-buttons">
+            <button id="cancel-remove" class="cancel-button">Cancel</button>
+            <button id="confirm-remove" class="confirm-button">Remove</button>
+        </div>
+    </div>
+</dialog>
+<link rel="stylesheet" href="../styles/watchlist.css">
+<script>
+
+    async function attachRemoveFromWLButtons() {
+        const removeButton = document.querySelectorAll('#remove-button');
+        const dialog = document.getElementById('confirm-dialog');
+        const closeButton = document.querySelector('.close');
+        const cancelButton = document.getElementById('cancel-remove');
+        const confirmButton = document.getElementById('confirm-remove');
+        let itemToRemoveId = null;
+
+        removeButton.forEach(button => {
+            button.addEventListener('click', () => {
+                itemToRemoveId = button.dataset.itemid;
+                document.getElementById('item-to-remove').textContent = button.dataset.name;
+                dialog.showModal();
+            });
+        });
+
+        closeButton.addEventListener('click', () => {
+            
+            dialog.close();
+        });
+
+        cancelButton.addEventListener('click', () => {
+            dialog.close();
+        });
+
+        confirmButton.addEventListener('click', async () => {
+            if (itemToRemoveId) {
+                try {
+                    const response = await fetch('/account/watchlist', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ itemID: itemToRemoveId })
+                    });
+                    
+                    if (response.ok) {
+                        // Refresh the page or remove the item from DOM
+                        location.reload();
+                    } else {
+                        console.error('Failed to remove item');
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                }
+            }
+            dialog.close();
+        });
+        }
+      
+  
+</script>

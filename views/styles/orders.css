@@ -1,0 +1,186 @@
+
+        /* Purchase Cards */
+        .empty-purchase-history {
+            text-align: center;
+            padding: 30px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            grid-column: 1 / -1;
+        }
+        .purchase-cards {
+            display: grid;
+            /*grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));*/
+            gap: 20px;
+        }
+
+        .purchase-card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .purchase-details h3 {
+            margin: 0 0 10px 0;
+            color: #0056b3;
+        }
+
+        .purchase-details p {
+            margin: 5px 0;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .purchase-total {
+            font-weight: bold;
+            color: #ff9900;
+        }
+
+        .actions {
+            margin-top: 15px;
+            display: flex;
+            justify-content: flex-start;
+            gap: 10px;
+        }
+
+        .actions button {
+            background-color: #0056b3;
+            color: white;
+            font-weight: bold;
+            border: none;
+            border-radius: 5px;
+            padding: 10px;
+            cursor: pointer;
+        }
+
+        .actions button:hover {
+            background-color: #003d99;
+        }
+
+        .actions a {
+            text-decoration: none;
+            color: #0056b3;
+            padding: 10px;
+            border: 1px solid #0056b3;
+            border-radius: 5px;
+            font-weight: bold;
+            text-align: center;
+            display: inline-block;
+        }
+
+        .actions a:hover {
+            background-color: #0056b3;
+            color: white;
+        }
+        
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        /* DIALOG BOX FOR FEEDBACK FORM */
+
+        /* Form Container */
+        .user-review-page {
+            width: 90%;
+            max-width: 800px;
+            margin: 50px auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+     
+        }
+
+        /* Preview Section */
+        .preview-section {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .preview-section .item-image img {
+            width: 100px;
+            height: 100px;
+            border-radius: 8px;
+            object-fit: cover;
+            margin-right: 20px;
+        }
+
+        .preview-section .item-info {
+            flex: 1;
+        }
+
+        .preview-section .item-info h3 {
+            margin: 0;
+            color: #0056b3;
+        }
+
+        .preview-section .seller-info {
+            margin-top: 5px;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        /* Form Styling */
+        .user-review-form label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .user-review-form input,
+        .user-review-form textarea,
+        .user-review-form select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .user-review-form textarea {
+            resize: none;
+            height: 100px;
+        }
+
+        /* Button Styling */
+        .user-review-form .btn-submit {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            text-align: center;
+            background-color: #ff9900;
+            color: white;
+            font-weight: bold;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .user-review-form .btn-submit:hover {
+            background-color: #e68a00;
+        }
+
+        /* The Close Button */
+.close {
+    color: #aaaaaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+  }
+  
+  .close:hover,
+  .close:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+  

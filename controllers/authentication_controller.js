@@ -1,5 +1,6 @@
 import {body, validationResult} from "express-validator";
-
+//import passport from 'passport';
+import passport from '../data/auth.js'
 export const renderSignin = async (req, res) => {
     res.render("user-login-page");
 }
@@ -7,6 +8,19 @@ export const renderSignin = async (req, res) => {
 export const renderRegister = async (req, res) => {
 
     res.render("user-registration-page", {firstNameError:""});
+}
+
+export const getAuthenticateGoogle = async (req, res) => {
+    passport.authenticate('google', {scope: ['email', 'profile']});
+
+}
+
+export const getGoogleCallback = async (req, res) => {
+    passport.authenticate('google', { failureRedirect: '/login' }),
+    function(req, res) {
+      // Successful authentication, redirect home.
+      res.redirect('/');
+    }
 }
 
 //Defines validation rules
