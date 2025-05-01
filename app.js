@@ -17,7 +17,9 @@ import { openSearchRouter } from './routes/open_search_router.js';
 import { getCartItemCount } from './controllers/checkout_controller.js';
 import { sellerRouter } from './routes/seller_router.js';
 import { feedbackRouter } from './routes/feedback_router.js';
-
+import searchTestRouter from './routes/search_test.js';
+import searchRouter from './routes/search.js';
+import indexItemsRouter from './routes/indexItems.js';
 
 const upload = multer({ dest: 'uploads/' }).single('image');
 //change "uploads" to whichever file you want to store uploads
@@ -31,6 +33,9 @@ const __dirname = path.dirname(__filename);
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use('/api', searchTestRouter);
+app.use('/search', searchRouter);
+app.use('/index', indexItemsRouter);
 
 
 app.use(async (req, res, next) => {
