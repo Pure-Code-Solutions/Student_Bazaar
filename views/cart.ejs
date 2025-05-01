@@ -11,10 +11,10 @@
 
     
     <main class="cart-page">
-        <div class="page-header">
+        <!--div class="page-header">
             <h1>Your Cart</h1>
             <p>(<%= cart.reduce((total, item) => total + item.quantity, 0) %>) items in your cart</p>
-        </div>
+        </div-->
         
         <div class="cart-container">
 
@@ -26,7 +26,7 @@
                         <img src="images/backpack.jpg" alt="Campus Backpack">
                     </div>
                     <div class="item-details">
-                        <h3><a href="product-detail.html?id=102"><%= item.name %></a></h3>
+                        <h3><a href='item/<%= item.itemID %>'><%= item.name %></a></h3>
                         <p class="item-variant"></p>
                         <div class="item-price">
                             <span class="current-price">$<%= item.price %></span>
@@ -39,7 +39,7 @@
                                 <button class="qty-btn-plus" value="<%= item.itemID %>">+</button>
                             </div-->
                             <button class="btn-remove" value="<%= item.itemID %>">Remove</button>
-                            <button class="btn-save">Save for Later</button>
+
                         </div>
                     </div>
                 </div>

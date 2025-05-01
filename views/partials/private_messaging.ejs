@@ -1,0 +1,22 @@
+<div class="message-area">
+                
+
+        
+        <div id="messageBox" class="message-box">
+            <% if (messages) {%>
+                <% messages.forEach(message => { %> 
+                    <% if(message.sender_userID == userID) {%>
+                    <div class="message-content-sender"><%= message.message %></div>
+                    <% }else {%>
+                        <div class="message-content-recipient"><%= message.message %></div>
+                    <%};%>
+            <% }); %>
+            <%}; %>
+        </div>
+        <form id="messageForm" class="message-form">
+            <input type="text" id="messageInput" class="form-control message-input" placeholder="Type your message" required>
+            <button type="submit" class="btn btn-primary">Send</button>
+        </form>
+    </div>
+
+    <link rel="stylesheet" href="../styles/inbox.css">

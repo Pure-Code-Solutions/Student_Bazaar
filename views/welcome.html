@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'VT323', monospace;
+        }
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: black;
+            color: red;
+            overflow: hidden;
+            text-align: center;
+        }
+        .container {
+            padding: 20px;
+            width: 500px;
+            text-shadow: 0 0 5px red;
+            box-shadow: 0 0 15px red;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        h2 {
+            margin-bottom: 20px;
+        }
+        .welcome {
+            color: rgb(0, 255, 0);
+            padding: 10px;
+            text-shadow: none;
+        }
+        .welcome-message {
+            margin-bottom: 30px;
+            padding: 10px;
+            border: 2px solid red;
+            background: black;
+            width: 100%;
+            font-size: 20px;
+            color: yellow; /* Initial color for "Connection Established" */
+        }
+        button {
+            padding: 12px;
+            background: red;
+            color: black;
+            border: none;
+            font-size: 18px;
+            font-weight: bold;
+            text-transform: uppercase;
+            box-shadow: 0 0 10px red;
+            cursor: pointer;
+        }
+        button:hover {
+            background: darkred;
+        }
+        .scan-lines {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(
+                to bottom,
+                rgba(255, 20, 20, 0.1),
+                rgba(255, 20, 20, 0.1) 2px,
+                transparent 2px,
+                transparent 4px
+            );
+            top: 0;
+            left: 0;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <img id="profilePicture" alt="PP" style="border-radius: 50%; width: 100px; height: 100px; text-align: center;">
+        <h1 id="welcomeMessage" class="welcome"></h1>
+        <div class="welcome-message" id="loadingMessage">CONNECTION ESTABLISHED</div>
+        <button onclick="logout()">[LOG OUT]</button>
+        <div class="scan-lines"></div>
+    </div>
+
+    <script>
+        // Initialize variables
+        let dotCount = 0;
+        let loadingInterval;
+
+        window.onload = function() {
+            // Get references to elements
+            const loadingMessage = document.getElementById('loadingMessage');
+            
+            // Fetch user data and profile picture immediately
+            fetchUserData();
+            fetchProfilePicture();
+            
+            // After 5 seconds, switch to the loading animation
+            setTimeout(() => {
+                loadingMessage.style.color = "red"; // Change to red for loading
+                loadingMessage.textContent = "Loading your data";
+                
+                // Start the blinking dots animation
+                loadingInterval = setInterval(() => {
+                    dotCount = (dotCount + 1) % 4;
+                    loadingMessage.textContent = "Loading your data" + ".".repeat(dotCount);
+                }, 500);
+                
+                // After a reasonable time, clear the loading message
+                setTimeout(() => {
+                    clearInterval(loadingInterval);
+                    loadingMessage.textContent = "System ready";
+                }, 8000); // Show loading animation for 8 seconds
+            }, 5000); // Show "CONNECTION ESTABLISHED" for 5 seconds
+        };
+
+        function fetchUserData() {
+            fetch('/api/user')
+                .then(response => response.json())
+                .then(data => {
+                    const welcomeMessage = document.getElementById('welcomeMessage');
+                    welcomeMessage.textContent = `Welcome, ${data.name}!`;
+                })
+                .catch((error) => {
+                    console.error("Error fetching user data:", error);
+                    document.getElementById('welcomeMessage').textContent = "User";
+                });
+        }
+
+        function fetchProfilePicture() {
+            fetch('/api/profile-picture')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.profilePictureUrl) {
+                        document.getElementById('profilePicture').src = data.profilePictureUrl;
+                    } else {
+                        document.getElementById('profilePicture').style.display = 'none';
+                    }
+                })
+                .catch((error) => {
+                    console.error("Error fetching profile picture:", error);
+                    document.getElementById('profilePicture').style.display = 'none';
+                });
+        }
+
+        function logout() {
+            fetch('/logout', { method: 'GET' })
+                .then(() => window.location.href = '/home.html?logout=true')
+                .catch(err => console.error('Logout failed', err));
+        }
+    </script>
+</body>
+</html>

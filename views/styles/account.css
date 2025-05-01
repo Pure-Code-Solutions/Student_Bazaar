@@ -230,7 +230,22 @@
             text-decoration: none;
             font-weight: bold;
         }
-
+        .btn-tertiary {
+            padding: 12px 15px;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: bold;
+            text-align: center;
+            cursor: pointer;
+            border: none;
+            background-color: white;
+            color: #3665f3;
+            border: 1px solid #ddd;
+        }
+        
+        .btn-tertiary:hover {
+            background-color: #f0f0f0;
+        }
         footer {
             background: #333;
             color: #fff;

@@ -168,7 +168,7 @@
         
         // Make filter groups expandable
         const filterGroups = document.querySelectorAll('.filter-group');
-        
+      
         // Set all filter groups as expanded by default
         filterGroups.forEach(group => {
             group.classList.add('expanded');
@@ -181,7 +181,8 @@
                 group.classList.toggle('expanded');
             });
         });
-
+           // Scroll to the bottom of the filter box
+           filterGroups.scrollTop = filterGroups.scrollHeight;
         // Price Range Slider Logic
         const priceSlider = document.getElementById('price-slider');
         const minPriceInput = document.getElementById('min-price');

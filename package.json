@@ -1,21 +1,31 @@
 {
-  "name": "student_bazaar",
+  "name": "tutorial",
   "version": "1.0.0",
-  "description": "Table of Contents\r 1. Project Description\r 2. Features\r 3. Technologies Used\r 4. Future Improvements",
   "main": "index.js",
   "type": "module",
   "scripts": {
     "start": "node app.js",
     "dev": "node --watch app.js"
   },
-  "keywords": [],
   "author": "",
   "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "nodemon": "^3.1.9"
+  },
   "dependencies": {
+    "@aws-crypto/sha256-js": "^5.2.0",
     "@aws-sdk/client-s3": "^3.779.0",
+    "@aws-sdk/credential-provider-node": "^3.799.0",
+    "@aws-sdk/node-http-handler": "^3.370.0",
+    "@aws-sdk/protocol-http": "^3.370.0",
+    "@aws-sdk/signature-v4": "^3.370.0",
     "@opensearch-project/opensearch": "^3.5.1",
+    "aws-opensearch-connector": "^1.2.0",
     "aws-sdk": "^2.1692.0",
     "bcrypt": "^5.1.1",
+    "bcryptjs": "^3.0.2",
+    "body-parser": "^1.20.3",
     "dotenv": "^16.4.7",
     "ejs": "^3.1.10",
     "express": "^4.21.2",
@@ -24,8 +34,10 @@
     "multer": "^1.4.5-lts.2",
     "mysql2": "^3.14.0",
     "node-localstorage": "^3.0.5",
+    "nodemailer": "^6.10.1",
     "passport": "^0.7.0",
     "passport-google-oauth2": "^0.2.0",
-    "passport-google-oauth20": "^2.0.0"
+    "passport-google-oauth20": "^2.0.0",
+    "socket.io": "^4.8.1"
   }
 }

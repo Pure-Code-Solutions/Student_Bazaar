@@ -8,7 +8,7 @@ export const renderCreateListing = async (req, res) => {
 };
 
 export const postListing = async (req, res) => {
-    const { category, tags, title, price, condition } = req.body;
+    const { category, tags, title, price, description, condition } = req.body;
 
     console.log('Category:', category);
     console.log('Tags:', tags); // This will be an array of selected tags
@@ -21,11 +21,11 @@ export const postListing = async (req, res) => {
         return res.status(400).send('Tags must be an array');
     }
 
-    await createListing(1, title, category, tags, price);
+    await createListing(777, title, category, tags, price, description);//Hardcoded for now
     
 }
 
-async function createListing(sellerID, name, categoryName, tags, price) {
+async function createListing(sellerID, name, categoryName, tags, price, description) {
     const [categoryResult] = await pool.query(`
         SELECT categoryID FROM category WHERE name = ?;
     `, [categoryName]);
@@ -37,9 +37,9 @@ async function createListing(sellerID, name, categoryName, tags, price) {
     const categoryID = categoryResult[0].categoryID;
 
     const [itemResult] = await pool.query(`
-        INSERT INTO item (sellerID, name, price, categoryID)
-        VALUES (?, ?, ?, ?);
-    `, [sellerID, name, price, categoryID]);
+        INSERT INTO item (sellerID, name, price, categoryID, description)
+        VALUES (?, ?, ?, ?, ?);
+    `, [sellerID, name, price, categoryID, description]);
 
     const itemID = itemResult.insertId;
 
