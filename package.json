@@ -2,8 +2,10 @@
   "name": "tutorial",
   "version": "1.0.0",
   "main": "index.js",
+  "type": "module",
   "scripts": {
-    "start": "nodemon index.js"
+    "start": "node app.js",
+    "dev": "node --watch app.js"
   },
   "author": "",
   "license": "ISC",
@@ -12,16 +14,6 @@
     "nodemon": "^3.1.9"
   },
   "dependencies": {
-
-    "bcryptjs": "^3.0.2",
-    "body-parser": "^1.20.3",
-    "ejs": "^3.1.10",
-    "express": "^4.21.2",
-    "express-session": "^1.18.1",
-    "mysql2": "^3.13.0",
-    "passport": "^0.7.0",
-    "passport-google-oauth2": "^0.2.0"
-
     "@aws-crypto/sha256-js": "^5.2.0",
     "@aws-sdk/client-s3": "^3.779.0",
     "@aws-sdk/credential-provider-node": "^3.799.0",
@@ -32,6 +24,8 @@
     "aws-opensearch-connector": "^1.2.0",
     "aws-sdk": "^2.1692.0",
     "bcrypt": "^5.1.1",
+    "bcryptjs": "^3.0.2",
+    "body-parser": "^1.20.3",
     "dotenv": "^16.4.7",
     "ejs": "^3.1.10",
     "express": "^4.21.2",
@@ -40,10 +34,10 @@
     "multer": "^1.4.5-lts.2",
     "mysql2": "^3.14.0",
     "node-localstorage": "^3.0.5",
+    "nodemailer": "^6.10.1",
     "passport": "^0.7.0",
     "passport-google-oauth2": "^0.2.0",
     "passport-google-oauth20": "^2.0.0",
     "socket.io": "^4.8.1"
-
   }
 }
