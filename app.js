@@ -4,6 +4,8 @@ import session from 'express-session';
 import path from "node:path";
 import * as dotenv from 'dotenv';
 import passport from './data/auth.js';
+import { Server } from 'socket.io';
+import { createServer } from 'node:http';
 dotenv.config();
 import { fileURLToPath } from "node:url";
 import { shopRouter } from "./routes/shop_router.js";
@@ -20,11 +22,17 @@ import { feedbackRouter } from './routes/feedback_router.js';
 import searchTestRouter from './routes/search_test.js';
 import searchRouter from './routes/search.js';
 import indexItemsRouter from './routes/indexItems.js';
+import { inboxRouter } from './routes/inbox_router.js';
+
+
 
 const upload = multer({ dest: 'uploads/' }).single('image');
 //change "uploads" to whichever file you want to store uploads
 const app = express();
+const server = createServer(app);
+const io = new Server(server);
 const PORT = 5000;
+
 
 
 const __filename = fileURLToPath(import.meta.url);
@@ -64,11 +72,27 @@ app.use("/account", accountRouter);
 app.use("/", checkoutRouter);
 app.use("/", sellingRouter);
 app.use("/seller", sellerRouter);
-app.use("/feedback", feedbackRouter);
+
+app.use("/inbox", inboxRouter);
 app.use('/api', S3router);
 app.use("/api", openSearchRouter);
 
 
+io.on('connection', (socket) => {
+  console.log('A user connected');
+
+  // Listen for incoming messages
+  socket.on('chat message', (msg) => {
+      console.log('Message received:', msg);
+
+      // Emit the message to all connected clients
+      io.emit('chat message', msg);
+  });
+
+  socket.on('disconnect', () => {
+      console.log('A user disconnected');
+  });
+});
 
 //Setup file path for ejs assets
 const assetsPath = path.join(__dirname, "views");
@@ -83,4 +107,4 @@ app.use((err, req, res, next) => {
 
 
 
-app.listen(PORT, () => console.log(`Express app listening on port ${PORT}!`));
+server.listen(PORT, () => console.log(`Express app listening on port ${PORT}!`));
