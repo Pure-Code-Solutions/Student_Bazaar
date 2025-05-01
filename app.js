@@ -28,7 +28,7 @@ import "./passport.js";
 const app = express();
 const server = createServer(app);
 const io = new Server(server);
-const PORT = 5000;
+const PORT = 5500;
 const upload = multer({ dest: 'uploads/' }).single('image');
 
 // Session setup (must be before passport)

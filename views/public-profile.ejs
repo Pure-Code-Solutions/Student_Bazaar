@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><%= user.name %>'s Profile</title>
+    <title><%=seller.store_name %>'s Profile</title>
     <link rel="stylesheet" href="../styles/public-profile.css">
 </head>
 <body>
@@ -12,7 +12,7 @@
 
     <!-- Profile Header -->
     <div class="header">
-        <img src="<%= user.avatar %>" alt="<%= user.name %>'s Avatar" class="logo">
+        <img src="<%= seller.avatar %>" alt="<%= seller.store_name %>'s Avatar" class="logo">
         <div class="info">
             <h1><%= seller.store_name %></h1>
             <div class="stats">
@@ -33,8 +33,8 @@
     <div class="nav">
         <div class="menu">
             <a href="#shop-anchor" class="active">Shop</a> 
-            <a href="#">Sale</a>
-            <a href="#">About</a>
+            <!--a href="#">Sale</a-->
+            <!--a href="#">About</a-->
             <a href="#reviews-anchor">Feedback</a> 
         </div>
         <div class="search">
