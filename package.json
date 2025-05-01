@@ -1,17 +1,27 @@
 {
-  "name": "student_bazaar",
+  "name": "tutorial",
   "version": "1.0.0",
-  "description": "Table of Contents\r 1. Project Description\r 2. Features\r 3. Technologies Used\r 4. Future Improvements",
   "main": "index.js",
-  "type": "module",
   "scripts": {
-    "start": "node app.js",
-    "dev": "node --watch app.js"
+    "start": "nodemon index.js"
   },
-  "keywords": [],
   "author": "",
   "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "nodemon": "^3.1.9"
+  },
   "dependencies": {
+
+    "bcryptjs": "^3.0.2",
+    "body-parser": "^1.20.3",
+    "ejs": "^3.1.10",
+    "express": "^4.21.2",
+    "express-session": "^1.18.1",
+    "mysql2": "^3.13.0",
+    "passport": "^0.7.0",
+    "passport-google-oauth2": "^0.2.0"
+
     "@aws-crypto/sha256-js": "^5.2.0",
     "@aws-sdk/client-s3": "^3.779.0",
     "@aws-sdk/credential-provider-node": "^3.799.0",
@@ -34,5 +44,6 @@
     "passport-google-oauth2": "^0.2.0",
     "passport-google-oauth20": "^2.0.0",
     "socket.io": "^4.8.1"
+
   }
 }

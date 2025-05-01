@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Verify Your Email | Student Bazaar</title>
+  <link rel="stylesheet" href="/styles/main.css">
+</head>
+<body>
+  <% if (typeof errors !== 'undefined' && errors.length > 0) { %>
+    <div class="form-errors">
+      <ul>
+        <% errors.forEach(err => { %>
+          <li style="color:red;"><%= err.msg %></li>
+        <% }); %>
+      </ul>
+    </div>
+  <% } %>
+  
+  <main style="text-align:center; padding-top: 100px;">
+    <h1>🔐 Enter Your Verification Code</h1>
+    <p>We've sent a 6-digit code to your email. Please enter it below.</p>
+
+    <% if (typeof error !== 'undefined') { %>
+      <p style="color: red;"><%= error %></p>
+    <% } %>
+
+    <form action="/verify" method="POST">
+      <input type="hidden" name="email" value="<%= email %>">
+      <input type="text" name="otp" maxlength="6" required placeholder="Enter OTP" />
+      <button type="submit" class="btn-primary">Verify</button>
+    </form>
+
+    <form action="/resend-otp" method="POST" style="margin-top: 20px;">
+      <input type="hidden" name="email" value="<%= email %>">
+      <button type="submit" class="btn-secondary">Resend OTP</button>
+    </form>
+
+    <div style="margin-top: 20px;">
+      <a href="/signin">Back to Sign In</a>
+    </div>
+  </main>
+</body>
+</html>
