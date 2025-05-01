@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= user.name %>'s Profile</title>
+    <link rel="stylesheet" href="../styles/public-profile.css">
+</head>
+<body>
+
+    <%- include('partials/navbar') %>
+
+    <!-- Profile Header -->
+    <div class="header">
+        <img src="<%= user.avatar %>" alt="<%= user.name %>'s Avatar" class="logo">
+        <div class="info">
+            <h1><%= seller.store_name %></h1>
+            <div class="stats">
+                <span><strong><%= overallRating %>% Positive Feedback</strong></span>
+               
+               
+               
+            </div>
+        </div>
+        <div class="actions">
+            <!--button class="btn-outline">Share</button-->
+            <button class="btn-outline">Contact</button>
+            <!--button class="btn-outline">Save Seller</button-->
+        </div>
+    </div>
+
+    <!-- Navigation Bar -->
+    <div class="nav">
+        <div class="menu">
+            <a href="#shop-anchor" class="active">Shop</a> 
+            <a href="#">Sale</a>
+            <a href="#">About</a>
+            <a href="#reviews-anchor">Feedback</a> 
+        </div>
+        <div class="search">
+  
+            <i class="search-icon"></i>
+        </div>
+    </div>
+
+    <!-- shop Section (Items for Sale) -->
+<div id="shop-anchor"></div> 
+<section class="shop-section">
+    <h3>Items for Sale <a href="#" class="view-all">See all</a></h3>
+    <div class="shop-grid">
+        <% if (shop.length > 0) { %>
+            <% shop.forEach(item => { %>
+                <div class="product-card">
+                    <h4><%= item.name %></h4>
+                    <p class="price">$<%= item.price %></p>
+                    <p>Category ID: <%= item.categoryID %></p>
+                    <a href="/item/<%= item.itemID %>" class="btn-tertiary">View Product</a>
+                </div>
+            <% }); %>
+        <% } else { %>
+            <p>No items for sale.</p>
+        <% } %>
+    </div>
+</section>
+
+
+<!-- Feedback Section (Customer Feedback) -->
+<div id="reviews-anchor"></div>
+<section class="reviews-section">
+    <h3>Customer Feedback</h3>
+    <div class="review-list">
+        <% if (feedback.length > 0) { %>
+            <% feedback.forEach(review => { %>
+                <div class="review-card">
+                    <h4><%= review.first_name %></h4>
+                    <p>"<%= review.feedback %>"</p>
+                    <span class="rating">Rating: <%= review.number_rating %>/5</span>
+                </div>
+            <% }); %>
+        <% } else { %>
+            <p>No feedback yet.</p>
+        <% } %>
+    </div>
+</section>
+
+    <!--%- include('partials/footer') %-->
+
+</body>
+</html>

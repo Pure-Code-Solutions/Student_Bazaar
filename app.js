@@ -18,7 +18,7 @@ import {S3router} from './routes/aws_router.js';
 import { openSearchRouter } from './routes/open_search_router.js';
 import { getCartItemCount } from './controllers/checkout_controller.js';
 import { sellerRouter } from './routes/seller_router.js';
-import { feedbackRouter } from './routes/feedback_router.js';
+
 import searchTestRouter from './routes/search_test.js';
 import searchRouter from './routes/search.js';
 import indexItemsRouter from './routes/indexItems.js';

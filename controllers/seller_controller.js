@@ -4,11 +4,12 @@ export const renderSellerProfile = async (req, res) => {
   const shop = await querySellerShop(sellerID);
   const feedback = await queryFeedback(sellerID);
   const overallRating = await getOverallRating(sellerID);
+  const seller = await getSellerProfile(sellerID);
 
   console.log(feedback);
   //console.log(overallRating);
-  res.send('SellerID: ' + sellerID);
-  //res.render('SELLERPAGE', {shop});
+
+  res.render('public-profile', {seller, shop, feedback, overallRating});
 };
 
 async function querySellerShop(sellerID) {
@@ -21,7 +22,9 @@ async function querySellerShop(sellerID) {
 
 async function queryFeedback(sellerID) {
   const [records] = await pool.query(`
-      SELECT * FROM feedback
+      SELECT fd.itemID, fd.number_rating, fd.feedback, u.first_name
+      FROM feedback fd
+      LEFT JOIN user u ON fd.customerID = u.userID
       WHERE sellerID = ?
     `, [sellerID]);
     return records;
@@ -55,4 +58,12 @@ async function getOverallRating(sellerID) {
   return overallRating;
 
 
+}
+
+async function getSellerProfile(sellerID) {
+  const [records] = await pool.query(`
+      SELECT * FROM seller_profile 
+      WHERE sellerID = ?;
+    `, [sellerID]);
+    return records[0];
 }
