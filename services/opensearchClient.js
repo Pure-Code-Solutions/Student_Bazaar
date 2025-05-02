@@ -7,6 +7,7 @@ import { URL } from "url";
 
 const REGION = "us-west-2";
 const ENDPOINT = process.env.OPENSEARCH_ENDPOINT;
+const PORT = parseInt(process.env.OPENSEARCH_PORT || '443'); // fallback for safety
 
 console.log("Connecting to OpenSearch at:", ENDPOINT);
 
@@ -16,7 +17,7 @@ async function sendSignedRequest(method, path, query = {}, body = null) {
     method,
     protocol: url.protocol,
     hostname: url.hostname,
-    port: 443,
+    port: PORT,
     path: url.pathname,
     query,
     headers: {
@@ -62,3 +63,9 @@ export async function searchIndex(index, queryObject) {
 export async function indexDocument(index, document) {
   return sendSignedRequest("POST", `/${index}/_doc`, {}, document);
 }
+
+export async function deleteIndex(index) {
+  return sendSignedRequest("DELETE", `/${index}`);
+}
+
+export { sendSignedRequest };

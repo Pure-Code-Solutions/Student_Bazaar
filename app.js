@@ -1,10 +1,10 @@
+import * as dotenv from 'dotenv';
+dotenv.config();
 import multer from 'multer';
 import express from "express";
 import session from 'express-session';
 import path from "node:path";
-import * as dotenv from 'dotenv';
 import passport from './data/auth.js';
-dotenv.config();
 import { fileURLToPath } from "node:url";
 import { shopRouter } from "./routes/shop_router.js";
 import { homeRouter } from "./routes/home_router.js";
@@ -20,6 +20,11 @@ import { feedbackRouter } from './routes/feedback_router.js';
 import searchTestRouter from './routes/search_test.js';
 import searchRouter from './routes/search.js';
 import indexItemsRouter from './routes/indexItems.js';
+import uploadRoute from './routes/upload.js';
+import devCleanupRoute from './routes/dev_cleanup.js';
+import reindexRoute from './routes/reindex.js';
+import uploadPfpRoute from './routes/upload_pfp.js';
+
 
 const upload = multer({ dest: 'uploads/' }).single('image');
 //change "uploads" to whichever file you want to store uploads
@@ -36,6 +41,10 @@ app.use(express.urlencoded({ extended: true }));
 app.use('/api', searchTestRouter);
 app.use('/search', searchRouter);
 app.use('/index', indexItemsRouter);
+app.use('/upload', uploadRoute);
+app.use('/dev', devCleanupRoute);
+app.use('/dev', reindexRoute);
+app.use('/api', uploadPfpRoute);
 
 
 app.use(async (req, res, next) => {
@@ -55,11 +64,24 @@ app.use(session({ secret: 'cats', resave: false, saveUninitialized: true }));
 app.use(passport.initialize());
 app.use(passport.session());
 
+//Mock test
+app.use((req, res, next) => {
+  if (!req.user) {
+    // Mock login session
+    req.user = {
+      userID: 1, // Use a real ID from your DB
+      email: 'test@example.com',
+      displayName: 'Test User'
+    };
+  }
+  next();
+});
 
 //Mount routers //COMMENT THIS OUT
 app.use("/", shopRouter);
 app.use("/", homeRouter);
 app.use("/", authenticationRouter);
+console.log("authenticationRouter mounted at /");
 app.use("/account", accountRouter);
 app.use("/", checkoutRouter);
 app.use("/", sellingRouter);
@@ -67,7 +89,6 @@ app.use("/seller", sellerRouter);
 app.use("/feedback", feedbackRouter);
 app.use('/api', S3router);
 app.use("/api", openSearchRouter);
-
 
 
 //Setup file path for ejs assets
@@ -84,3 +105,6 @@ app.use((err, req, res, next) => {
 
 
 app.listen(PORT, () => console.log(`Express app listening on port ${PORT}!`));
+app._router.stack
+  .filter(r => r.route)
+  .forEach(r => console.log(`${Object.keys(r.route.methods)[0].toUpperCase()} ${r.route.path}`));

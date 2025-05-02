@@ -1,0 +1,90 @@
+import express from 'express';
+import { indexDocument, deleteIndex } from '../services/opensearchClient.js'; // ⬅️ Add deleteIndex
+import mysql from 'mysql2/promise';
+import dotenv from 'dotenv';
+dotenv.config();
+import { sendSignedRequest } from '../services/opensearchClient.js';
+
+const router = express.Router();
+
+const pool = mysql.createPool({
+  host: process.env.DB_HOST,
+  port: process.env.DB_PORT,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME,
+});
+
+router.post('/reindex', async (req, res) => {
+  try {
+    // 🧨 Attempt to delete old index before reindexing
+    try {
+      const deleteResult = await deleteIndex('item');
+      console.log('Index deleted:', deleteResult);
+    } catch (err) {
+      if (err?.toString().includes('index_not_found_exception')) {
+        console.log('No existing index to delete — continuing...');
+      } else {
+        throw err; // surface real errors
+      }
+    }
+
+    const [rows] = await pool.query(`
+      SELECT item.itemID, item.name, item.description, item.categoryID, item.imageUrl,
+             category.name AS categoryName
+      FROM item
+      JOIN category ON item.categoryID = category.categoryID
+    `);
+
+    let successCount = 0;
+
+    for (const row of rows) {
+      const doc = {
+        itemID: row.itemID,
+        name: row.name,
+        description: row.description || '',
+        categoryID: row.categoryID,
+        categoryName: row.categoryName,
+        imageUrl: row.imageUrl || null
+      };
+
+      await indexDocument('item', doc);
+      successCount++;
+    }
+
+    res.status(200).json({
+      message: `Reindexed ${successCount} items successfully`
+    });
+  } catch (err) {
+    console.error('Error during reindex:', err);
+    res.status(500).json({ error: 'Reindexing failed' });
+  }
+});
+
+router.delete('/deleteIndex', async (req, res) => {
+  try {
+    const result = await deleteIndex('item');
+    res.status(200).send(`Index deleted: ${result}`);
+  } catch (err) {
+    if (err.toString().includes('index_not_found_exception')) {
+      res.status(200).send('Index not found — nothing to delete.');
+    } else {
+      console.error('Delete index error:', err);
+      res.status(500).json({ error: 'Failed to delete index' });
+    }
+  }
+});
+
+router.get('/indices', async (req, res) => {
+  try {
+    const response = await sendSignedRequest('GET', '/_cat/indices?v');
+    res.status(200).send(response);
+  } catch (err) {
+    console.error('Failed to fetch indices:', err);
+    res.status(500).json({ error: 'Failed to fetch index list' });
+  }
+});
+
+
+export default router;
+

@@ -4,8 +4,6 @@ import { render } from "ejs";
 import { pool } from "../data/pool.js";
 export const accountRouter = Router();
 
-
-
 accountRouter.get("/account", (req, res) => {
   res.redirect("/account/dashboard");
 });

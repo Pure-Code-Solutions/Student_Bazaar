@@ -3,25 +3,22 @@ import {body, validationResult} from "express-validator";
 import passport from '../data/auth.js'
 export const renderSignin = async (req, res) => {
     res.render("user-login-page");
-}
+};
 
 export const renderRegister = async (req, res) => {
-
     res.render("user-registration-page", {firstNameError:""});
-}
+};
 
-export const getAuthenticateGoogle = async (req, res) => {
-    passport.authenticate('google', {scope: ['email', 'profile']});
+// Trigger Google OAuth login
+export const getAuthenticateGoogle = passport.authenticate('google', {
+    scope: ['email', 'profile']
+});
 
-}
-
-export const getGoogleCallback = async (req, res) => {
-    passport.authenticate('google', { failureRedirect: '/login' }),
-    function(req, res) {
-      // Successful authentication, redirect home.
-      res.redirect('/');
-    }
-}
+// Handle Google OAuth callback
+export const getGoogleCallback = passport.authenticate('google', {
+  failureRedirect: '/signin',
+  successRedirect: '/account/dashboard'
+});
 
 //Defines validation rules
 const validateUser = [
@@ -45,10 +42,8 @@ export const postRegister = [
     validateUser, //is the req to to passed in ValidationResult
     async (req, res) => {
         const errors = validationResult(req);
-
         // Convert errors to an array
         const errorsArray = errors.array();
-
         // Group errors by path
         const groupedErrors = errorsArray.reduce((acc, err) => {
             if (!acc[err.path]) {
@@ -63,8 +58,6 @@ export const postRegister = [
                     errors: errorsArray
             });
         }
-                
-        
         const firstName = req.body["first-name"];
         const lastName = req.body["last-name"];
         const email = req.body["email"];
