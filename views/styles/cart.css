@@ -7,14 +7,26 @@ body {
     padding: 0;
 }
 
-/* Header Styles */
-header nav {
-    background: #333;
-    color: #fff;
+/* Header and Navigation */
+header {
+    background-color: #0056b3;
     padding: 10px 0;
+}
+nav {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    width: 90%;
+    margin: 0 auto;
+}
+nav .nav-links a, nav .nav-actions a {
+    color: white;
+    text-decoration: none;
+    margin: 0 10px;
+    font-weight: bold;
+}
+nav .nav-links a:hover, nav .nav-actions a:hover {
+    text-decoration: underline;
 }
 
 header nav .logo img {

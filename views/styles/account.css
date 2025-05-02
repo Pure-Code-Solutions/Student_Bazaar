@@ -17,7 +17,7 @@
         .account-page .page-header {
             text-align: center;
             padding: 20px;
-            background: #00b4d8;
+            background:#0056b3;
             color: #fff;
         }
 
@@ -68,8 +68,8 @@
         }
 
         .account-nav a.active {
-            background: #00b4d8;
-            color: #fff;
+          
+            color: #0056b3;
         }
 
         .account-help,
