@@ -4,6 +4,8 @@ import mysql from 'mysql2/promise';
 import dotenv from 'dotenv';
 dotenv.config();
 import { sendSignedRequest } from '../services/opensearchClient.js';
+import { client } from '../data/open_search.js';
+
 
 const router = express.Router();
 
@@ -17,18 +19,57 @@ const pool = mysql.createPool({
 
 router.post('/reindex', async (req, res) => {
   try {
-    // 🧨 Attempt to delete old index before reindexing
+    // Optional: Delete index (commented for now)
+    // await deleteIndex('item');
+
+    // Create index with edge_ngram mapping
     try {
-      const deleteResult = await deleteIndex('item');
-      console.log('Index deleted:', deleteResult);
+      await sendSignedRequest('PUT', '/item', {}, {
+  settings: {
+    analysis: {
+      analyzer: {
+        edge_ngram_analyzer: {
+          tokenizer: 'edge_ngram_tokenizer',
+          filter: ['lowercase']
+        }
+      },
+      tokenizer: {
+        edge_ngram_tokenizer: {
+          type: 'edge_ngram',
+          min_gram: 2,
+          max_gram: 15,
+          token_chars: ['letter', 'digit']
+        }
+      }
+    }
+  },
+  mappings: {
+    properties: {
+      name: {
+        type: 'text',
+        analyzer: 'edge_ngram_analyzer',
+        search_analyzer: 'standard'
+      },
+      description: { type: 'text' },
+      categoryName: { type: 'keyword' },
+      imageUrl: { type: 'keyword' }
+    }
+  }
+});
+console.log('Index created with edge_ngram mapping via signed request.');
+
+	  
+	  
+      console.log('Index created with edge_ngram mapping.');
     } catch (err) {
-      if (err?.toString().includes('index_not_found_exception')) {
-        console.log('No existing index to delete — continuing...');
+      if (err?.meta?.body?.error?.type === 'resource_already_exists_exception') {
+        console.log('Index already exists — skipping create.');
       } else {
-        throw err; // surface real errors
+        throw err;
       }
     }
 
+    //Reindex from MySQL
     const [rows] = await pool.query(`
       SELECT item.itemID, item.name, item.description, item.categoryID, item.imageUrl,
              category.name AS categoryName
@@ -60,6 +101,7 @@ router.post('/reindex', async (req, res) => {
     res.status(500).json({ error: 'Reindexing failed' });
   }
 });
+
 
 router.delete('/deleteIndex', async (req, res) => {
   try {
