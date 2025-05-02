@@ -211,6 +211,23 @@
                 } catch (error) {
                     console.error('Error fetching watchlist:', error);
                 }
+            } else if(sectionId == "listing"){
+                try {
+                    const response = await fetch('/account/listing', {
+                        method: 'GET',
+                        headers: { 'Content-Type': 'text/html' },
+                    });
+
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+
+                    const data = await response.text();
+                    updateListingContent(data);
+                
+                } catch (error) {
+                    console.error('Error fetching watchlist:', error);
+                }
             }
         }
 
@@ -246,6 +263,27 @@ async function updateWatchlistContent(data) {
         }
     } else {
         console.error('No .watchlist-list element found in the fetched data.');
+    }
+}
+
+async function updateListingContent(data) {
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = data;
+
+    // Find the new orders list in the fetched data
+    const newListings = tempDiv.querySelector('.listing-cards');
+
+    if (newListings) {
+        // Replace the current orders list with the new one
+        const currentListings = document.querySelector('.listing-cards');
+        if (currentListings) {
+            currentListings.innerHTML = newListings.innerHTML;
+            
+        } else {
+            console.error('No .listing-cards element found in the DOM.');
+        }
+    } else {
+        console.error('No .listing-cards element found in the fetched data.');
     }
 }
 
