@@ -1,0 +1,12 @@
+<h2>Search Results for "<%= query %>"</h2>
+<% if (results.length === 0) { %>
+  <p>No results found.</p>
+<% } else { %>
+  <ul>
+    <% results.forEach(item => { %>
+      <li>
+        <a href="/item/<%= item.itemID %>"><%= item.name %></a> - $<%= item.price %>
+      </li>
+    <% }) %>
+  </ul>
+<% } %>

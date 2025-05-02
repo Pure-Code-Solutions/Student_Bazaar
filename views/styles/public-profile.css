@@ -1,0 +1,207 @@
+/* Main Styles */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f3f3f3;
+    margin: 0;
+    padding: 0;
+    color: #333;
+}
+
+/* scrolling */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Position anchor spacers to align scroll properly */
+#shop-anchor, #reviews-anchor {
+    position: relative;
+    top: -120px; 
+    height: 1px;
+}
+
+
+/* Header - Profile Info */
+.header {
+    background-color: rgb(239, 239, 239);
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.header .logo {
+    height: 50px;
+    margin-right: 20px;
+}
+
+.header .info {
+    flex-grow: 1;
+}
+
+.header .info h1 {
+    margin: 0;
+    font-size: 24px;
+}
+
+.header .info .stats {
+    margin-top: 5px;
+    color: #555;
+}
+
+.header .info .stats span {
+    margin-right: 20px;
+}
+
+.header .actions {
+    display: flex;
+    gap: 10px;
+}
+
+.btn-outline {
+    background: none;
+    border: 2px solid #0056b3;
+    color: #0056b3;
+    padding: 8px 12px;
+    font-weight: bold;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.btn-outline:hover {
+    background: #0056b3;
+    color: white;
+}
+
+/* Navigation Bar */
+.nav {
+    position: sticky;
+    top: 109px;
+    z-index: 98; 
+    background-color: white;
+    padding: 10px 20px;
+    display: flex;
+    align-items: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+
+.nav .menu {
+    flex-grow: 1;
+}
+
+.nav .menu a {
+    margin-right: 20px;
+    color: black;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.nav .menu a.active {
+    font-weight: 700;
+    border-bottom: 3px solid black;
+}
+
+/* Search Bar */
+.nav .search {
+    position: relative;
+}
+
+.nav .search input {
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    border-radius: 20px;
+    width: 300px;
+}
+
+.nav .search .search-icon {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    width: 18px;
+    height: 18px;
+    background-color: #888;
+    border-radius: 50%;
+}
+
+/* Shop Section */
+.shop-section {
+    padding: 20px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.shop-section h3 {
+    font-size: 22px;
+    margin-bottom: 15px;
+}
+
+.view-all {
+    float: right;
+    margin-right: 2%;
+    font-size: 18px;
+    text-decoration: underline;
+    color: #000000;
+}
+
+/* enforce 4 per row */
+.shop-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); 
+    gap: 10px; 
+}
+
+/* Product Card */
+.product-card {
+    background: white;
+    padding: 15px;
+    text-align: center;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.product-card img {
+    width: 100%;
+    border-radius: 5px;
+}
+
+.product-card h4 {
+    margin-top: 10px;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.price {
+    font-weight: bold;
+    color: #0056b3;
+    margin-top: 10px;
+}
+
+/* Reviews Section */
+.reviews-section {
+    padding: 20px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.review-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.review-card {
+    background: white;
+    padding: 15px;
+    border-left: 5px solid #ff9900;
+    border-radius: 5px;
+}
+
+.rating {
+    font-weight: bold;
+    color: #ff9900;
+}

@@ -3,74 +3,208 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sign In | CampusShop</title>
-    <link rel="stylesheet" href="./styles/main.css">
+    <title>Login Page</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'VT323', monospace;
+        }
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: black;
+            color: red;
+            overflow: hidden;
+            text-align: center;
+        }
+        .container {
+            padding: 20px;
+            width: 500px;
+            text-shadow: 0 0 5px red;
+            box-shadow: 0 0 15px red;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        h2 {
+            margin-bottom: 20px;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 2px solid red;
+            background: black;
+            color: red;
+            font-size: 18px;
+            outline: none;
+            text-align: center;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background: red;
+            color: black;
+            border: none;
+            font-size: 18px;
+            font-weight: bold;
+            text-transform: uppercase;
+            box-shadow: 0 0 10px red;
+            cursor: pointer;
+        }
+        button:hover {
+            background: darkred;
+        }
+        .google-btn {
+            background: white;
+            color: black;
+            border: none;
+            font-size: 18px;
+            font-weight: bold;
+            text-transform: uppercase;
+            margin-top: 10px;
+            padding: 12px;
+            cursor: pointer;
+            width: 100%;
+            box-shadow: 0 0 10px red;
+        }
+        .google-btn:hover {
+            background: #e0e0e0;
+        }
+        .or-divider {
+            margin: 15px 0;
+            color: red;
+            text-shadow: 0 0 5px red;
+        }
+        .toggle-btn {
+            background: none;
+            border: none;
+            color: red;
+            cursor: pointer;
+            margin-top: 10px;
+            text-decoration: underline;
+            font-size: 16px;
+        }
+        .scan-lines {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(
+                to bottom,
+                rgba(255, 0, 0, 0.1),
+                rgba(255, 0, 0, 0.1) 2px,
+                transparent 2px,
+                transparent 4px
+            );
+            top: 0;
+            left: 0;
+            pointer-events: none;
+        }
+        .success {
+            color: #39FF14;
+            text-shadow: 0 0 10px #39FF14, 0 0 20px #39FF14, 0 0 30px #39FF14;
+        }
+        .success-message {
+            margin-top: 20px;
+        }
+
+        h1 {
+            font-size: 24px;
+            color: red;
+        }
+        #authMessage {
+            font-size: 24px;
+            color: yellow;
+            padding: 10px;
+        }
+    </style>
 </head>
-<%- include('./partials/navbar') %>
 <body>
+    <div class="container" id="formContainer">
+        <h2 id="authMessage">PLEASE AUTHORIZE</h2>
 
-    
-    <main class="auth-page">
-        <div class="auth-container">
-            <div class="auth-form-container">
-                <h1>Sign In</h1>
-                <p class="auth-subtitle">Welcome back! Please enter your details.</p>
-                
-                <form class="auth-form">
-                    <div class="form-group">
-                        <label for="email">Email</label>
-                        <input type="email" id="email" placeholder="Enter your email" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="password">Password</label>
-                        <input type="password" id="password" placeholder="Enter your password" required>
-                    </div>
-                    
-                    <div class="form-options">
-                        <div class="remember-me">
-                            <input type="checkbox" id="remember">
-                            <label for="remember">Remember me</label>
-                        </div>
-                        <a href="#" class="forgot-password">Forgot password?</a>
-                    </div>
-                    
-                    <button type="submit" class="btn-primary btn-full">Sign In</button>
-                    
-                    <div class="divider">
-                        <span>or</span>
-                    </div>
-                    
-                    <button type="button" class="btn-outline btn-full btn-with-icon">
-                        <img src="images/google-icon.svg" alt="Google">
-                        Sign in with Google
-                    </button>
-                    
-                    <button type="button" class="btn-outline btn-full btn-with-icon">
-                        <img src="images/apple-icon.svg" alt="Apple">
-                        Sign in with Apple
-                    </button>
-                    
-                    <div class="school-login">
-                        <button type="button" class="btn-link">Sign in with your school account</button>
-                        <p class="school-info">Use your .edu email for additional student benefits</p>
-                    </div>
-                </form>
-                
-                <div class="auth-footer">
-                    <p>Don't have an account? <a href="/register">Sign up</a></p>
-                </div>
-            </div>
-            
-            <!--div class="auth-image">
-                <img src="images/login-image.jpg" alt="Students on campus">
-                <div class="auth-image-overlay">
-                </div>
-            </div-->
-        </div>
-        
-    </main>
+        <form id="loginForm">
+            <input type="email" placeholder="Email:" required>
+            <input type="password" placeholder="Password:" required>
+            <button type="submit">[LOGIN]</button>
+            <button type="button" class="google-btn" onclick="loginWithGoogle()">[LOGIN WITH GOOGLE]</button>
+            <div class="or-divider">OR</div>
+            <button type="button" class="toggle-btn" onclick="toggleForm()">Don't have an account? Sign up</button>
+        </form>
 
+        <form id="signupForm" style="display: none;">
+            <input type="text" placeholder="First Name:" required>
+            <input type="text" placeholder="Last Name:" required>
+            <input type="email" placeholder="Email:" required>
+            <input type="tel" placeholder="Phone Number:" required>
+            <input type="password" placeholder="Password:" required>
+            <button type="submit">[SIGN UP]</button>
+            <button type="button" class="toggle-btn" onclick="toggleForm()">Already have an account? Login</button>
+        </form>
+
+        <div class="scan-lines"></div>
+        <div id="successMessage" class="success-message" style="display: none;"></div>
+    </div>
+
+    <script>
+        function loginWithGoogle() {
+            window.location.href = "http://localhost:5500/auth/google";
+        }
+
+        function toggleForm() {
+            const loginForm = document.getElementById('loginForm');
+            const signupForm = document.getElementById('signupForm');
+            const authMessage = document.getElementById('authMessage');
+
+            if (loginForm.style.display === 'none') {
+                loginForm.style.display = 'block';
+                signupForm.style.display = 'none';
+                authMessage.textContent = 'PLEASE AUTHORIZE';
+            } else {
+                loginForm.style.display = 'none';
+                signupForm.style.display = 'block';
+                authMessage.textContent = 'NEW USER REGISTRATION';
+            }
+        }
+
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const authMessage = document.getElementById('authMessage');
+            const loginForm = document.getElementById('loginForm');
+            const successMessage = document.getElementById('successMessage');
+
+            const isLoginSuccessful = true; // Replace with actual login logic
+
+            if (isLoginSuccessful) {
+                authMessage.textContent = 'CONNECTION ESTABLISHED';
+                authMessage.classList.add('success');
+                loginForm.style.display = 'none';
+                successMessage.textContent = "Access Granted.";
+                successMessage.style.display = 'block';
+            }
+        });
+
+        window.onload = function () {
+            const urlParams = new URLSearchParams(window.location.search);
+            const authMessage = document.getElementById("authMessage");
+
+            if (urlParams.has("logout")) {
+                authMessage.textContent = "Logged out successfully";
+
+                setTimeout(() => {
+                    authMessage.textContent = "PLEASE AUTHORIZE";
+                    authMessage.style.color = "red";
+                    window.history.replaceState(null, "", "/home.html");
+                }, 9000);
+            }
+        };
+    </script>
 </body>
-<!--%- include('./partials/footer') %-->
 </html>

@@ -5,8 +5,12 @@ export const renderAccount = async (req, res) => {
   if (!req.user) {
     return res.status(401).send("Unauthorized");
   }
+
   const userID = req.user.userID;
   const { profilePicture, name, email } = await getUserProfilePicture(userID);
+
+  console.log("Final profilePicture URL:", profilePicture); // ✅ Add this
+
   res.render("user-account-dashboard", {
     activeSection: "dashboard",
     profilePicture,
@@ -15,24 +19,55 @@ export const renderAccount = async (req, res) => {
   });
 };
 
+
 export const renderOrders = async (req, res) => {
-    const userID = 777; // Hardcoded for now
-    const orders = await queryUserOrders(userID);
-    const groupedOrders = await sortOrderByPurchaseDate(orders);
-    //console.log(groupedOrders);
-    res.render("user-account-dashboard", { activeSection: "orders", groupedOrders });
+  const userID = 777; // Hardcoded for now
+  const orders = await queryUserOrders(userID);
+  const groupedOrders = await sortOrderByPurchaseDate(orders);
+
+  const { profilePicture, name, email } = await getUserProfilePicture(userID);
+
+  res.render("user-account-dashboard", {
+    activeSection: "orders",
+    groupedOrders,
+    profilePicture,
+    name,
+    email
+  });
 };
+
 
 export const renderSelling = async (req, res) => {
-    res.render("user-account-dashboard", { activeSection: "selling" });
+  const [listings] = await pool.query(`SELECT * FROM item WHERE sellerID = 777`);
+
+  const userID = req.user?.userID;
+  const { profilePicture, name, email } = await getUserProfilePicture(userID);
+
+  res.render("user-account-dashboard", {
+    activeSection: "listing",
+    listings,
+    profilePicture,
+    name,
+    email
+  });
 };
 
+
 export const renderWatchlist = async (req, res) => {
-    const userID = 777; //HARDCODED FOR NOW :)
-    const watchlist = await queryWatchlist(userID);
-    //console.log(watchlist);
-    res.render("user-account-dashboard", {activeSection:"watchlist", watchlist })
+  const userID = 777; //HARDCODED FOR NOW :)
+  const watchlist = await queryWatchlist(userID);
+
+  const { profilePicture, name, email } = await getUserProfilePicture(userID);
+
+  res.render("user-account-dashboard", {
+    activeSection: "watchlist",
+    watchlist,
+    profilePicture,
+    name,
+    email
+  });
 };
+
 
 export const renderFeedback = async (req, res) => {
     res.render("user-account-dashboard");
@@ -122,41 +157,8 @@ async function getUserProfilePicture(userID) {
   const row = rows[0] || {};
 
   return {
-    profilePicture: row.profilePicture || 'https://studentbazaar-bucket.s3.us-west-2.amazonaws.com/defaultAvatar.png',
+    profilePicture: row.profilePicture || 'https://studentbazaar-bucket.s3.us-west-2.amazonaws.com/defaults/defaultAvatar.png',
     name: row.name || 'Unknown User',
     email: row.email || 'unknown@example.com'
   };
 }
-
-/*
-Here, you mentioned:
-Update getUserProfilePicture() in account_controller.js:
-Change this:
-
-js
-Copy
-Edit
-const [rows] = await pool.query(`SELECT profilePicture FROM user WHERE userID = ?`, [userID]);
-To this:
-
-js
-Copy
-Edit
-const [rows] = await pool.query(`
-  SELECT profilePicture, first_name AS name, email
-  FROM user
-  WHERE userID = ?
-`, [userID]);
-Then return all of it:
-
-js
-Copy
-Edit
-return {
-  profilePicture: rows[0]?.profilePicture || 'https://studentbazaar-bucket.s3.us-west-2.amazonaws.com/defaultAvatar.png',
-  name: rows[0]?.name || 'Unknown User',
-  email: rows[0]?.email || 'unknown@example.com'
-};
-
-
-*/

@@ -1,0 +1,17 @@
+<h2>My Listings</h2>
+<!-- Listings content -->
+<div class="listing-cards">
+  <% if (locals.listings) { %>
+    <% locals.listings.forEach(item => { %> 
+      <div class="listing-card">
+        <img src="<%= item.imageUrl || 'https://studentbazaar-bucket.s3.us-west-2.amazonaws.com/defaults/default-listing.jpg' %>" 
+             alt="Listing Image" 
+             class="item-image" 
+             style="width: 200px; height: auto; object-fit: cover;" />
+        <h3><%= item.name %></h3>
+        <p>Price: $<%= item.price %></p>
+        <!--a href="#" class="btn-tertiary">Edit Listing</a-->
+      </div>
+    <% }); %>
+  <% } %>
+</div>

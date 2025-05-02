@@ -69,7 +69,7 @@ app.use((req, res, next) => {
   if (!req.user) {
     // Mock login session
     req.user = {
-      userID: 1, // Use a real ID from your DB
+      userID: 777, // Use a real ID from your DB
       email: 'test@example.com',
       displayName: 'Test User'
     };
@@ -102,6 +102,10 @@ app.use((err, req, res, next) => {
     res.status(500).send('Something went wrong');
   });
 
+app.post('/search-debug', (req, res) => {
+  console.log('💥 HIT /search-debug');
+  res.send('OK');
+});
 
 
 app.listen(PORT, () => console.log(`Express app listening on port ${PORT}!`));
