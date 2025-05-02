@@ -1,4 +1,5 @@
 import { pool } from "../data/pool.js";
+import { removeItemFromWatchlist } from "./shop_controller.js";
 
 export const renderAccount = async (req, res) => {
   console.log("req.user:", req.user);
@@ -23,20 +24,36 @@ export const renderOrders = async (req, res) => {
     res.render("user-account-dashboard", { activeSection: "orders", groupedOrders });
 };
 
+
 export const renderSelling = async (req, res) => {
     res.render("user-account-dashboard", { activeSection: "selling" });
+
+
+
+export const renderListing = async (req, res) => {
+    const listings = await queryListings(777); // Hardcoded for now
+    res.render("user-account-dashboard", { activeSection: "listing", listings });
+
 };
 
 export const renderWatchlist = async (req, res) => {
     const userID = 777; //HARDCODED FOR NOW :)
     const watchlist = await queryWatchlist(userID);
-    //console.log(watchlist);
+
     res.render("user-account-dashboard", {activeSection:"watchlist", watchlist })
 };
 
-export const renderFeedback = async (req, res) => {
-    res.render("user-account-dashboard");
-};
+
+export const postWatchlist = async (req, res) => {
+    const { itemID } = req.body;
+    const userID = 777; // Hardcoded for now
+    console.log(itemID);
+    await removeItemFromWatchlist(userID, itemID);
+
+    //res.json({ success: true, message: "Item removed from watchlist" });
+    res.sendStatus(200);
+}
+
 
 export const submitFeedback = async (req, res) => {
     const { sellerID, itemID, feedback, number_rating} = req.body;
@@ -103,14 +120,16 @@ async function insertFeedback(customerID, sellerID, itemID, number_rating, feedb
 
 async function queryWatchlist(userID) {
     const [records] = await pool.query(`
-        SELECT watchlist.watchlistID,item.name, item.price, item.itemID, item.sellerID
+        SELECT watchlist.watchlistID,item.name, item.price, item.itemID, item.sellerID, sp.store_name
         FROM watchlist
         LEFT JOIN item ON watchlist.itemID = item.itemID
+        LEFT JOIN seller_profile sp ON  sp.sellerID= item.sellerID
         WHERE watchlist.userID = ?;
         `, [userID]);
 
     return records;
 }
+
 
 async function getUserProfilePicture(userID) {
   const [rows] = await pool.query(`
@@ -160,3 +179,17 @@ return {
 
 
 */
+
+
+async function queryListings(userID) {
+    const [records] = await pool.query(`
+        SELECT item.name, item.price, item.itemID, item.sellerID, sp.store_name
+        FROM item
+        LEFT JOIN seller_profile sp ON  sp.sellerID= item.sellerID
+        WHERE sp.sellerID = ?;
+        `, [userID]);
+
+    return records;
+}
+
+

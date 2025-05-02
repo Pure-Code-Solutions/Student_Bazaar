@@ -4,7 +4,7 @@ import { searchIndex } from '../services/opensearchClient.js';
 const router = express.Router();
 
 // POST /search
-router.post('/', async (req, res) => {
+router.post('/shop', async (req, res) => {
   try {
     const { query } = req.body;
 
@@ -26,6 +26,7 @@ console.log("Using OpenSearch endpoint:", process.env.OPENSEARCH_ENDPOINT);
 
 
     res.send(JSON.parse(result)); // Return parsed OpenSearch results
+
   } catch (err) {
     console.error('OpenSearch error:', err);
     res.status(500).json({ error: 'Search failed' });
