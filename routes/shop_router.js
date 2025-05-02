@@ -5,11 +5,7 @@ export const shopRouter = Router();
 
 shopRouter.get("/shop", renderShop);
 shopRouter.get("/shop/:category", renderShopByCategory);
-shopRouter.post("/shop", postAddToCart);
+///shopRouter.post("/shop", postAddToCart);
 shopRouter.get("/categories", renderCategories);
 shopRouter.get("/item/:item", renderItemDetail);
 shopRouter.post("/item/:item", postItemDetail);
-shopRouter.get("/sidebar",  
-    async (req, res) => {
-    res.render("sidebar");
-} )

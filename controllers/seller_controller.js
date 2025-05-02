@@ -51,11 +51,18 @@ async function getRatingCount(sellerID) {
 }
 
 async function getOverallRating(sellerID) {
-  const ratingCount = await getRatingCount(sellerID);
-  const ratingSum = await getRatingSum(sellerID);
-  const total = ratingCount * 5;
-  const overallRating = Math.round(ratingSum/total);
-  return overallRating;
+  const ratingCount = await getRatingCount(sellerID); // Total number of ratings
+  const ratingSum = await getRatingSum(sellerID); // Sum of all ratings
+
+  if (ratingCount === 0) {
+    return 0; // Avoid division by zero if there are no ratings
+  }
+
+  const maxRating = 5; // Maximum possible rating
+  const averageRating = ratingSum / ratingCount; // Calculate the average rating
+  const percentage = (averageRating / maxRating) * 100; // Calculate the percentage
+
+  return Math.round(percentage); // Return the percentage rounded to the nearest whole number
 
 
 }
