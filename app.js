@@ -1,12 +1,16 @@
+import * as dotenv from 'dotenv';
+dotenv.config();
 import multer from 'multer';
 import express from "express";
 import session from 'express-session';
 import path from "node:path";
+
 import * as dotenv from 'dotenv';
 import passport from "passport";
 import { Server } from 'socket.io';
 import { createServer } from 'node:http';
 dotenv.config();
+
 import { fileURLToPath } from "node:url";
 import { shopRouter } from "./routes/shop_router.js";
 import { homeRouter } from "./routes/home_router.js";
@@ -17,6 +21,16 @@ import { sellingRouter } from "./routes/selling_router.js";
 import {S3router} from './routes/aws_router.js';
 import { openSearchRouter } from './routes/open_search_router.js';
 import { sellerRouter } from './routes/seller_router.js';
+
+import { feedbackRouter } from './routes/feedback_router.js';
+import searchTestRouter from './routes/search_test.js';
+import searchRouter from './routes/search.js';
+import indexItemsRouter from './routes/indexItems.js';
+import uploadRoute from './routes/upload.js';
+import devCleanupRoute from './routes/dev_cleanup.js';
+import reindexRoute from './routes/reindex.js';
+import uploadPfpRoute from './routes/upload_pfp.js';
+
 
 import { inboxRouter } from './routes/inbox_router.js';
 
@@ -55,6 +69,46 @@ app.set("view engine", "ejs");
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+app.use('/api', searchTestRouter);
+app.use('/search', searchRouter);
+app.use('/index', indexItemsRouter);
+app.use('/upload', uploadRoute);
+app.use('/dev', devCleanupRoute);
+app.use('/dev', reindexRoute);
+app.use('/api', uploadPfpRoute);
+
+
+app.use(async (req, res, next) => {
+  const userID = 777; // Replace with logic to get the logged-in user's ID
+  try {
+    const cartCount = await getCartItemCount(userID);
+    res.locals.user = {
+      cartCount: cartCount || 0,
+    };
+  } catch (error) {
+    console.error('Error fetching cart count:', error);
+    res.locals.user = { cartCount: 0 };
+  }
+  next();
+});
+app.use(session({ secret: 'cats', resave: false, saveUninitialized: true }));
+app.use(passport.initialize());
+app.use(passport.session());
+
+//Mock test
+app.use((req, res, next) => {
+  if (!req.user) {
+    // Mock login session
+    req.user = {
+      userID: 1, // Use a real ID from your DB
+      email: 'test@example.com',
+      displayName: 'Test User'
+    };
+  }
+  next();
+});
+=======
+
 // Set up res.locals for all views
 app.use((req, res, next) => {
   res.locals.userSession = req.session.user || null;
@@ -68,6 +122,7 @@ app.use((req, res, next) => {
 app.use("/", shopRouter);
 app.use("/", homeRouter);
 app.use("/", authenticationRouter);
+console.log("authenticationRouter mounted at /");
 app.use("/account", accountRouter);
 app.use("/", checkoutRouter);
 app.use("/", sellingRouter);
@@ -83,8 +138,15 @@ app.use((err, req, res, next) => {
 });
 
 
+//Setup file path for ejs assets
+const assetsPath = path.join(__dirname, "views");
+app.use(express.static(assetsPath));
+app.set("view engine", "ejs");
+
+
 io.on('connection', (socket) => {
   console.log('A user connected');
+
 
   // Listen for incoming messages
   socket.on('chat message', (msg) => {
@@ -98,14 +160,13 @@ io.on('connection', (socket) => {
       console.log('A user disconnected');
   });
 });
-// Optional: Check DB before starting server
-pool.query('SELECT 1')
-  .then(() => {
-    app.listen(PORT, () => console.log(`Express app listening on port ${PORT}!`));
-  })
-  .catch(err => {
-    console.error("Database connection failed:", err);
-    process.exit(1);
-  });
+
+
+
+app.listen(PORT, () => console.log(`Express app listening on port ${PORT}!`));
+app._router.stack
+  .filter(r => r.route)
+  .forEach(r => console.log(`${Object.keys(r.route.methods)[0].toUpperCase()} ${r.route.path}`));
 
  
+
