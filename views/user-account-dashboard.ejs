@@ -22,7 +22,12 @@
             <aside class="account-sidebar">
                 <div class="user-profile-brief">
                     <div class="user-avatar">
-						<img src="<%= profilePicture %>" alt="User Avatar" />
+                        <% if (profilePicture) { %>
+                            <img src="<%= profilePicture %>" alt="User Avatar" />
+                        <% } else { %>
+                            <img src="images/default-avatar.png" alt="Default Avatar" />
+                        <% } %>
+						
                     </div>
                     <div class="user-info">
                         <h3><%= name %></h3>
