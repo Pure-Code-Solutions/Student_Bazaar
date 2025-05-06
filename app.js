@@ -4,7 +4,7 @@ import multer from 'multer';
 import express from "express";
 import session from 'express-session';
 import path from "node:path";
-import passport from 'passport';
+//import passport from 'passport';
 import { fileURLToPath } from "node:url";
 import { shopRouter } from "./routes/shop_router.js";
 import { homeRouter } from "./routes/home_router.js";
@@ -14,7 +14,6 @@ import { checkoutRouter } from "./routes/checkout_routes.js";
 import { sellingRouter } from "./routes/selling_router.js";
 import {S3router} from './routes/aws_router.js';
 import { openSearchRouter } from './routes/open_search_router.js';
-import { getCartItemCount } from './controllers/checkout_controller.js';
 import { sellerRouter } from './routes/seller_router.js';
 //import { feedbackRouter } from './routes/feedback_router.js';
 //import searchTestRouter from './routes/search_test.js';
@@ -26,6 +25,7 @@ import reindexRoute from './routes/reindex.js';
 import uploadPfpRoute from './routes/upload_pfp.js';
 
 
+import {passport} from './controllers/auth.js';
 const upload = multer({ dest: 'uploads/' }).single('image');
 //change "uploads" to whichever file you want to store uploads
 const app = express();
