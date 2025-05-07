@@ -43,6 +43,7 @@ export const renderSelling = async (req, res) => {
 }
 
 export const renderListing = async (req, res) => {
+  const userID = 777; // Hardcoded for now
     const listings = await queryListings(777); // Hardcoded for now
     const { profilePicture, name, email } = await getUserProfilePicture(userID);
     res.render("user-account-dashboard", { activeSection: "listing", listings, profilePicture,name, email });

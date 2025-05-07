@@ -5,7 +5,6 @@ import multer from 'multer';
 import express from "express";
 import session from 'express-session';
 import path from "node:path";
-import passport from "passport";
 import { Server } from 'socket.io';
 import { createServer } from 'node:http';
 import { fileURLToPath } from "node:url";
