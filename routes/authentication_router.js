@@ -32,8 +32,8 @@ router.get('/register', (req, res) => {
 
 /* ---------- FORM HANDLERS ---------- */
 
-router.post('/register', postRegister);
-router.post('/signin', postSignin);
+//router.post('/register', postRegister);
+router.post('/signin', postRegister);
 router.get('/logout', logout);
 
 /* ---------- GOOGLE OAUTH ---------- */
@@ -57,9 +57,9 @@ router.get('/auth/google/callback',
 // Show OTP input page unless already verified
 router.get('/verify', async (req, res) => {
   const email = req.query.email;
-
+  console.log("Email from query:", email);  
   const [rows] = await pool.query(
-    "SELECT is_verified FROM user_v2 WHERE email = ?",
+    "SELECT is_verified FROM user WHERE email = ?",
     [email]
   );
 
@@ -81,7 +81,7 @@ router.post('/verify', async (req, res) => {
   const { email, otp } = req.body;
 
   const [rows] = await pool.query(
-    "SELECT otp_code, otp_expires_at FROM user_v2 WHERE email = ?",
+    "SELECT otp_code, otp_expires_at FROM user WHERE email = ?",
     [email]
   );
 
@@ -104,12 +104,12 @@ router.post('/verify', async (req, res) => {
 
   // Update user status to verified
   await pool.query(
-    "UPDATE user_v2 SET is_verified = TRUE, otp_code = NULL, otp_expires_at = NULL WHERE email = ?",
+    "UPDATE user SET is_verified = TRUE, otp_code = NULL, otp_expires_at = NULL WHERE email = ?",
     [email]
   );
 
   // Refresh session with user info
-  const [userRows] = await pool.query("SELECT * FROM user_v2 WHERE email = ?", [email]);
+  const [userRows] = await pool.query("SELECT * FROM user WHERE email = ?", [email]);
   if (userRows.length) {
     const user = userRows[0];
     req.session.user = {
@@ -133,11 +133,12 @@ router.post('/resend-otp', async (req, res) => {
   const otpExpiresAt = new Date(Date.now() + 10 * 60 * 1000);
 
   await pool.query(
-    "UPDATE user_v2 SET otp_code = ?, otp_expires_at = ? WHERE email = ?",
+    "UPDATE user SET otp_code = ?, otp_expires_at = ? WHERE email = ?",
     [otp, otpExpiresAt, email]
   );
 
-  try {
+  console.log("New OTP generated:", otp);
+  /*try {
     const transporter = nodemailer.createTransport({
       service: 'gmail',
       auth: {
@@ -156,7 +157,7 @@ router.post('/resend-otp', async (req, res) => {
     console.log('✅ Email sent:', info.messageId);
   } catch (err) {
     console.error('❌ Failed to send Gmail OTP email:', err);
-  }
+  }*/
 
   req.session.verifyMessage = "A new OTP has been sent to your email.";
   res.redirect(`/verify?email=${encodeURIComponent(email)}`);

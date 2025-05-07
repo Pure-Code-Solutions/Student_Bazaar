@@ -16,7 +16,7 @@ passport.use(
         async function (request, accessToken, refreshToken, profile, done) {
             try {
                 // Log the complete profile to debug
-                console.log("Full Google Profile:", JSON.stringify(profile, null, 2));
+                //console.log("Full Google Profile:", JSON.stringify(profile, null, 2));
 
                 // Extract required data
                 const googleId = profile.id;
@@ -59,7 +59,7 @@ async function checkUserExists(googleId) {
     try {
         const [results] = await pool.query('SELECT * FROM user WHERE googleID = ?', [googleId]);
         if (results && results.length > 0) {
-            console.log('User found in database:', results[0].GOOGLE_ID);
+            console.log('User found in database:', results[0].googleID);
             return true;
         } else {
             console.log('User not found in database');
@@ -84,12 +84,12 @@ async function createUser(googleId, email, firstName, lastName) {
             throw new Error('Cannot create user: Google ID is null');
         }
 
-        const [results] = await pool.query(
+        await pool.query(
             'INSERT INTO user (googleID, email, first_name, last_name) VALUES (?, ?, ?, ?)',
             [googleId, email, firstName, lastName]
         );
         console.log('New user created with Google ID:', googleId);
-        return results;
+        
     } catch (err) {
         console.error('Error inserting new user:', err);
         throw err;
