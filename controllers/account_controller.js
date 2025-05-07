@@ -13,14 +13,12 @@ export const renderAccount = async (req, res) => {
   console.log("Final profilePicture URL:", profilePicture);
 
   res.render("user-account-dashboard", {
-    activeSection: "dashboard",
-    profilePicture,
-    name,
-    email
+    activeSection: "dashboard", profilePicture,name, email
   });
 };
 
 export const renderOrders = async (req, res) => {
+
   const userID = 777; // Hardcoded for now
   const orders = await queryUserOrders(userID);
   const groupedOrders = await sortOrderByPurchaseDate(orders);
@@ -36,10 +34,18 @@ export const renderOrders = async (req, res) => {
   });
 };
 
-export const renderListing = async (req, res) => {
-  const userID = req.user?.userID || 777;
-  const listings = await queryListings(userID);
+
+
+export const renderSelling = async (req, res) => {
   const { profilePicture, name, email } = await getUserProfilePicture(userID);
+    res.render("user-account-dashboard", { activeSection: "selling", profilePicture,name, email });
+
+}
+
+export const renderListing = async (req, res) => {
+    const listings = await queryListings(777); // Hardcoded for now
+    const { profilePicture, name, email } = await getUserProfilePicture(userID);
+    res.render("user-account-dashboard", { activeSection: "listing", listings, profilePicture,name, email });
 
   res.render("user-account-dashboard", {
     activeSection: "listing",
@@ -50,11 +56,10 @@ export const renderListing = async (req, res) => {
   });
 };
 
-export const renderSelling = async (req, res) => {
-  res.render("user-account-dashboard", { activeSection: "selling" });
-};
+
 
 export const renderWatchlist = async (req, res) => {
+
   const userID = 777;
   const watchlist = await queryWatchlist(userID);
   const { profilePicture, name, email } = await getUserProfilePicture(userID);
@@ -66,6 +71,7 @@ export const renderWatchlist = async (req, res) => {
     name,
     email
   });
+
 };
 
 export const postWatchlist = async (req, res) => {

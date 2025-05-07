@@ -68,16 +68,16 @@ export const postRegister = [
     try {
       console.log("Saving user to DB...");
       await pool.query(
-        "INSERT INTO user_v2 (first_name, last_name, email, password) VALUES (?, ?, ?, ?)",
+        "INSERT INTO user (first_name, last_name, email, password) VALUES (?, ?, ?, ?)",
         [firstName, lastName, email, hashedPassword]
       );
 
       // Generate and store OTP
       const otp = Math.floor(100000 + Math.random() * 900000).toString();
       const otpExpiresAt = new Date(Date.now() + 10 * 60 * 1000);
-
+      console.log(" OTP:", otp);
       await pool.query(
-        "UPDATE user_v2 SET otp_code = ?, otp_expires_at = ? WHERE email = ?",
+        "UPDATE user SET otp_code = ?, otp_expires_at = ? WHERE email = ?",
         [otp, otpExpiresAt, email]
       );
 
@@ -111,7 +111,7 @@ export const postSignin = async (req, res) => {
 
   try {
     const [rows] = await pool.query(
-      "SELECT * FROM user_v2 WHERE email = ?",
+      "SELECT * FROM user WHERE email = ?",
       [email]
     );
 

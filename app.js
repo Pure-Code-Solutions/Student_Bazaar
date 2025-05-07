@@ -28,7 +28,8 @@ import reindexRoute from './routes/reindex.js';
 import uploadPfpRoute from './routes/upload_pfp.js';
 import { inboxRouter } from './routes/inbox_router.js';
 import { pool } from "./data/pool.js";
-import "./passport.js";
+
+import {passport} from './controllers/auth.js';
 
 const app = express();
 const server = createServer(app);
