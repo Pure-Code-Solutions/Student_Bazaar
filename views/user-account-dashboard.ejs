@@ -22,6 +22,7 @@
             <aside class="account-sidebar">
                 <div class="user-profile-brief">
                     <div class="user-avatar">
+
                         <% if (profilePicture) { %>
                             <img src="<%= profilePicture %>" alt="User Avatar" />
                         <% } else { %>
@@ -30,8 +31,8 @@
 						
                     </div>
                     <div class="user-info">
-                        <h3><%= name %></h3>
-						<p><%= email %></p>
+                        <h3><%= user.displayName %></h3>
+						<p><%= user.email %></p>
                         <span class="student-badge">Verified Student</span>
                     </div>
                 </div>

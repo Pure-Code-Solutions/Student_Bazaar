@@ -46,9 +46,9 @@ async function createListing(sellerID, name, categoryName, tags, price, descript
 
     const [itemResult] = await pool.query(`
 
-        INSERT INTO item (sellerID, name, price, categoryID, description, imageUrl)
+        INSERT INTO item (sellerID, name, price, categoryID, description, imgUrl)
         VALUES (?, ?, ?, ?, ?);
-    `, [sellerID, name, price, categoryID,  description, imageUrl]);
+    `, [sellerID, name, price, categoryID,  description]);
 
 
 
