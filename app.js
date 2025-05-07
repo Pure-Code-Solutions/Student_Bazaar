@@ -17,11 +17,10 @@ import { accountRouter } from "./routes/account_router.js";
 import { checkoutRouter } from "./routes/checkout_routes.js";
 import { sellingRouter } from "./routes/selling_router.js";
 import { S3router } from './routes/aws_router.js';
-import { openSearchRouter } from './routes/open_search_router.js';
+import openSearchRouter from './routes/open_search_router.js';
 import { sellerRouter } from './routes/seller_router.js';
 //import { feedbackRouter } from './routes/feedback_router.js';
-//import searchTestRouter from './routes/search_test.js';
-import searchRouter from './routes/search.js';
+//import searchRouter from './routes/search.js';
 import indexItemsRouter from './routes/indexItems.js';
 import uploadRoute from './routes/upload.js';
 import devCleanupRoute from './routes/dev_cleanup.js';
@@ -73,7 +72,7 @@ app.use(async (req, res, next) => {
 app.use((req, res, next) => {
   if (!req.user) {
     req.user = {
-      userID: 777,
+      userID: 2,
       email: 'test@example.com',
       displayName: 'Test User'
     };
@@ -91,17 +90,17 @@ app.use("/", sellingRouter);
 app.use("/seller", sellerRouter);
 app.use("/inbox", inboxRouter);
 app.use("/api", S3router);
-app.use("/api", openSearchRouter);
+app.use("/search", openSearchRouter);
 app.use("/api", uploadPfpRoute);
 //app.use("/api", searchTestRouter);
-app.use("/search", searchRouter);
+//app.use("/search", searchRouter);
 app.use("/index", indexItemsRouter);
 app.use("/upload", uploadRoute);
 app.use("/dev", devCleanupRoute);
 app.use("/dev", reindexRoute);
 
 app.post('/search-debug', (req, res) => {
-  console.log('💥 HIT /search-debug');
+  console.log('HIT /search-debug');
   res.send('OK');
 });
 

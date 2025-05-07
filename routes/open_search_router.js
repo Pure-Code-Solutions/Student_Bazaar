@@ -1,70 +1,74 @@
-import path from 'path';
-import { fileURLToPath } from 'url';
-import { dirname } from 'path';
 import express from 'express';
 import { searchIndex } from '../services/opensearchClient.js';
 
-import { client } from '../data/open_search.js';
-
-
-export const openSearchRouter = express.Router();
+const openSearchRouter = express.Router();
 console.log("OpenSearch router is mounted");
 
-openSearchRouter.post('/search', async (req, res) => {
-  const { query } = req.body;
+openSearchRouter.get('/', async (req, res) => {
+  const query = req.query.query;
+  if (!query) return res.redirect('/shop');
 
-  console.log(' [OpenSearch] Received search query:', query);
+  console.log("[GET] /search query:", query);
 
   try {
     const raw = await searchIndex('item', {
       query: {
-        match: {
-          name: {
-            query,
-            fuzziness: "AUTO"
-          }
+        bool: {
+          should: [
+            { match: { name: { query, fuzziness: "AUTO" } } },
+            { match_phrase_prefix: { name: { query } } }
+          ]
         }
       }
     });
 
     const results = JSON.parse(raw).hits.hits.map(hit => hit._source);
 
-    res.render('search-results', {
+    res.render('shop', {
       query,
-      results
+      products: results,
+      page: 1,
+      numberOfPages: 1,
+      category: '',
+      subcategories: null
     });
   } catch (error) {
-    console.error('OpenSearch search error:', error);
-    res.status(500).send('Search failed');
+    console.error("GET /search error:", error);
+    res.status(500).send("Search failed");
   }
 });
 
 
-openSearchRouter.post('/search', async (req, res) => {
+openSearchRouter.post('/', async (req, res) => {
   const { query } = req.body;
+  console.log(" /search route hit with query:", query);
 
   try {
     const raw = await searchIndex('item', {
       query: {
-        match_phrase_prefix: {
-          name: {
-            query: query
-          }
+        bool: {
+          should: [
+            { match: { name: { query, fuzziness: "AUTO" } } },
+            { match_phrase_prefix: { name: { query } } }
+          ]
         }
       }
     });
 
     const results = JSON.parse(raw).hits.hits.map(hit => hit._source);
 
-    res.render('search-results', {
+    res.render('shop', {
       query,
-      results
+      products: results,
+      page: 1,
+      numberOfPages: 1,
+      category: '',
+      subcategories: null
     });
   } catch (error) {
-    console.error('OpenSearch search error:', error);
-    res.status(500).send('Search failed');
+    console.error("OpenSearch search error:", error);
+    res.status(500).send("Search failed");
   }
 });
-
 
 export default openSearchRouter;
