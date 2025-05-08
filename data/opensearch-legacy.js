@@ -3,6 +3,12 @@ import pkg from 'aws-opensearch-connector';
 const { createAWSConnection } = pkg;
 import AWS from 'aws-sdk';
 import * as dotenv from 'dotenv';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+// Load .env from the parent directory
+dotenv.config({ path: path.resolve(__dirname, '../.env') });
 dotenv.config();
 
 AWS.config.update({

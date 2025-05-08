@@ -3,7 +3,13 @@ import multer from 'multer';
 import fs from 'fs';
 import {s3} from '../data/aws.js'; // Import S3 configuration
 import { PutObjectCommand } from '@aws-sdk/client-s3';
+import * as dotenv from 'dotenv';
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+// Load .env from the parent directory
+dotenv.config({ path: path.resolve(__dirname, '../.env') });
 
 export const S3router = express.Router();
 const upload = multer({ dest: 'uploads/' }); // Temporary local storage
