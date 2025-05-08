@@ -45,16 +45,15 @@ router.post('/reindex', async (req, res) => {
   },
   mappings: {
     properties: {
-      name: {
-        type: 'text',
-        analyzer: 'edge_ngram_analyzer',
-        search_analyzer: 'standard'
-      },
+      name: { type: 'text', analyzer: 'edge_ngram_analyzer', search_analyzer: 'standard' },
       description: { type: 'text' },
+      price: { type: 'float' },
       categoryName: { type: 'keyword' },
-      imageUrl: { type: 'keyword' }
+      imageUrl: { type: 'keyword' },
+      tags: { type: 'keyword' }
     }
   }
+
 });
 console.log('Index created with edge_ngram mapping via signed request.');
 
@@ -71,23 +70,31 @@ console.log('Index created with edge_ngram mapping via signed request.');
 
     //Reindex from MySQL
     const [rows] = await pool.query(`
-      SELECT item.itemID, item.name, item.description, item.categoryID, item.imageUrl,
-             category.name AS categoryName
-      FROM item
-      JOIN category ON item.categoryID = category.categoryID
-    `);
+	SELECT i.itemID, i.name, i.description, i.categoryID, i.price, i.imageUrl,
+         c.name AS categoryName,
+         GROUP_CONCAT(t.name) AS tags
+	FROM item i
+	JOIN category c ON i.categoryID = c.categoryID
+	LEFT JOIN category_tag ct ON c.categoryID = ct.categoryID
+	LEFT JOIN tag t ON ct.tagID = t.tagID
+	GROUP BY i.itemID
+	`);
+
 
     let successCount = 0;
 
     for (const row of rows) {
       const doc = {
-        itemID: row.itemID,
-        name: row.name,
-        description: row.description || '',
-        categoryID: row.categoryID,
-        categoryName: row.categoryName,
-        imageUrl: row.imageUrl || null
-      };
+		itemID: row.itemID,
+		name: row.name,
+		description: row.description || '',
+		categoryID: row.categoryID,
+		categoryName: row.categoryName,
+		price: row.price,
+		imageUrl: row.imageUrl || null,
+		tags: row.tags ? row.tags.split(',') : []
+		};
+
 
       await indexDocument('item', doc);
       successCount++;
