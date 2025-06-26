@@ -26,7 +26,11 @@ export const postListing = async (req, res) => {
     }
 
 	
+<<<<<<< HEAD
     await createListing(req.user.userID, title, category, tags, price, description, imageUrl);//Hardcoded for now
+=======
+    await createListing(777, title, category, tags, price, description, imageUrl);//Hardcoded for now
+>>>>>>> bbdfdfef4d2b76a0db8924d5f757df20ec398272
 	res.status(201).json({ message: 'Item listed successfully' });
 }
 
@@ -47,7 +51,11 @@ async function createListing(sellerID, name, categoryName, tags, price, descript
     const [itemResult] = await pool.query(`
 
         INSERT INTO item (sellerID, name, price, categoryID, description)
+<<<<<<< HEAD
         VALUES (?, ?, ?, ?);
+=======
+        VALUES (?, ?, ?, ?, ?);
+>>>>>>> bbdfdfef4d2b76a0db8924d5f757df20ec398272
     `, [sellerID, name, price, categoryID,  description]);
 
 
