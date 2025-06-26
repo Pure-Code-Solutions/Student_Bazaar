@@ -1,4 +1,4 @@
-![image](https://github.com/user-attachments/assets/e7a0ecb7-55eb-4e5c-8104-bad43c54f748)1. Full Project Scope (Final Overview)
+1. Full Project Scope (Final Overview)
 
 Student Bazaar is a full-stack e-commerce web application designed to allow university students to buy, sell, and manage secondhand goods. The backend was built in Node.js (ESModules) using Express.js and integrated with a cloud-native infrastructure powered by AWS.
 
