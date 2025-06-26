@@ -91,8 +91,8 @@ export const renderItemDetail = async (req, res) =>
 {
     const  itemID  = req.params.item;
     const item = await queryItemByID(itemID);
-    const userID = 777; //HARDCODED FOR NOW
-    const cartID = 1; //HARDCORED FOR NOW
+    const userID = req.user.userID; //HARDCODED FOR NOW
+    const cartID = await getCartID(userID); //HARDCORED FOR NOW
     const isWatchlisted = await isItemInWatchlist(userID, itemID);
     const isInCart = await isItemInCart(cartID, itemID);
     //console.log(item);
@@ -104,7 +104,7 @@ export const renderItemDetail = async (req, res) =>
  export const postAddToCart = async (req, res) => {
     //Post request made when add cart button is clicked
     const { itemID } = req.body;
-    const userID = 777; // Hardcoded user ID for now
+    const userID = req.user.userID; // Hardcoded user ID for now
     
 
     
@@ -118,7 +118,8 @@ export const renderItemDetail = async (req, res) =>
 export const postItemDetail = async (req, res) => {
     const body = req.body;
     console.log(body);
-    const cartID = 1; //HARDCODED FOR NOW
+    const userID = req.user.userID;
+    const cartID = await getCartID(userID); //HARDCODED FOR NOW
     //Instance when add to cart button pressed
     if(body.addToCart != undefined) {
         if(body.inCart){
@@ -132,9 +133,9 @@ export const postItemDetail = async (req, res) => {
     if(body.addToWatchlist!= undefined) {
         if(body.inWatchlist) {
             //Removes from wishlist when already in
-            await removeItemFromWatchlist(body.userID, body.itemID);
+            await removeItemFromWatchlist(req.user.userID, body.itemID);
         } else {
-            await insertToWatchlist(body.userID, body.itemID);
+            await insertToWatchlist(req.user.userID, body.itemID);
         }
     }
     res.sendStatus(200);

@@ -11,9 +11,12 @@
         </div>
         <div class="nav-actions">
             <a href="/cart" class="cart-icon"><img src="images/cart.svg" alt="Cart">()</a>
-
-            <a href="/account/dashboard" class="account-icon"><img src="images/account.svg" alt="Account"></a>
-            <a href="/inbox/messages">Inbox</a>
+            <% if (user != undefined) { %>
+                <a href="/account/dashboard" class="account-icon"><img src="images/account.svg" alt="Account"></a>
+                <a href="/inbox/messages">Inbox</a>
+            <% } %>
+            <!--a href="/account/dashboard" class="account-icon"><img src="images/account.svg" alt="Account"></a>
+            <a href="/inbox/messages">Inbox</a-->
         </div>
 
     </nav>

@@ -2,8 +2,8 @@ import { pool } from "../data/pool.js";
 import { getCartID } from "./shop_controller.js";
 
 export const renderCart = async (req, res) => {
-    let cart = await queryCartItems(777);
-    const userID = 777; // Hardcoded for now
+    let cart = await queryCartItems(req.user.userID);
+    const userID = req.user.userID; // Hardcoded for now
     const cartID = await getCartID(userID);
 
 
@@ -13,8 +13,8 @@ export const renderCart = async (req, res) => {
 
 export const renderCheckout = async (req, res) => {
     const section = req.params.section || 'shipping-section';
-    let cart = await queryCartItems(777);
-    const userID = 777; // Hardcoded for now
+    let cart = await queryCartItems(req.user.userID);
+    const userID = req.user.userID; // Hardcoded for now
     let userAddress = await getUserAddress(userID);
     const cartID = await getCartID(userID);
     console.log(cart);
@@ -24,7 +24,7 @@ export const renderCheckout = async (req, res) => {
 
 export const submitAddress = async(req, res) => {
     const  address  = req.body;
-    const userID = 777; // Hardcoded for now
+    const userID = req.user.userID; // Hardcoded for now
 
     await insertUserAddress(userID, address.country, address.city, address.zip, address.street, address.premise, address.state);
 
@@ -33,7 +33,7 @@ export const submitAddress = async(req, res) => {
 }
 
 export const submitOrder = async (req, res) => {
-    const userID = 777; // Hardcoded for now
+    const userID = req.user.userID; // Hardcoded for now
     const cart = await queryCartItems(userID);
 
     //console.log("Cart: ", cart);
@@ -45,7 +45,7 @@ export const submitOrder = async (req, res) => {
 
 export const updateItemFromCart = async (req, res) => {
     const { itemID, incrementItem, decrementItem, removeItem } = req.body;
-    const userID = 777; // Hardcoded for now
+    const userID = req.user.userID; // Hardcoded for now
     const cartID = await getCartID(userID);
 
     try {
@@ -80,7 +80,7 @@ async function insertUserAddress(userID, country, city, zip, street, premise, st
     const [rows] = await pool.query(`
         UPDATE user_address
         SET country = ?, city = ?, postal_code = ?, street = ?, premise = ?, state = ?
-        WHERE userID = '777'`, [country, city, zip, street, premise, state]);
+        WHERE userID = 'req.user.userID'`, [country, city, zip, street, premise, state]);
     
     
 };
@@ -172,7 +172,7 @@ async function insertOrder (userID,  addressID, itemID, quantity, price_at_purch
 async function insertAllOrderItems (cart) {
 
     for (let i = 0; i < cart.length; i++) {
-        const userID = 777; // Hardcoded for now
+        const userID = req.user.userID; // Hardcoded for now
         const userAddress = await getUserAddress(userID);
         const addressID = userAddress.user_addressID;
 

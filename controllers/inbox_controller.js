@@ -2,7 +2,7 @@
 import { pool } from "../data/pool.js";
 
 export const renderInbox = async (req, res) => {
-    const userID = 777; //HARDCORDE FOR NOW DKPOWF{I;w}
+    const userID = req.user.userID; //HARDCORDE FOR NOW DKPOWF{I;w}
     
     const conversationID =  1; //HARDCORDE FOR NOW DKPOWF{I;w}
     const messages = await getMessagesWithParticipant(conversationID, userID);;
@@ -15,7 +15,7 @@ export const renderInbox = async (req, res) => {
 };
 
 export const renderConversation = async (req, res) => {
-    const userID = 777; //HARDCORDE FOR NOW DKPOWF{I;w}
+    const userID = req.user.userID; //HARDCORDE FOR NOW DKPOWF{I;w}
     const conversations = [];
     const conversationID = 1;
     const messages = await getMessagesWithParticipant(conversationID, userID);

@@ -50,7 +50,7 @@ app.use(session({
   secret: "studentbazaar-secret-key",
   resave: false,
   saveUninitialized: false,
-  cookie: { secure: false }
+  cookie: { secure: false, maxAge: 1000 * 60 * 60 } // Set secure to true in production
 }));
 app.use(passport.initialize());
 app.use(passport.session());
@@ -69,7 +69,7 @@ app.use(async (req, res, next) => {
 });
 
 // Mock user (for dev/testing)
-app.use((req, res, next) => {
+/*app.use((req, res, next) => {
   if (!req.user) {
     req.user = {
       userID: 2,
@@ -78,7 +78,7 @@ app.use((req, res, next) => {
     };
   }
   next();
-});
+});*/
 
 // Routes
 app.use("/", shopRouter);
@@ -110,6 +110,10 @@ app.use((err, req, res, next) => {
   res.status(500).send('Something went wrong');
 });
 
+app.use((req, res, next) => {
+  res.locals.user = req.user || null; // Pass `req.user` to all templates
+  next();
+});
 // Socket.IO logic
 io.on('connection', (socket) => {
   console.log('A user connected');

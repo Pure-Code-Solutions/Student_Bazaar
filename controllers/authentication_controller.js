@@ -67,9 +67,18 @@ export const postRegister = [
 
     try {
       console.log("Saving user to DB...");
+      //Creates a new user in the database
       await pool.query(
         "INSERT INTO user (first_name, last_name, email, password) VALUES (?, ?, ?, ?)",
         [firstName, lastName, email, hashedPassword]
+      );
+
+
+      const store_name = await createRandomStoreName();
+      //Creates seller profile for the user
+      await pool.query(
+        "INSERT INTO seller_profile (sellerID, store_name) VALUES ((SELECT userID FROM user WHERE email = ?), ?)",
+        [email, store_name]
       );
 
       // Generate and store OTP
@@ -159,3 +168,9 @@ export const logout = (req, res) => {
     res.redirect("/signin");
   });
 };
+
+
+async function createRandomStoreName() {
+  const randomNumber = Math.floor(Math.random() * 10000);
+  return `Store${randomNumber}`;
+}

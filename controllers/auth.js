@@ -1,6 +1,7 @@
 import passport from 'passport';
 import { Strategy as GoogleStrategy } from 'passport-google-oauth2';
 import { pool } from "../data/pool.js";
+import { renderSellerProfile } from './seller_controller.js';
 
 const GOOGLE_CLIENT_ID = '891980437516-70nuopfrd3l5263lhj178m9a1gav71ms.apps.googleusercontent.com';
 const GOOGLE_CLIENT_SECRET = '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';
@@ -19,6 +20,7 @@ passport.use(
                 //console.log("Full Google Profile:", JSON.stringify(profile, null, 2));
 
                 // Extract required data
+           
                 const googleId = profile.id;
                 const email = profile.emails?.[0]?.value || null;
                 const firstName = profile.name?.givenName || null;
@@ -31,18 +33,29 @@ passport.use(
                 }
 
                 // Check if user exists in the database
-                const userExists = await checkUserExists(googleId);
+                let user = await getUserID(googleId);
 
-                if (!userExists) {
+                if (!user) {
                     await createUser(googleId, email, firstName, lastName);
+                    user = await getUserID(googleId); // Fetch the newly created user
                 }
 
                 // Add the important fields to the profile object
                 const userData = {
                     ...profile,
+                    userID: user.userID,
                     googleId: googleId,
                     email: email,
                     profilePicture: profilePicture,
+                };
+                   // Store user data in the session
+                   request.session.user = {
+                    userID: user.userID,
+                    googleId: googleId,
+                    email: email,
+                    profilePicture: profilePicture,
+                    firstName: firstName,
+                    lastName: lastName,
                 };
 
                 return done(null, userData);
@@ -55,15 +68,15 @@ passport.use(
 );
 
 // Helper function to check if user exists (returns a Promise)
-async function checkUserExists(googleId) {
+async function getUserID(googleId) {
     try {
-        const [results] = await pool.query('SELECT * FROM user WHERE googleID = ?', [googleId]);
+        const [results] = await pool.query('SELECT userID FROM user WHERE googleID = ?', [googleId]);
         if (results && results.length > 0) {
             console.log('User found in database:', results[0].googleID);
-            return true;
+            return results[0];
         } else {
             console.log('User not found in database');
-            return false;
+            return null;
         }
     } catch (err) {
         console.error('Database query error:', err);
@@ -98,7 +111,7 @@ async function createUser(googleId, email, firstName, lastName) {
 
 passport.serializeUser(function (user, done) {
     done(null, {
-        id: user.id,
+        userID: user.userID || user.id,
         googleId: user.googleId || user.id,
         displayName: user.displayName,
         photos: user.photos,

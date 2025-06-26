@@ -19,7 +19,7 @@ export const renderAccount = async (req, res) => {
 
 export const renderOrders = async (req, res) => {
 
-  const userID = 777; // Hardcoded for now
+  const userID = req.user.userID; // Hardcoded for now
   const orders = await queryUserOrders(userID);
   const groupedOrders = await sortOrderByPurchaseDate(orders);
 
@@ -43,8 +43,8 @@ export const renderSelling = async (req, res) => {
 }
 
 export const renderListing = async (req, res) => {
-  const userID = 777; // Hardcoded for now
-    const listings = await queryListings(777); // Hardcoded for now
+  const userID = req.user.userID; // Hardcoded for now
+    const listings = await queryListings(req.user.userID); // Hardcoded for now
     const { profilePicture, name, email } = await getUserProfilePicture(userID);
     res.render("user-account-dashboard", { activeSection: "listing", listings, profilePicture,name, email });
 
@@ -61,7 +61,7 @@ export const renderListing = async (req, res) => {
 
 export const renderWatchlist = async (req, res) => {
 
-  const userID = 777;
+  const userID = req.user.userID;
   const watchlist = await queryWatchlist(userID);
   const { profilePicture, name, email } = await getUserProfilePicture(userID);
 
@@ -77,7 +77,7 @@ export const renderWatchlist = async (req, res) => {
 
 export const postWatchlist = async (req, res) => {
   const { itemID } = req.body;
-  const userID = 777;
+  const userID = req.user.userID;
   console.log(itemID);
   await removeItemFromWatchlist(userID, itemID);
   res.sendStatus(200);
@@ -89,7 +89,7 @@ export const renderFeedback = async (req, res) => {
 
 export const submitFeedback = async (req, res) => {
   const { sellerID, itemID, feedback, number_rating } = req.body;
-  const userID = 777;
+  const userID = req.user.userID;
   await insertFeedback(userID, sellerID, itemID, number_rating, feedback);
   res.json({ success: true, message: "Feedback submitted successfully" });
 };
